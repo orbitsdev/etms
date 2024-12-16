@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AdminDashboard;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/dashboard', function () {return view('welcome');});
+Route::get('/', function () {return view('welcome');});
+
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+    //   return view('dashboard');
+    return redirect()->route('admin.dashboard');
+
+    })->name('dashboard');
+    Route::get('/admin-dashboard', AdminDashboard::class)->name('admin.dashboard');
+
+
 });
