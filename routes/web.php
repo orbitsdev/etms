@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\AdminDashboard;
+use App\Livewire\Equiments\CreateEquipment;
+use App\Livewire\Equipments\ListEquipments;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,7 +30,12 @@ Route::middleware([
     return redirect()->route('admin.dashboard');
 
     })->name('dashboard');
-    Route::get('/admin-dashboard', AdminDashboard::class)->name('admin.dashboard');
 
+    Route::get('/admin-dashboard', AdminDashboard::class)->name('admin.dashboard');
+    Route::prefix('/equipments')->name('equipment.')->group(function () {
+        Route::get('/', ListEquipments::class)->name('index');
+        Route::get('/create', CreateEquipment::class)->name('create');
+    });
+  
 
 });
