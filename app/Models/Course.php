@@ -13,4 +13,10 @@ class Course extends Model
     public function sections(){
         return $this->hasMany(Section::class);
     }
+
+    public function scopeWithRelation($query){
+        return $query->latest()->with([
+            'sections',
+        ]);
+    }
 }

@@ -18,7 +18,7 @@
             </div>
 
            </div>
-           @can('is-admin')
+        
            <nav class="flex flex-1 flex-col">
              <ul role="list" class="flex flex-1 flex-col gap-y-7 ">
                <li>
@@ -42,7 +42,7 @@
                         </a>
                       </li>
                     </ul>
-
+                    @can('is-admin')
                     <div class="mt-6">
                         <li class="">
                             <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div>
@@ -50,7 +50,7 @@
                                 <li>
                                   <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
                                   <a href="{{route('equipment.index')}}"
-                                  class=" {{RouteManager::isCurrentPage(Session::get('current_route_name'),['equipment.index','equipment.create'],'active-link','inactive-link') }}">
+                                  class=" {{RouteManager::isCurrentPage(Session::get('current_route_name'),['equipment.index','equipment.create','equipment.edit'],'active-link','inactive-link') }}">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
                                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
                                    </svg>
@@ -89,15 +89,15 @@
                               </ul>
                         </li>
                     </div>
-
+                    @endcan
                     <div class="">
                         <li class="mt-8">
                             <div class="text-sm font-semibold leading-6 text-sksu-800">CONTENT </div>
                             <ul role="list" class="-mx-2 mt-2 space-y-1">
                                 <li>
                                   <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
-                                  <a href="#"
-                                  class="inactive-link">
+                                  <a href="{{route('department.index')}}"
+                                  class="{{RouteManager::isCurrentPage(Session::get('current_route_name'),['department.index','department.create','department.edit'],'active-link','inactive-link') }}">
                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 ">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
                                         </svg>
@@ -105,8 +105,8 @@
                                   </a>
                                 </li>
                                 <li>
-                                  <a href="#"
-                                  class="inactive-link">
+                                  <a href="{{route('courses.index')}}"
+                                  class="{{RouteManager::isCurrentPage(Session::get('current_route_name'),['courses.index','courses.create','courses.edit'],'active-link','inactive-link') }}">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 ">
                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
                                    </svg>
@@ -115,8 +115,8 @@
                                   </a>
                                 </li>
                                 <li>
-                                  <a href="#"
-                                  class="inactive-link">
+                                  <a href="{{route('sections.index')}}"
+                                  class="{{RouteManager::isCurrentPage(Session::get('current_route_name'),['sections.index','sections.create','sections.edit'],'active-link','inactive-link') }}">
                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 ">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
                                         </svg>
@@ -149,7 +149,7 @@
                </li>
              </ul>
            </nav>
-           @endcan
+         
          </div>
        </div>
  </div>
