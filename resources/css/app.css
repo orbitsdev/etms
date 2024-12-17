@@ -52,7 +52,7 @@
 }
 
 .fi-ta-table th {
-    @apply !bg-green-600;
+    @apply !bg-sksu-700;
   }
 
 
@@ -66,9 +66,21 @@
   @apply !w-[100rem];
 }
 .active-link {
-    @apply text-green-600 bg-gray-100 mb-5  rubik-400 hover:bg-gray-50  flex gap-x-3 rounded-md px-1 py-2 text-sm leading-6 font-semibold;
+    @apply text-sksu-700 bg-gray-100  rubik-400 hover:bg-gray-50  flex gap-x-3 rounded-md px-1 py-2 text-base leading-6 font-semibold;
 }
 
 .inactive-link {
-    @apply text-gray-700 rubik-400 hover:text-green-600 hover:bg-gray-100  flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold;
+    @apply text-gray-700 rubik-400 hover:text-sksu-700 hover:bg-gray-100  flex gap-x-3 rounded-md p-2 text-base leading-6 font-semibold;
+}
+
+
+.fi-ta-header-cell-sort-icon{
+    @apply text-white;
+
+}
+.fi-ta-text-item-label{
+    @apply text-base  leading-6 text-gray-600 dark:text-white;
+}
+.fi-ta-group-header h4{
+    @apply  text-base text-sksu-700 ;
 }

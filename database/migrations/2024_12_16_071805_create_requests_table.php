@@ -4,13 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
 
 // Pending	Request is awaiting approval.
 // Approved	Request has been approved and is ready for the next step.
@@ -20,6 +13,14 @@ return new class extends Migration
 // Returned	Equipment has been returned by the user.
 // Cancelled	Request has been cancelled.
 // Completed	The request is fully resolved, no further actions needed.
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+
 
         Schema::create('requests', function (Blueprint $table) {
             $table->id();

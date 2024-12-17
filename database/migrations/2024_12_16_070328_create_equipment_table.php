@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('serial_number')->unique();
+            $table->string('serial_number')->nullable()->unique();
             $table->integer('stock')->default(0);
             $table->enum('status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived'])->default('Available');
             $table->string('location')->nullable();

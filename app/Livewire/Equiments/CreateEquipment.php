@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Equiments;
 
-use App\Models\Equipment;
 use Filament\Forms;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Livewire\Component;
+use Filament\Forms\Form;
+use App\Models\Equipment;
 use Illuminate\Contracts\View\View;
+use App\Http\Controllers\FilamentForm;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
 
 class CreateEquipment extends Component implements HasForms
 {
@@ -24,37 +25,26 @@ class CreateEquipment extends Component implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->maxLength(191),
-                Forms\Components\TextInput::make('serial_number')
-                    ->required()
-                    ->maxLength(191),
-                Forms\Components\TextInput::make('stock')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
-                Forms\Components\TextInput::make('location')
-                    ->maxLength(191),
-                Forms\Components\DateTimePicker::make('archived_date'),
-            ])
+            ->schema(FilamentForm::equipmentForm())
             ->statePath('data')
             ->model(Equipment::class);
     }
 
-    public function create(): void
+    public function create()
     {
         $data = $this->form->getState();
 
         $record = Equipment::create($data);
 
         $this->form->model($record)->saveRelationships();
+        FilamentForm::success('Equipment created successfully');
+        return redirect()->route('equipment.index');
     }
 
     public function render(): View
     {
         return view('livewire.equiments.create-equipment');
     }
+
+
 }

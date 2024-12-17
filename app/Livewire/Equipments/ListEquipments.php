@@ -6,10 +6,18 @@ use Filament\Tables;
 use Livewire\Component;
 use App\Models\Equipment;
 use Filament\Tables\Table;
+use App\Exports\EquipmentExport;
+use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -33,25 +41,26 @@ class ListEquipments extends Component implements HasForms, HasTable
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('location')
-                    ->searchable(),
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('archived_date')
                     ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable()->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
+
 
             ->headerActions([
 
 
                 Action::make('create')
-                
+
                 ->color('primary')
                 ->button()
                 ->url(function(){
@@ -59,23 +68,67 @@ class ListEquipments extends Component implements HasForms, HasTable
                 }),
 
 
-             
 
 
 
-        
+
+
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('status')
+                ->options(Equipment::STATUS_OPTIONS)->searchable()
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
-                //
+                ActionGroup::make([
+                    Action::make('View')
+                    ->icon('heroicon-s-eye')
+                    ->modalSubmitAction(false)
+                    ->modalContent(function(Model $record){
+                        return view('livewire.view-equipment', ['record'=> $record]);
+                    })
+                    ->modalCancelAction(fn (StaticAction $action) => $action->label('Close'))
+                    ->closeModalByClickingAway(false)->modalWidth('7xl'),
+
+                    Action::make('Download Details')
+
+                    ->action(function (Model $record) {
+
+
+
+                        // Generate a dynamic filename
+                        $createdDate = $record->created_at
+                            ? $record->created_at->format('F j, Y')
+                            : 'Unknown_Date';
+                        $filename = $record->name . '_' . $record->serial_number . '_Created_' . $createdDate . '.xlsx';
+
+                        return Excel::download(new EquipmentExport($record), $filename);
+
+                    })
+
+
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->requiresConfirmation()
+                    ->modalHeading('Export Winners')
+                    ->modalSubheading('Download the winners of the event as an Excel report for your reference.')
+                    ->modalButton('Download Report')
+
+                    ,
+                    Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function(Model $record){
+                        return route('equipment.edit', ['record'=> $record]);})->color('gray'),
+
+                    Tables\Actions\DeleteAction::make()->color('gray'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    //
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->groups([
+                Group::make('status')
+                ->titlePrefixedWithLabel(false),
+
+            ])->defaultGroup('status');
     }
 
     public function render(): View

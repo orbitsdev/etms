@@ -27,6 +27,7 @@ export default {
             colors: {
 
                 gray: colors.neutral,
+
                 'sksu': {
                     '50': '#edfff3',
                     '100': '#d6ffe6',
