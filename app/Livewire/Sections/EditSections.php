@@ -33,11 +33,14 @@ class EditSections extends Component implements HasForms
             ->model($this->record);
     }
 
-    public function save(): void
+    public function save()
     {
         $data = $this->form->getState();
 
         $this->record->update($data);
+
+        FilamentForm::success('Section updated successfully');
+        return redirect()->route('sections.index');
     }
 
     public function render(): View

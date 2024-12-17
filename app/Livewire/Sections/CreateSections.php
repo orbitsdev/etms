@@ -30,13 +30,15 @@ class CreateSections extends Component implements HasForms
             ->model(Section::class);
     }
 
-    public function create(): void
+    public function create()
     {
         $data = $this->form->getState();
 
         $record = Section::create($data);
 
         $this->form->model($record)->saveRelationships();
+        FilamentForm::success('Section created successfully');
+        return redirect()->route('sections.index');
     }
 
     public function render(): View
