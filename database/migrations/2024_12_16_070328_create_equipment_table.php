@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('serial_number')->nullable()->unique();
             $table->integer('stock')->default(0);
-            $table->enum('status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived'])->default('Available');
+            $table->enum('status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived'])->nullable()->default('Available');
             $table->string('location')->nullable();
             $table->timestamp('archived_date')->nullable();
             $table->timestamps();

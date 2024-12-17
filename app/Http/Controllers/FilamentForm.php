@@ -27,6 +27,7 @@ class FilamentForm extends Controller
                TextInput::make('name')
                 ->maxLength(191)->required()  ->columnSpanFull(),
            TextInput::make('serial_number')
+           ->unique(ignoreRecord: true)
            ->columnSpan(3)
                 ->maxLength(191),
            TextInput::make('stock')
@@ -35,14 +36,39 @@ class FilamentForm extends Controller
                 ->default(1)->required()->mask(9999),
         //    TextInput::make('status')
         //         ->required()  ->columnSpan(3),
-           TextInput::make('location')
-                ->maxLength(191)->columnSpan(3),
+        //    TextInput::make('location')
+        //         ->maxLength(191)->columnSpan(3),
                 Select::make('status')
                 ->options(Equipment::STATUS_OPTIONS)
-                ->native(false),
+                ->native(false)->columnSpan(3)
+                ->hidden(fn(string $operation): bool => $operation === 'create')->default(Equipment::AVAILABLE),
         //    DateTimePicker::make('archived_date')->date()->columnSpan(3)->native(false),
            SpatieMediaLibraryFileUpload::make('image')->columnSpanFull(),
             ]),
+        ];
+    }
+    public static function userDetailsForm(): array
+    {
+        return [
+        TextInput::make('first_name')
+            ->maxLength(191)->required(),
+    TextInput::make('middle_name')->required()
+            ->maxLength(191),
+    TextInput::make('last_name')->required()
+            ->maxLength(191),
+    TextInput::make('type')
+            ->required(),
+
+    TextInput::make('department')
+            ->maxLength(191),
+    TextInput::make('course')
+            ->maxLength(191),
+    TextInput::make('section')
+            ->maxLength(191),
+    TextInput::make('position')
+            ->maxLength(191),
+    TextInput::make('year')
+            ->maxLength(191),
         ];
     }
 

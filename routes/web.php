@@ -1,14 +1,19 @@
 <?php
 
 use App\Models\Equipment;
+use App\Livewire\UserDashboard;
 use App\Livewire\ViewEquipment;
 use App\Exports\EquipmentExport;
 use App\Livewire\AdminDashboard;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReporController;
+use App\Http\Controllers\ReportController;
 use App\Livewire\Equipments\EditEquipment;
 use App\Livewire\Equiments\CreateEquipment;
 use App\Livewire\Equipments\ListEquipments;
+use App\Livewire\UserDetails\CreateUserDetails;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,42 +27,35 @@ use App\Livewire\Equipments\ListEquipments;
 */
 
 // Route::get('/dashboard', function () {return view('welcome');});
-Route::get('/', function () {return view('welcome');});
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
 
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-    //   return view('dashboard');
-    return redirect()->route('admin.dashboard');
-
-    })->name('dashboard');
-
-    Route::get('/admin-dashboard', AdminDashboard::class)->name('admin.dashboard');
-    Route::prefix('/equipments')->name('equipment.')->group(function () {
-        Route::get('/', ListEquipments::class)->name('index');
-        Route::get('/create', CreateEquipment::class)->name('create');
-        Route::get('/edit/{record}', EditEquipment::class)->name('edit');
-        Route::get('/view/{record}', ViewEquipment::class)->name('view');
-    });
-
-    Route::get('/view/{record}', ViewEquipment::class)->name('view');
+Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified', ])->group(function () {
+   
+   Route::get('/dashboard', function () {
     
-    Route::get('/export/equipment/{id}', function ($id) {
-        $equipment = Equipment::withAllRelations()->findOrFail($id);
+      return Auth::user()->getRedirectRouteBasedOnRole(); 
+    }
+   )->name('dashboard');
 
-        // Generate a dynamic filename
-        $createdDate = $equipment->created_at
-            ? $equipment->created_at->format('F j, Y')
-            : 'Unknown_Date';
-        $filename = $equipment->name . '_' . $equipment->serial_number . '_Created_' . $createdDate . '.xlsx';
-
-        // Export with EquipmentExport
-        return Excel::download(new EquipmentExport($equipment), $filename);
-    })->name('export.equipment');
+    Route::middleware([ 'ensure.user.details'])->group(function(){
+        Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
+        Route::get('/', UserDashboard::class)->name('user.dashboard');
+        Route::prefix('/equipments')->name('equipment.')->group(function () {
+            Route::get('/', ListEquipments::class)->name('index');
+            Route::get('/create', CreateEquipment::class)->name('create');
+            Route::get('/edit/{record}', EditEquipment::class)->name('edit');
+            Route::get('/view/{record}', ViewEquipment::class)->name('view');
+        });
+    
+        Route::get('/view/{record}', ViewEquipment::class)->name('view');
+        Route::get('/export/equipment/{id}', [ReportController::class, 'exportEquipmentDetails'])->name('export.equipment');
+    });
+   
+   
+    Route::get('user-details/form', CreateUserDetails::class)->name('user.createUserDetails');
 
 
 });

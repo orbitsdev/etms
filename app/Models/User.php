@@ -62,15 +62,33 @@ class User extends Authenticatable
     ];
 
 
-    public function userDetails(){
+    public function userDetails()
+    {
         return $this->hasOne(UserDetails::class);
     }
 
-    public function requests(){
+    public function requests()
+    {
         return $this->hasMany(Request::class);
     }
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->role === 'admin';
+    }
+
+    public function getRedirectRouteBasedOnRole()
+    {
+        switch ($this->role) {
+            case 'admin':
+                return 'admin.dashboard';
+
+            case 'manager':
+            case 'requester':
+                return 'user.dashboard';
+
+            default:
+                return '/';
+        }
     }
 }

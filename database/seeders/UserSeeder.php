@@ -32,5 +32,14 @@ class UserSeeder extends Seeder
             'password'=> Hash::make('password'),
             'role'=> 'admin',
          ]);
+
+         User::create([
+            'name'=> 'Brian Orbino',
+            'email'=> 'test@etms.com',
+            'password'=> Hash::make('password'),
+            'role'=> 'requester',
+         ]);
+
+        //  ['admin', 'manager', 'requester']
     }
 }
