@@ -41,11 +41,9 @@ return new class extends Migration
                ]
             )->default('Pending');
             $table->text('purpose')->nullable();
-            $table->string('user_name_snapshot')->nullable();
-            $table->string('equipment_name_snapshot')->nullable();
-            $table->string('equipment_serial_snapshot')->nullable();
-            $table->string('equipment_department')->nullable();
-            $table->foreignId('updated_by')->constrained('users')->onDelete('cascade');
+            $table->json('user_snapshot')->nullable(); // Storing snapshots in JSON format
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('cascade');
+
             // $table->string('name')->nullable();
             $table->timestamps();
         });

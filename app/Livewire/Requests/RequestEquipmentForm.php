@@ -7,6 +7,7 @@ use App\Models\Request;
 use Livewire\Component;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -30,13 +31,29 @@ class RequestEquipmentForm extends Component implements HasForms
             ->model(Request::class);
     }
 
-    public function create(): void
+    public function create()
     {
         $data = $this->form->getState();
+        $user = Auth::user();
+        $userDetails = $user->userDetails;
+
+       
+        $data['user_id'] = $user->id;
+
+        // Combine user details into a JSON snapshot
+        $data['user_snapshot'] = [
+            'name' => $userDetails->fullName(),
+            'department' => $userDetails->department ?? '',
+            'position' => $userDetails->isFaculty() ? $userDetails->position ?? '' : null,
+            'course' => $userDetails->isStudent() ? $userDetails->course ?? '' : null,
+            'section' => $userDetails->isStudent() ? $userDetails->section ?? '' : null,
+        ];
 
         $record = Request::create($data);
 
         $this->form->model($record)->saveRelationships();
+        FilamentForm::success('Equipment created successfully');
+        return redirect()->route('requests.index');
     }
 
     public function render(): View

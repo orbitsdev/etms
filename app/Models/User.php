@@ -77,6 +77,10 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+    public function isRequester()
+    {
+        return $this->role === 'requester';
+    }
 
     public function getRedirectRouteBasedOnRole()
     {

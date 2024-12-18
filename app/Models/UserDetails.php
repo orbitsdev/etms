@@ -29,6 +29,19 @@ class UserDetails extends Model
 
         return "{$currentYear}-{$nextYear}";
     }
+    public function isFaculty()
+    {
+        return $this->type === UserDetails::FACULTY;
+    }
+    public function isStudent()
+    {
+        return $this->type === UserDetails::STUDENT;
+    }
 
+
+    public function fullName(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 
 }

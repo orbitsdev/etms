@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Request extends Model
 {
     use HasFactory;
-
+    protected $casts = [
+        'user_snapshot' => 'array', // Automatically cast JSON to an array
+    ];
 
     public function user()
     {
