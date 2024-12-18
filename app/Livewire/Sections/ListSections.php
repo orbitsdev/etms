@@ -28,11 +28,12 @@ class ListSections extends Component implements HasForms, HasTable
         return $table
             ->query(Section::query())
             ->columns([
+                Tables\Columns\TextColumn::make('course.name')
+                ->toggleable(isToggledHiddenByDefault: false),
+                // ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('course.name')
-                   
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -55,7 +56,7 @@ class ListSections extends Component implements HasForms, HasTable
                     })
                     ->modalCancelAction(fn (StaticAction $action) => $action->label('Close'))
                     ->closeModalByClickingAway(false)->modalWidth('7xl'),
-                
+
                     Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function(Model $record){
                         return route('sections.edit', ['record'=> $record]);})->color('gray'),
 
@@ -70,8 +71,8 @@ class ListSections extends Component implements HasForms, HasTable
             ->groups([
                 Group::make('course.name')
                     ->label('Course') ->titlePrefixedWithLabel(false),
-            ]);
-            
+            ])->defaultGroup('course.name');
+
     }
 
     public function render(): View

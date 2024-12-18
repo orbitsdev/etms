@@ -3,8 +3,13 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\CourseSeeder;
+use Database\Seeders\SectionSeeder;
+use Database\Seeders\DepartmentSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +19,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserSeeder::class
+            UserSeeder::class,
+            DepartmentSeeder::class,
+            CourseSeeder::class,
+            SectionSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

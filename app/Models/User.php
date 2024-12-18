@@ -80,12 +80,13 @@ class User extends Authenticatable
     public function getRedirectRouteBasedOnRole()
     {
         switch ($this->role) {
+
             case 'admin':
-                return 'admin.dashboard';
+                return redirect()->route('admin.dashboard');
 
             case 'manager':
             case 'requester':
-                return 'user.dashboard';
+                return redirect()->route('user.dashboard');
 
             default:
                 return '/';

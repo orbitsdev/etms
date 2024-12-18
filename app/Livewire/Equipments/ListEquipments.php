@@ -39,7 +39,17 @@ class ListEquipments extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'Available' => 'success',
+                    'Reserved' => 'warning',
+                    'Not Available' => 'danger',
+                    'Out of Stock' => 'gray',
+                    'Archived' => 'info',
+                }),
+
+
                 Tables\Columns\TextColumn::make('location')
                     ->wrap(),
                 Tables\Columns\TextColumn::make('archived_date')

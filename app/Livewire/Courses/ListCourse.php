@@ -71,8 +71,11 @@ class ListCourse extends Component implements HasForms, HasTable
                         return view('livewire.view-course', ['record'=> $record]);
                     })
                     ->modalCancelAction(fn (StaticAction $action) => $action->label('Close'))
-                    ->closeModalByClickingAway(false)->modalWidth('7xl'),
-                
+                    ->closeModalByClickingAway(false)->modalWidth('7xl')
+                    ->hidden(function(Model $record){
+                       return !$record->sections()->exists();
+                    }),
+
                     Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function(Model $record){
                         return route('courses.edit', ['record'=> $record]);})->color('gray'),
 

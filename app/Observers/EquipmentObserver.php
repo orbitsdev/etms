@@ -46,10 +46,14 @@ class EquipmentObserver
             $oldStock = $equipment->getOriginal('stock');
             $newStock = $equipment->stock;
 
-            // Log stock change
+
             TrackingController::logStockChange($equipment, $oldStock, $newStock,);
 
-            // Log to history
+
+            if ($newStock <= 0 && $equipment->status !== 'Out of Stock') {
+                $equipment->update(['status' => 'Out of Stock']);
+            }
+
             TrackingController::logHistory($equipment, [
                 'type' => 'Stock Change',
                 'old_stock' => $oldStock,

@@ -19,15 +19,15 @@ class RedirectBasedOnRole
         $user = Auth::user();
 
         if ($user) {
-          
+
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
-            } elseif ($user->role === 'user') {
+            } else if ($user->role === 'user') {
                 return redirect()->route('user.dashboard');
             }
         }
 
-        
+
         return $next($request);
     }
 }

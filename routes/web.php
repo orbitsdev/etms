@@ -44,18 +44,20 @@ Route::get('/', function () {
 
 
 Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified', ])->group(function () {
-   
+
    Route::get('/dashboard', function () {
-    
-      return Auth::user()->getRedirectRouteBasedOnRole(); 
+
+
+
+       return Auth::user()->getRedirectRouteBasedOnRole();
     }
    )->name('dashboard');
 
-    Route::middleware([ 
+    Route::middleware([
         // 'ensure.user.details'
         ])->group(function(){
         Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
-        Route::get('/', UserDashboard::class)->name('user.dashboard');
+        Route::get('/requester', UserDashboard::class)->name('user.dashboard');
         Route::prefix('/equipments')->name('equipment.')->group(function () {
             Route::get('/', ListEquipments::class)->name('index');
             Route::get('/create', CreateEquipment::class)->name('create');
@@ -80,14 +82,14 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
             Route::get('/create', CreateSections::class)->name('create');
             Route::get('/edit/{record}', EditSections::class)->name('edit');
             Route::get('/view/{record}', ViewSection::class)->name('view');
-         
+
 
         });
         // Route::get('/view/{record}', ViewEquipment::class)->name('view');
         Route::get('/export/equipment/{id}', [ReportController::class, 'exportEquipmentDetails'])->name('export.equipment');
     });
-   
-   
+
+
     Route::get('user-details/form', CreateUserDetails::class)->name('user.createUserDetails');
 
 
