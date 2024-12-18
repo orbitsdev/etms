@@ -195,9 +195,9 @@
                         <x-dropdown-link href="{{ route('edit-profile', ['record' => Auth::user()]) }}">
                             {{ __('Edit Profile') }}
                         </x-dropdown-link>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" x-data>
                             @csrf
-                            <x-dropdown-link href="#" @click.prevent="$root.submit();">
+                            <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>

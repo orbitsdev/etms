@@ -3,14 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use App\Models\Equipment;
 use App\Models\Department;
+use App\Models\UserDetails;
 use Illuminate\Http\Request;
+use App\Models\Section as MSection;
 use Filament\Forms\Components\Group;
+use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Forms\Components\FileUpload;
+use Rawilk\FilamentPasswordInput\Password;
 use Filament\Forms\Components\DateTimePicker;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -51,7 +59,7 @@ class FilamentForm extends Controller
                 ]),
         ];
     }
-   
+
 
     public static function departmentForm(): array
     {
@@ -81,7 +89,7 @@ class FilamentForm extends Controller
                     TextInput::make('name')->required()->label('NAME')
                         ->unique(ignoreRecord: true,)
                         ->columnSpanFull(),
-                   
+
 
 
                     TableRepeater::make('course_sections')
@@ -99,48 +107,12 @@ class FilamentForm extends Controller
 
 
 
+
+
         ];
     }
 
-    public static function userDetailsForm(): array
-    {
-        return [
-            Group::make()
-                ->relationship('userDetails')
-                ->schema([
 
-
-                    Section::make('')
-                        ->columns([
-                            'sm' => 3,
-                            'xl' => 6,
-                            '2xl' => 9,
-                        ])
-                        ->schema([
-                            TextInput::make('first_name')
-                                ->maxLength(191)->required(),
-                            TextInput::make('middle_name')->required()
-                                ->maxLength(191),
-                            TextInput::make('last_name')->required()
-                                ->maxLength(191),
-                            TextInput::make('type')
-                                ->required(),
-
-                            TextInput::make('department')
-                                ->maxLength(191),
-                            TextInput::make('course')
-                                ->maxLength(191),
-                            TextInput::make('section')
-                                ->maxLength(191),
-                            TextInput::make('position')
-                                ->maxLength(191),
-                            TextInput::make('year')
-                                ->maxLength(191),
-                        ])
-                ])
-
-        ];
-    }
 
     public static function sectionForm(): array
     {
@@ -154,6 +126,180 @@ class FilamentForm extends Controller
                 ->preload()
                 ->columnSpan(2)
                 ->searchable(),
+
+        ];
+    }
+    public static function userForm(): array{
+        return [
+
+            Section::make('Account Details')
+            // ->description('Update your account details. Ensure all required fields are filled.')
+            ->columns([
+                'sm' => 3,
+                'xl' => 6,
+                '2xl' => 12,
+            ])
+            ->schema([
+                TextInput::make('name')
+                ->required() ->columnSpan(3)
+                ->maxLength(191),
+           TextInput::make('email')
+                ->email()
+                ->columnSpan(3)
+                ->disabled()
+                ->maxLength(191),
+        //    DateTimePicker::make('email_verified_at'),
+           Password::make('password')
+           ->password()
+           ->columnSpan(3)
+           ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+           ->dehydrated(fn(?string $state): bool => filled($state))
+           ->required(fn(string $operation): bool => $operation === 'create')
+           ->label(fn(string $operation) => $operation == 'create' ? 'PASSWORD' : 'NEW PASSWORD'),
+           TextInput::make('role')
+           ->disabled()
+           ->columnSpan(3)
+           ,
+        //    Textarea::make('two_factor_secret')
+        //         ->columnSpanFull(),
+        //    Textarea::make('two_factor_recovery_codes')
+        //         ->columnSpanFull(),
+        //    DateTimePicker::make('two_factor_confirmed_at'),
+        //    TextInput::make('current_team_id')
+        //         ->numeric(),
+        FileUpload::make('profile_photo_path')
+        ->disk('public')
+        ->directory('accounts')
+        ->image()
+        ->imageEditor()
+        // ->required()
+        ->columnSpanFull()
+        ->label('PROFILE'),
+            ]),
+            ...FilamentForm::userDetailsForm(),
+
+        ];
+    }
+
+    public static function userDetailsForm(): array
+    {
+        return [
+            Group::make()
+                ->relationship('userDetails')
+                ->columnSpanFull()
+                ->schema([
+
+
+                    Section::make('User Details')
+                    ->description('Please fill out the required details below.')
+
+                        ->columns([
+                            'sm' => 3,
+                            'xl' => 6,
+                            '2xl' => 9,
+                        ])
+                        ->schema([
+                            Select::make('type')
+                            ->required()
+                            ->label('Designation')
+    ->required()
+    ->hint('Select your designation.')
+                            ->options(UserDetails::TYPE_OPTIONS)
+                            ->default(UserDetails::STUDENT)
+                            ->searchable()
+                            ->columnSpan(function ($state,Get $get, ){
+                                if($get('type')== UserDetails::FACULTY){
+                                    return 6;
+                                }else{
+                                    return 9;
+                                }
+                            })
+                                ->live(debounce: 500)
+                                 ->afterStateUpdated(function ($state, Get $get, Set $set) {
+
+                                 })
+
+                                ,
+
+                                TextInput::make('position')
+                                ->maxLength(191)->columnSpan(3)
+                                ->required()
+                                ->hint('ex. Head Faculty')
+                                ->hidden(function (Get $get) {
+                                    return $get('type') != UserDetails::FACULTY;
+                                })
+                                ,
+                            TextInput::make('first_name')
+                                ->maxLength(191)->required()->columnSpan(3),
+                            TextInput::make('middle_name')->required()->columnSpan(3)
+                                ->maxLength(191),
+                            TextInput::make('last_name')->required()
+                                ->maxLength(191)->columnSpan(3),
+
+
+                                Select::make('department')
+                                ->required()
+                                ->label('Building/Department')
+                                ->options(Department::all()->pluck('name', 'name'))
+                                ->searchable()
+                                ->columnSpan(3)
+                                ->createOptionForm(FilamentForm::departmentForm()),
+
+                                 Select::make('course')
+                                ->required()
+                                ->label('Course')
+                                ->options(Course::all()->pluck('name', 'name'))
+                                ->searchable()
+                                ->columnSpan(3)
+                                ->live(debounce: 500)
+                                 ->afterStateUpdated(function ($state, Get $get, Set $set) {
+
+                                 })
+                                 ->hidden(function (Get $get) {
+                                    return $get('type') != UserDetails::STUDENT;
+                                })
+                                 ,
+
+
+                             Select::make('section')->options(function (Get $get) {
+                                        if (!empty($get('course'))) {
+                                            return MSection::whereHas('course', function($query) use($get){
+                                                return $query->where('name', $get('course'));
+                                            })->get()->pluck('name', 'name');
+                                        } else {
+                                            return [];
+                                        }
+                                    })
+                                    // ->helperText('If no section is available, it might be no sections was added in the system')
+                                        ->required()
+                                        ->preload()
+                                        ->searchable()
+                                        ->native(false)
+
+                                        ->columnSpan(3)
+                                        ->hidden(function (Get $get) {
+                                            if($get('type') != UserDetails::STUDENT){
+                                                return true;
+                                            }
+
+                                            return $get('course') == null;
+                                        }),
+
+
+
+
+
+                                ]),
+
+                            TextInput::make('year')
+                            ->label('Academic Year')
+                            // ->unique(ignoreRecord: true)
+                            ->mask('9999-9999')
+                            ->columnSpan(3)
+                            ->default(UserDetails::suggestion())
+                                ,
+
+                ])
 
         ];
     }

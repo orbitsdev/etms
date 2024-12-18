@@ -1,6 +1,6 @@
 <div class="flex flex-col justify-center items-center min-h-screen bg-gray-100">
     <!-- Logout Button -->
-    <div class="w-full max-w-4xl mb-4 mt-8">
+    <div class="w-full max-w-4xl mb-4 mt-2">
         <div class="flex justify-end">
             <!-- Logout Form -->
             <form action="{{ route('logout') }}" method="POST">
@@ -23,7 +23,7 @@
 
 
     <!-- Form Card -->
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-5xl">
 
         <h2 class="text-2xl font-bold  text-gray-800 text-center">Complete Your Details</h2>
         <p class="text-sm text-gray-600 mb-6 text-center">
@@ -37,6 +37,13 @@
             <!-- Submit Button -->
             <x-filament::button type="submit" class="mt-4 w-full">
                 Update Details
+
+                <div wire:loading wire:target="save" class="ml-2">
+                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                </div>
             </x-filament::button>
         </form>
     </div>

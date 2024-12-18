@@ -18,11 +18,16 @@ class EnsureUserDetailsExist
     {
         $user = Auth::user();
 
-        if ($user && !$user->userDetails && $user->role != 'admin') {
-            // Redirect to the user details form if UserDetails is missing
-            return redirect()->route('user.createUserDetails')
-                             ->with('warning', 'Please complete your user details.');
+        if ($user->isAdmin()) {
+            return $next($request);
         }
+         if (!$user->userDetails) {
+
+            return redirect()->route('edit-profile',['record'=> $user])
+                ->with('warning', 'Please complete your user details.');
+        }
+
+
 
         return $next($request);
     }
