@@ -313,7 +313,7 @@ class FilamentForm extends Controller
                 ->schema([
                     DatePicker::make('request_date')->date()->columnSpan(4)->required()->closeOnDateSelection()->minDate(today()),
                     //   DateTimePicker::make('actual_return_date'),
-                    DatePicker::make('return_date')->date()->columnSpan(4)->required()->closeOnDateSelection()->minDate(today()),
+                    DatePicker::make('actual_return_date')->date()->columnSpan(4)->required()->closeOnDateSelection()->minDate(today()),
                     Textarea::make('purpose')
                         ->columnSpanFull()
                         ->required()

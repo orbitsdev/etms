@@ -12,35 +12,38 @@ use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
 
-class RequestEquipmentForm extends Component implements HasForms
+class EditEquipmentRequest extends Component implements HasForms
 {
     use InteractsWithForms;
 
     public ?array $data = [];
 
+    public Request $record;
+
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form->fill($this->record->attributesToArray());
     }
 
     public function form(Form $form): Form
     {
         return $form
-            ->schema(FilamentForm::requestEquipmentForm())->columns(4)
+        ->schema(FilamentForm::requestEquipmentForm())->columns(4)
             ->statePath('data')
-            ->model(Request::class);
+            ->model($this->record);
     }
 
-    public function create()
+    public function save()
     {
         $data = $this->form->getState();
+
         $user = Auth::user();
         $userDetails = $user->userDetails;
 
 
         $data['user_id'] = $user->id;
 
-        // Combine user details into a JSON snapshot
+       
         $data['user_snapshot'] = [
             'name' => $userDetails->fullName,
             'department' => $userDetails->department ?? '',
@@ -48,16 +51,13 @@ class RequestEquipmentForm extends Component implements HasForms
             'course' => $userDetails->isStudent() ? $userDetails->course ?? '' : null,
             'section' => $userDetails->isStudent() ? $userDetails->section ?? '' : null,
         ];
-
-        $record = Request::create($data);
-
-        $this->form->model($record)->saveRelationships();
+        $this->record->update($data);
         FilamentForm::success('Equipment created successfully');
-        return redirect()->route('requests.index');
+        return redirect()->route('requests.index');;
     }
 
     public function render(): View
     {
-        return view('livewire.requests.request-equipment-form');
+        return view('livewire.requests.edit-equipment-request');
     }
 }

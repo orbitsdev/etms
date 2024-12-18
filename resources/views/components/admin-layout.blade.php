@@ -9,10 +9,10 @@
         <!-- Static sidebar for desktop -->
         <div class="hidden lg:fixed lg:inset-y-0 lg:z-20 lg:flex lg:w-80 lg:flex-col">
          <!-- Sidebar component, swap this element with another sidebar if you like -->
-         <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-            <div class="mt-3 flex h-16 shrink-0 items-center space-x-2">
+         <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4 w-[22rem]">
+            <div class="mt-3 flex h-16 shrink-0 items-center ">
                 <!-- Dropdown Container -->
-                <img class="h-14 w-14" src="{{asset('images/sksu_logo.png')}}" alt="Your Company">
+                {{-- <img class="h-14 w-14" src="{{asset('images/sksu_logo.png')}}" alt="Your Company"> --}}
 
 
                 <!-- System Title -->
@@ -20,9 +20,9 @@
                     <p class="text-xl font-bold text-sksu-800">{{Auth::user()->name ??''}}</p>
                     <p class="text-xs drop-shadow-sm text-sksu-900">{{Auth::user()->email}}</p>
                 </div> --}}
-                <div>
-                    <p class="text-2xl font-bold text-sksu-800">ETMS</p>
-                    <p class="text-xs drop-shadow-sm text-sksu-900">Equipment Tracking Management System</p>
+                <div class="flex justify-center items-center text-center flex-col mt-24">
+                    <p class="text-center text-5xl font-bold text-sksu-900">ETMS</p>
+                    <p class="text-center text-sm mt-1 drop-shadow-sm text-sksu-900">Equipment Tracking Management System</p>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
 
 
 
-           <nav class="flex flex-1 flex-col">
+           <nav class="flex flex-1 flex-col mt-8 ">
              <ul role="list" class="flex flex-1 flex-col gap-y-7 ">
                  <li>
                      <ul role="list" class="-mx-2 space-y-1  ">
@@ -145,7 +145,7 @@
                     @can('is-requester')
                     <div class="mt-6">
                         <li class="">
-                            <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div>
+                            {{-- <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div> --}}
                             <ul role="list" class="-mx-2 mt-2 space-y-1">
 
                                 <li>

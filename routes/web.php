@@ -19,6 +19,7 @@ use App\Livewire\Departments\ListDepartment;
 use App\Livewire\Equipments\EditEquipment;
 use App\Livewire\Equiments\CreateEquipment;
 use App\Livewire\Equipments\ListEquipments;
+use App\Livewire\Requests\EditEquipmentRequest;
 use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\Sections\CreateSections;
@@ -92,6 +93,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::prefix('/requests')->name('requests.')->group(function () {
             Route::get('/', ListRequesterRequest::class)->name('index');
             Route::get('/form', RequestEquipmentForm::class)->name('create');
+            Route::get('/form/update/{record}', EditEquipmentRequest::class)->name('edit');
             Route::get('/view/{record}', ViewRequesterRequest::class)->name('view');
 
 

@@ -10,6 +10,7 @@ use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Actions\ActionGroup;
@@ -27,37 +28,50 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
         return $table
             ->query(Request::query())
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.userDetails.fullName')
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('user.userDetails', function ($query) use ($search) {
+                            $query->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%");
+                        });
+                       })->label('Request By'),
+                       TextColumn::make('items.equipment.name')
+    ->listWithLineBreaks()->label('Items'),
                 Tables\Columns\TextColumn::make('request_date')
-                    ->dateTime()
-                    ->sortable(),
+                    ->date()
+                   ,
                 Tables\Columns\TextColumn::make('actual_return_date')
-                    ->dateTime()
-                    ->sortable(),
+                    ->date()
+                   ,
                 Tables\Columns\TextColumn::make('pickup_date')
                     ->dateTime()
-                    ->sortable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                   ,
                 Tables\Columns\TextColumn::make('return_date')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('user_name_snapshot')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('equipment_name_snapshot')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('equipment_serial_snapshot')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('equipment_department')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                   ,
+
+                Tables\Columns\TextColumn::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'Pending' => 'gray',
+                    'Approved' => 'success',
+                    'Ready for Pickup' => 'warning',
+                    'Picked Up' => 'success',
+                    'Delivered' => 'success',
+                    'Returned' => 'success',
+                    'Cancelled' => 'danger',
+                    'Completed' => 'success',
+                })
+                ,
+
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                ->label('Last Update')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -95,7 +109,7 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
                     ->closeModalByClickingAway(false)->modalWidth('7xl'),
 
                     Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function(Model $record){
-                        return route('equipment.edit', ['record'=> $record]);})->color('gray'),
+                        return route('requests.edit', ['record'=> $record]);})->color('gray'),
 
                     Tables\Actions\DeleteAction::make()->color('gray'),
                 ]),

@@ -39,9 +39,13 @@ class UserDetails extends Model
     }
 
 
-    public function fullName(): string
+
+    public function getFullNameAttribute()
     {
-        return "{$this->first_name} {$this->last_name}";
+        $firstName = $this->first_name ?? '';
+        $lastName = $this->last_name ?? '';
+
+        return $firstName . ' ' . $lastName;
     }
 
 }
