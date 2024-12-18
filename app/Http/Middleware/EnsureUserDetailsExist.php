@@ -17,7 +17,7 @@ class EnsureUserDetailsExist
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-
+   
         if ($user->isAdmin()) {
             return $next($request);
         }
