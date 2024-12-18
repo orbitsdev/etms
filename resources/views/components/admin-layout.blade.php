@@ -10,19 +10,30 @@
         <div class="hidden lg:fixed lg:inset-y-0 lg:z-20 lg:flex lg:w-80 lg:flex-col">
          <!-- Sidebar component, swap this element with another sidebar if you like -->
          <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-           <div class="mt-3 flex h-16 shrink-0 items-center space-x-2">
-               <img class="h-14 w-auto" src="{{asset('images/sksu_logo.png')}}" alt="Your Company">
-               <div class="">
-                <p class="text-2xl text-sksu-800 font-bold"> ETMS</p>
-                <p class="text-xs text-sksu-900 drop-shadow-sm "> Equipment Tracking Management System</p>
+            <div class="mt-3 flex h-16 shrink-0 items-center space-x-2">
+                <!-- Dropdown Container -->
+                <img class="h-14 w-14" src="{{asset('images/sksu_logo.png')}}" alt="Your Company">
+
+
+                <!-- System Title -->
+                {{-- <div>
+                    <p class="text-xl font-bold text-sksu-800">{{Auth::user()->name ??''}}</p>
+                    <p class="text-xs drop-shadow-sm text-sksu-900">{{Auth::user()->email}}</p>
+                </div> --}}
+                <div>
+                    <p class="text-2xl font-bold text-sksu-800">ETMS</p>
+                    <p class="text-xs drop-shadow-sm text-sksu-900">Equipment Tracking Management System</p>
+                </div>
             </div>
 
-           </div>
-        
+
+
+
+
            <nav class="flex flex-1 flex-col">
              <ul role="list" class="flex flex-1 flex-col gap-y-7 ">
                <li>
-
+                @can('is-admin')
                  <ul role="list" class="-mx-2 space-y-1  ">
 
                     <div class="text-sm font-semibold leading-6 text-gray-400"></div>
@@ -42,7 +53,7 @@
                         </a>
                       </li>
                     </ul>
-                    @can('is-admin')
+
                     <div class="mt-6">
                         <li class="">
                             <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div>
@@ -89,7 +100,7 @@
                               </ul>
                         </li>
                     </div>
-                    @endcan
+
                     <div class="">
                         <li class="mt-8">
                             <div class="text-sm font-semibold leading-6 text-sksu-800">CONTENT </div>
@@ -134,22 +145,80 @@
 
                  </ul>
                </li>
-
+               @endcan
                <li class="mt-auto">
-                   <form action="{{route('logout')}}" method="POST">
-                       @csrf
-                       <button class="group -mx-2 flex gap-x-3 rounded-md p-2 text-lg leading-6 text-gray-700 hover:bg-gray-50 hover:text-green-600 w-full">
+                <div x-data="{ dropdownOpen: false }" class="relative">
+                    <!-- Button to Open Dropdown -->
+                    <button
+                        @click="dropdownOpen = !dropdownOpen"
+                        type="button"
+                        class="group -mx-2 flex gap-x-3 rounded-md p-2 text-lg leading-6 text-gray-700 hover:bg-gray-50 hover:text-green-600 w-full"
+                        id="user-menu-button"
+                    >
+                        <span class="sr-only">Open user menu</span>
+
+                        {{-- <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                        </svg>
+                        <p>
+                            Logout
+
+                        </p> --}}
+ <img
+                            class="h-10 w-10 rounded-full object-cover border-4 border-sksu-700"
+                            src="{{Auth::user()->getImage()}}"
+                            alt="Profile"
+                        >
+                         <div>
+                    <p class="text-lg ">{{Auth::user()->name ??''}}</p>
+                    <p class="text-xs drop-shadow-sm text-gray-700">{{Auth::user()->email}}</p>
+                </div>
+
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                        x-show="dropdownOpen"
+                        @click.outside="dropdownOpen = false"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-90"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-90"
+                        class="absolute bottom-0 right-0 z-50 mt-[-10rem] w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                    >
+                        <!-- Dropdown Options -->
+                        <x-dropdown-link href="{{ Auth::user()->getImage() }}" target="_blank">
+                            {{ __('View Image') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('edit-profile', ['record' => Auth::user()]) }}">
+                            {{ __('Edit Profile') }}
+                        </x-dropdown-link>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-dropdown-link href="#" @click.prevent="$root.submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Static Logout Button in Bottom Navigation -->
+                {{-- <form action="{{ route('logout') }}" method="POST" class="w-full">
+                    @csrf
+                    <button class="group -mx-2 flex gap-x-3 rounded-md p-2 text-lg leading-6 text-gray-700 hover:bg-gray-50 hover:text-green-600 w-full">
                         <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-                          </svg>
+                        </svg>
                         Logout
                     </button>
-                   </form>
+                </form> --}}
+            </li>
 
-               </li>
              </ul>
            </nav>
-         
+
          </div>
        </div>
  </div>

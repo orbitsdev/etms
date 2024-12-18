@@ -7,6 +7,7 @@ use App\Models\Request;
 use App\Models\UserDetails;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -90,6 +91,31 @@ class User extends Authenticatable
 
             default:
                 return '/';
+        }
+    }
+
+
+    public function getImage()
+    {
+        if (!empty($this->profile_photo_path) && Storage::disk('public')->exists($this->profile_photo_path)) {
+            return Storage::disk('public')->url($this->profile_photo_path);
+        } else {
+            return asset('images/placeholder-image.jpg'); // Return default image URL
+        }
+    }
+
+    public function routeBaseOnRole()
+    {
+        switch ($this->role) {
+            case 'admin':
+                return route('admin.dashboard');
+            case 'manager':
+                return route('user.dashboard');
+            case 'requester':
+                return route('user.dashboard');
+
+            default:
+                return route('unauthorizepage');
         }
     }
 }
