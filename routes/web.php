@@ -19,12 +19,15 @@ use App\Livewire\Departments\ListDepartment;
 use App\Livewire\Equipments\EditEquipment;
 use App\Livewire\Equiments\CreateEquipment;
 use App\Livewire\Equipments\ListEquipments;
+use App\Livewire\Requests\ListRequesterRequest;
+use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\Sections\CreateSections;
 use App\Livewire\Sections\EditSections;
 use App\Livewire\Sections\ListSections;
 use App\Livewire\User\EditUserDetails;
 use App\Livewire\UserDetails\CreateUserDetails;
 use App\Livewire\ViewCourse;
+use App\Livewire\ViewRequesterRequest;
 use App\Livewire\ViewSection;
 
 /*
@@ -85,8 +88,19 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
 
 
         });
+
+        Route::prefix('/requests')->name('requests.')->group(function () {
+            Route::get('/', ListRequesterRequest::class)->name('index');
+            Route::get('/form', RequestEquipmentForm::class)->name('create');
+            Route::get('/view/{record}', ViewRequesterRequest::class)->name('view');
+
+
+
+        });
         // Route::get('/view/{record}', ViewEquipment::class)->name('view');
         Route::get('/export/equipment/{id}', [ReportController::class, 'exportEquipmentDetails'])->name('export.equipment');
+
+
     });
 
 

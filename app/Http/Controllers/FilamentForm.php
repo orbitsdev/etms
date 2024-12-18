@@ -17,9 +17,11 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Rawilk\FilamentPasswordInput\Password;
 use Filament\Forms\Components\DateTimePicker;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
@@ -303,6 +305,98 @@ class FilamentForm extends Controller
 
         ];
     }
+
+    public static function requestEquipmentForm(): array
+    {
+        return [
+
+            Group::make()
+            ->columnSpanFull()
+            ->columns([
+                'sm' => 3,
+                'xl' => 6,
+                '2xl' => 8,
+            ])
+            ->schema([
+                DatePicker::make('request_date')->date()->native(false)  ->columnSpan(4)->required() ->closeOnDateSelection()->minDate(today()),
+                //   DateTimePicker::make('actual_return_date'),
+                DatePicker::make('return_date')->date()->native(false)  ->columnSpan(4)->required() ->closeOnDateSelection()->minDate(today()),
+                  Textarea::make('purpose')
+                  ->columnSpanFull()
+                  ->required()
+                ->rows(5)
+            ])->columnSpan(['lg' => 2]),
+            Section::make()
+            ->columnSpanFull()
+            ->columns([
+                'sm' => 3,
+                'xl' => 6,
+                '2xl' => 8,
+            ])
+            ->schema([
+                TableRepeater::make('request_items')
+        ->relationship('items')
+        ->columnWidths([
+
+            'quantiy' => '200px',
+        ])
+            ->schema([
+                Select::make('equipment_id')
+                ->label('Equipment')
+                ->relationship(
+                    name: 'equipment',
+                    titleAttribute: 'equipment.name',
+                )
+                ->live(debounce: 500)
+                ->afterStateUpdated(function ($state, Get $get, Set $set) {
+                    $set('quantiy', null);
+                })
+                ->distinct()
+                ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                ->preload()
+
+                ->searchable()
+                ->required(),
+                TextInput::make('quantiy')
+                ->live(debounce: 500)
+                ->default(1)
+                ->required()
+                ->numeric()
+                ->minValue(0)
+                ->maxValue(function(Get $get, Set $set){
+                    return $get('equipment_id')? Equipment::find($get('equipment_id'))->quantity : 0;
+                }),
+            ])
+            ->addActionLabel('Add Item')
+            ->withoutHeader()
+            ->columnSpan('full')
+            ->label('Items')
+            ->minItems(1)
+            ])->columnSpan(['lg' => 2]),
+
+
+
+
+        //   TextInput::make('user_id')
+        //     ->required()
+        //     ->numeric(),
+
+    //   DateTimePicker::make('pickup_date'),
+    //   TextInput::make('user_name_snapshot')
+    //         ->maxLength(191),
+    //   TextInput::make('equipment_name_snapshot')
+    //         ->maxLength(191),
+    //   TextInput::make('equipment_serial_snapshot')
+    //         ->maxLength(191),
+    //   TextInput::make('equipment_department')
+    //         ->maxLength(191),
+    //   TextInput::make('status')
+    //         ->required(),
+
+        ];
+    }
+
+
 
     public static function success(String $title = 'Success', String $body = null)
     {

@@ -32,28 +32,29 @@
 
            <nav class="flex flex-1 flex-col">
              <ul role="list" class="flex flex-1 flex-col gap-y-7 ">
-               <li>
-                @can('is-admin')
-                 <ul role="list" class="-mx-2 space-y-1  ">
+                 <li>
+                     <ul role="list" class="-mx-2 space-y-1  ">
 
-                    <div class="text-sm font-semibold leading-6 text-gray-400"></div>
-                    <ul role="list" class="-mx-2 mt-2 space-y-1">
-                    <li class=" mb-6">
-                        <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
-                        <a href="#"
-                        class="inactive-link">
-                        <div class="flex justify-center items-center">
+                         {{-- <div class="text-sm font-semibold leading-6 text-gray-400"></div> --}}
+                         @can('is-admin')
+                         <ul role="list" class="-mx-2 mt-2 space-y-1">
+                             <li class=" mb-6">
+                                 <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
+                                 <a href="#"
+                                 class="inactive-link">
+                                 <div class="flex justify-center items-center">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 ">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                            </svg>
-                        </div>
+                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 ">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                    </svg>
+                                </div>
 
-                          <span class="ml-2 truncate">Dashboard</span>
-                        </a>
-                      </li>
+                                <span class="ml-2 truncate">Dashboard</span>
+                            </a>
+                        </li>
                     </ul>
-
+                    @endcan
+                    @can('is-admin')
                     <div class="mt-6">
                         <li class="">
                             <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div>
@@ -100,7 +101,8 @@
                               </ul>
                         </li>
                     </div>
-
+                    @endcan
+                    @can('is-admin')
                     <div class="">
                         <li class="mt-8">
                             <div class="text-sm font-semibold leading-6 text-sksu-800">CONTENT </div>
@@ -138,14 +140,44 @@
                               </ul>
                         </li>
                     </div>
+                    @endcan
 
+                    @can('is-requester')
+                    <div class="mt-6">
+                        <li class="">
+                            <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div>
+                            <ul role="list" class="-mx-2 mt-2 space-y-1">
+
+                                <li>
+                                  <a href="{{route('requests.index')}}"
+                                  class="{{RouteManager::isCurrentPage(Session::get('current_route_name'),['requests.index'],'active-link','inactive-link') }}">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                   </svg>
+
+
+                                    <span class="ml-2 truncate">My Request</span>
+                                    <div>
+                                        <span class="inline-flex items-center justify-center px-1.5 py-1 text-xs rubik-500 leading-none text-green-100 bg-green-600 rounded-full">
+                                        40
+                                        </span>
+
+                                  </div>
+                                  </a>
+                                </li>
+
+
+                              </ul>
+                        </li>
+                    </div>
+                    @endcan
 
 
 
 
                  </ul>
                </li>
-               @endcan
+
                <li class="mt-auto">
                 <div x-data="{ dropdownOpen: false }" class="relative">
                     <!-- Button to Open Dropdown -->

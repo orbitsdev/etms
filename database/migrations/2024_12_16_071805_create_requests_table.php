@@ -29,10 +29,6 @@ return new class extends Migration
             $table->timestamp('actual_return_date')->nullable();
             $table->timestamp('pickup_date')->nullable();
             $table->timestamp('return_date')->nullable();
-            $table->string('user_name_snapshot')->nullable();
-            $table->string('equipment_name_snapshot')->nullable();
-            $table->string('equipment_serial_snapshot')->nullable();
-            $table->string('equipment_department')->nullable();
             $table->enum('status', [
                 'Pending',
                 'Approved',
@@ -44,8 +40,13 @@ return new class extends Migration
                 'Completed'
                ]
             )->default('Pending');
-
-            $table->string('name')->nullable();
+            $table->text('purpose')->nullable();
+            $table->string('user_name_snapshot')->nullable();
+            $table->string('equipment_name_snapshot')->nullable();
+            $table->string('equipment_serial_snapshot')->nullable();
+            $table->string('equipment_department')->nullable();
+            $table->foreignId('updated_by')->constrained('users')->onDelete('cascade');
+            // $table->string('name')->nullable();
             $table->timestamps();
         });
     }

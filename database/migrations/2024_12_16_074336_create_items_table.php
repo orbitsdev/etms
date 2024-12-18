@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('request_id')->constrained()->onDelete('cascade');
             $table->foreignId('equipment_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('quantity')->default(1);
             $table->enum('status', [

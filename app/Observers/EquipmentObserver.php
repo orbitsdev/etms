@@ -66,6 +66,8 @@ class EquipmentObserver
             $oldStatus = $equipment->getOriginal('status');
             $newStatus = $equipment->status;
 
+            // $equipment->updated_by = Auth::user()->id;
+
             // Log to history
             TrackingController::logHistory($equipment, [
                 'type' => 'Status Change',

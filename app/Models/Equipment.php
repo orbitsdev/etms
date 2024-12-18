@@ -53,6 +53,9 @@ class Equipment extends Model implements HasMedia
     public function history(){
         return $this->hasMany(History::class);
     }
+    public function items(){
+        return $this->hasMany(Item::class);
+    }
 
     public function registerMediaCollections(): void
     {
@@ -102,5 +105,7 @@ class Equipment extends Model implements HasMedia
         'media',
     ]);
 }
+
+
 
 }
