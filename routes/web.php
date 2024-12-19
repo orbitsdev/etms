@@ -19,6 +19,7 @@ use App\Livewire\Departments\EditDepartment;
 use App\Livewire\Departments\ListDepartment;
 use App\Livewire\Equipments\EditEquipment;
 use App\Livewire\Equiments\CreateEquipment;
+use App\Livewire\Equipment\ListEquipmentView;
 use App\Livewire\Equipments\ListEquipments;
 use App\Livewire\Request\ListOfEquipmetnRequest;
 use App\Livewire\Requests\EditEquipmentRequest;
@@ -66,6 +67,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::get('/requester', UserDashboard::class)->name('user.dashboard');
         Route::prefix('/equipments')->name('equipment.')->group(function () {
             Route::get('/', ListEquipments::class)->name('index');
+            Route::get('/list', ListEquipmentView::class)->name('list');
             Route::get('/create', CreateEquipment::class)->name('create');
             Route::get('/edit/{record}', EditEquipment::class)->name('edit');
             Route::get('/view/{record}', ViewEquipment::class)->name('view');

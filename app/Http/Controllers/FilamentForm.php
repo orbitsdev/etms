@@ -366,6 +366,7 @@ class FilamentForm extends Controller
                                 ->relationship(
                                     name: 'equipment',
                                     titleAttribute: 'name',
+                                    modifyQueryUsing: fn (Builder $query) => $query->available(),
                                 )
                                 ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} - ({$record->stock})")
                                 ->live(debounce: 500)
@@ -445,7 +446,9 @@ class FilamentForm extends Controller
             Select::make('status')
 
             ->live(debounce: 500)
-            ->options(Request::STATUS_OPTIONS)
+            ->options(function(Model $record){
+                return $record->getAvailableStatusTransitions();
+            })
             ->native(false)->columnSpan(3),
 
             Textarea::make('status_reason')
@@ -479,4 +482,7 @@ class FilamentForm extends Controller
             ->danger()
             ->send();
     }
+
+
+    
 }

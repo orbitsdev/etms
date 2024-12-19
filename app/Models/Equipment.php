@@ -110,4 +110,24 @@ class Equipment extends Model implements HasMedia
 
 
 
+
+public function scopeAvailable($query){
+    return $query->where('status', Equipment::AVAILABLE);
+}
+public function scopeReserved($query){
+    return $query->where('status', Equipment::RESERVED);
+}
+public function scopeNotAvailable($query){
+    return $query->where('status', Equipment::NOTAVAILABLE);
+}
+public function scopeOutOfStocks($query){
+    return $query->where('status', Equipment::OUTOFSTOCK);
+}
+public function scopeUnderMaintenance($query){
+    return $query->where('status', Equipment::UNDER_MAINTENANCE);
+}
+public function scopeArchived($query){
+    return $query->where('status', Equipment::ARCHIVED);
+}
+
 }

@@ -39,26 +39,26 @@ class ListEquipments extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('serial_number')
-                    ->searchable(isIndividual : true),
+                    ->searchable(isIndividual: true),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'Available' => 'success',
-                    'Reserved' => 'warning',
-                    'Not Available' => 'danger',
-                    'Out of Stock' => 'gray',
-                    'Archived' => 'info',
-                    default=> 'gray'
-                }),
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'Available' => 'success',
+                        'Reserved' => 'warning',
+                        'Not Available' => 'danger',
+                        'Out of Stock' => 'gray',
+                        'Archived' => 'info',
+                        default => 'gray'
+                    }),
 
 
                 Tables\Columns\TextColumn::make('location')
                     ->wrap(),
                 Tables\Columns\TextColumn::make('issue_description')
-                ->label('Issue')
+                    ->label('Issue')
                     ->wrap()->formatStateUsing(function (Model $record) {
                         return $record->status == Equipment::UNDER_MAINTENANCE ? $record->issue_description : '';
                     }),
@@ -81,11 +81,11 @@ class ListEquipments extends Component implements HasForms, HasTable
 
                 Action::make('create')
 
-                ->color('primary')
-                ->button()
-                ->url(function(){
-                    return route('equipment.create');
-                }),
+                    ->color('primary')
+                    ->button()
+                    ->url(function () {
+                        return route('equipment.create');
+                    }),
 
 
 
@@ -96,81 +96,90 @@ class ListEquipments extends Component implements HasForms, HasTable
             ])
             ->filters([
                 SelectFilter::make('status')
-                ->options(Equipment::STATUS_OPTIONS)->searchable()
+                    ->options(Equipment::STATUS_OPTIONS)->searchable()
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 ActionGroup::make([
                     Action::make('View')
-                    ->icon('heroicon-s-eye')
-                    ->modalSubmitAction(false)
-                    ->modalContent(function(Model $record){
-                        return view('livewire.view-equipment', ['record'=> $record]);
-                    })
-                    ->modalCancelAction(fn (StaticAction $action) => $action->label('Close'))
-                    ->closeModalByClickingAway(false)->modalWidth('7xl'),
+                        ->icon('heroicon-s-eye')
+                        ->modalSubmitAction(false)
+                        ->modalContent(function (Model $record) {
+                            return view('livewire.view-equipment', ['record' => $record]);
+                        })
+                        ->modalCancelAction(fn(StaticAction $action) => $action->label('Close'))
+                        ->closeModalByClickingAway(false)->modalWidth('7xl'),
 
                     Action::make('manage')
-                    ->label('Manage')
-                    ->icon('heroicon-s-pencil-square')
-                    ->modalWidth(MaxWidth::SixExtraLarge)
-                    ->fillForm(function (Model $record) {
+                        ->label('Manage')
+                        ->icon('heroicon-s-pencil-square')
+                        ->modalWidth(MaxWidth::SixExtraLarge)
+                        ->fillForm(function (Model $record) {   
 
-                        return [
-                            'status' => $record->status,
-                             'issue_description' => $record->issue_description,
-                        ];
-                    })
-                    ->form(FilamentForm::manageEquipment())
-             
-                    ->action(function (Model $record,array $data) {
-                        
-                           $record->status = $data['status'];
-                           if($data['issue_description']){
+                            if($record->status == Equipment::UNDER_MAINTENANCE){
+                                return [
+                                    'status' => $record->status,
+                                    'issue_description' => $record->issue_description,
+                                ];
+                                
+                            }else{
+                                
+                                return [
+                                    'status' => $record->status,
+                                ];
+                            }
+                        })
+                        ->form(FilamentForm::manageEquipment())
+
+                        ->action(function (Model $record, array $data) {
+
+                            $record->status = $data['status'];
+                            if ($data['status'] === Equipment::UNDER_MAINTENANCE) {
                                 $record->issue_description = $data['issue_description'];
-                           }
-                           $record->reported_by = Auth::user()->id; 
-                           $record->save();
+                               
+                            }
+                            if ($data['status'] === Equipment::ARCHIVED) {
+                                $record->archived_date = now();
+                            }
+                            $record->reported_by = Auth::user()->id;
+                            $record->save();
 
-                if ($data['status'] === Equipment::UNDER_MAINTENANCE) {
-                MaintenanceLog::create([
-                    'equipment_id' => $record->id,
-                    'issue_description' => $data['issue_description'],
-                    'status' => MaintenanceLog::UNDER_MAINTENANCE,
-                    'reported_by' => Auth::id(),
-                    'reported_date' => now(),
-                ]);
-            }
-                           FilamentForm::success('Equipment was'.$data['status']);
-                        
+                            if ($data['status'] === Equipment::UNDER_MAINTENANCE) {
+                                MaintenanceLog::create([
+                                    'equipment_id' => $record->id,
+                                    'issue_description' => $data['issue_description'],
+                                    'status' => MaintenanceLog::UNDER_MAINTENANCE,
+                                    'reported_by' => Auth::id(),
+                                    'reported_date' => now(),
+                                ]);
+                            }
 
-                    })->color('gray'),
+                            FilamentForm::success('Equipment was' . $data['status']);
+                        })->color('gray'),
 
                     Action::make('Download')
 
-                    ->action(function (Model $record) {
+                        ->action(function (Model $record) {
 
 
 
-                        // Generate a dynamic filename
-                        $createdDate = $record->created_at
-                            ? $record->created_at->format('F j, Y')
-                            : 'Unknown_Date';
-                        $filename = $record->name . '_' . $record->serial_number . '_Created_' . $createdDate . '.xlsx';
+                            // Generate a dynamic filename
+                            $createdDate = $record->created_at
+                                ? $record->created_at->format('F j, Y')
+                                : 'Unknown_Date';
+                            $filename = $record->name . '_' . $record->serial_number . '_Created_' . $createdDate . '.xlsx';
 
-                        return Excel::download(new EquipmentExport($record), $filename);
+                            return Excel::download(new EquipmentExport($record), $filename);
+                        })
 
-                    })
 
-
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->requiresConfirmation()
-                    ->modalHeading('Export Winners')
-                    ->modalSubheading('Download the winners of the event as an Excel report for your reference.')
-                    ->modalButton('Download Report')
-
-                    ,
-                    Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function(Model $record){
-                        return route('equipment.edit', ['record'=> $record]);})->color('gray'),
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->requiresConfirmation()
+                        ->modalHeading('Export Winners')
+                        ->modalSubheading('Download the winners of the event as an Excel report for your reference.')
+                        ->modalButton('Download Report'),
+                    Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function (Model $record) {
+                        return route('equipment.edit', ['record' => $record]);
+                    })->color('gray'),
 
                     Tables\Actions\DeleteAction::make()->color('gray'),
                 ]),
@@ -182,7 +191,7 @@ class ListEquipments extends Component implements HasForms, HasTable
             ])
             ->groups([
                 Group::make('status')
-                ->titlePrefixedWithLabel(false),
+                    ->titlePrefixedWithLabel(false),
 
             ])->defaultGroup('status');
     }

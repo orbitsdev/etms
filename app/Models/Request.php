@@ -30,9 +30,57 @@ class Request extends Model
         self::RETURNED => self::RETURNED,
         self::CANCELED => self::CANCELED,
         self::COMPLETED => self::COMPLETED,
-
     ];
+    public const IF_CANCELED = [
+        self::APPROVED => self::APPROVED,
+    ];
+    public const IF_PENDING = [
+        self::APPROVED => self::APPROVED,
+        self::CANCELED => self::CANCELED,
+    ];
+    public const IF_APPROVED = [
+        self::CANCELED => self::CANCELED,
+        self::READY_FOR_PICKUP => self::READY_FOR_PICKUP,
+        self::PICKUP => self::PICKUP,
+      
+    ];
+    public const IF_READY_FOR_PICKUP = [
+        self::PICKUP => self::PICKUP,
+        self::CANCELED => self::CANCELED,
+      
+    ];
+
+    public const IF_PICKUP = [
+        self::RETURNED => self::RETURNED,
+        self::COMPLETED => self::COMPLETED,
+    ];
+    public const IF_RETURNED = [
+        self::COMPLETED => self::COMPLETED,
+    ];
+    public const IF_COMPLETED = [
+        // self::CANCELED => self::CANCELED,
+        // self::COMPLETED => self::COMPLETED,
+    ];
+   
     
+
+    public function getAvailableStatusTransitions(): array
+{
+    // Map the current status to its allowed transitions
+    $statusTransitions = [
+        self::PENDING => self::IF_PENDING,
+        self::APPROVED => self::IF_APPROVED,
+        self::READY_FOR_PICKUP => self::IF_READY_FOR_PICKUP,
+        self::PICKUP => self::IF_PICKUP,
+        self::RETURNED => self::IF_RETURNED,
+        self::CANCELED => self::IF_CANCELED,
+        self::COMPLETED =>self::IF_COMPLETED,
+    ];
+
+    // Return the transitions for the current status or an empty array if the status is invalid
+    return $statusTransitions[$this->status] ?? [];
+}
+
 
 
     protected $casts = [
