@@ -5,14 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 
-// Pending	Request is awaiting approval.
-// Approved	Request has been approved and is ready for the next step.
-// Ready for Pickup	Equipment is ready for the user to pick up.
-// Picked Up	Equipment has been collected by the user.
-// Delivered	Equipment has been delivered to the user (optional).
-// Returned	Equipment has been returned by the user.
-// Cancelled	Request has been cancelled.
-// Completed	The request is fully resolved, no further actions needed.
 return new class extends Migration
 {
     /**

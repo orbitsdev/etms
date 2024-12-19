@@ -1,38 +1,39 @@
 <?php
 
-use App\Livewire\Request\ListOfEquipmentRequest;
+use App\Models\Request;
 use App\Models\Equipment;
+use App\Livewire\ViewCourse;
+use App\Livewire\ViewSection;
 use App\Livewire\UserDashboard;
 use App\Livewire\ViewEquipment;
 use App\Exports\EquipmentExport;
 use App\Livewire\AdminDashboard;
+use App\Livewire\Courses\EditCourse;
+use App\Livewire\Courses\ListCourse;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReporController;
-use App\Http\Controllers\ReportController;
 use App\Livewire\Courses\CreateCourse;
-use App\Livewire\Courses\EditCourse;
-use App\Livewire\Courses\ListCourse;
-use App\Livewire\Departments\CreateDepartment;
-use App\Livewire\Departments\EditDepartment;
-use App\Livewire\Departments\ListDepartment;
+use App\Livewire\User\EditUserDetails;
+use App\Livewire\ViewRequesterRequest;
+use App\Livewire\Sections\EditSections;
+use App\Livewire\Sections\ListSections;
+use App\Http\Controllers\ReporController;
+use App\Livewire\Sections\CreateSections;
+use App\Http\Controllers\ReportController;
 use App\Livewire\Equipments\EditEquipment;
 use App\Livewire\Equiments\CreateEquipment;
-use App\Livewire\Equipment\ListEquipmentView;
 use App\Livewire\Equipments\ListEquipments;
-use App\Livewire\Request\ListOfEquipmetnRequest;
+use App\Livewire\Departments\EditDepartment;
+use App\Livewire\Departments\ListDepartment;
+use App\Livewire\Equipment\ListEquipmentView;
+use App\Livewire\Departments\CreateDepartment;
 use App\Livewire\Requests\EditEquipmentRequest;
 use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
-use App\Livewire\Sections\CreateSections;
-use App\Livewire\Sections\EditSections;
-use App\Livewire\Sections\ListSections;
-use App\Livewire\User\EditUserDetails;
 use App\Livewire\UserDetails\CreateUserDetails;
-use App\Livewire\ViewCourse;
-use App\Livewire\ViewRequesterRequest;
-use App\Livewire\ViewSection;
+use App\Livewire\Request\ListOfEquipmentRequest;
+use App\Livewire\Request\ListOfEquipmetnRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,10 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
 
     Route::get('user-details/form', CreateUserDetails::class)->name('user.createUserDetails');
 
+
+
 });
 
 Route::get('/unauthorizepage', function () { return 'UnAuthorize'; })->name('unauthorizepage');
+
+Route::get('/test/{record}', ViewRequesterRequest::class);

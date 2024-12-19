@@ -13,11 +13,12 @@ class ViewRequesterRequest extends Component
     {
 
 
-        $this->record = Request::withRelation()->findOrFail($record);
+        $this->record = Request::withAllRelations()->withItemCounts()->findOrFail($record);
     }
     public function render()
     {
-        return view('livewire.view-requester-request');
+        
+        return view('livewire.view-requester-request',['record' => $this->record]);
     }
 
    

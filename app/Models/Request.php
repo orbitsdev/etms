@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Equipment;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -104,7 +105,7 @@ class Request extends Model
             'user',
             'admin',
             'items' => function ($query) {
-                $query->latest();
+                $query->with(['equipment'])->latest();
             },
 
         ]);
@@ -113,4 +114,85 @@ class Request extends Model
     {
         return $query->where('user_id', Auth::user()->id);
     }
+
+    public function getFormattedRequestDateAttribute(): ?string
+    {
+        return $this->request_date 
+            ? Carbon::parse($this->request_date)->format('F j, Y, g:i A') 
+            : null;
+    }
+    public function getFormattedActualReturnDateAttribute(): ?string
+    {
+        return $this->actual_return_date 
+            ? Carbon::parse($this->actual_return_date)->format('F j, Y, g:i A') 
+            : null;
+    }
+
+    public function availableItems()
+{
+    return $this->items()->whereHas('equipment', function ($query) {
+        $query->where('status', Equipment::AVAILABLE);
+    });
+}
+
+public function unavailableItems()
+{
+    return $this->items()->whereHas('equipment', function ($query) {
+        $query->where('status', '!=', Equipment::AVAILABLE);
+    });
+
+    
+}
+
+public function getItemsSummaryAttribute()
+{
+    $availableCount = $this->availableItems()->count();
+    $unavailableCount = $this->unavailableItems()->count();
+
+    return [
+        'available' => $availableCount,
+        'unavailable' => $unavailableCount,
+    ];
+}
+public function scopeWithItemCounts($query)
+{
+    return $query->withCount([
+        'items as available_items_count' => function ($query) {
+            $query->whereHas('equipment', function ($query) {
+                $query->where('status', Equipment::AVAILABLE);
+            });
+        },
+        'items as unavailable_items_count' => function ($query) {
+            $query->whereHas('equipment', function ($query) {
+                $query->where('status', '!=', Equipment::AVAILABLE);
+            });
+        },
+    ]);
+}
+
+public function countAvailableItems(): int
+{
+    // Ensure items and equipment are already loaded
+    if (!$this->relationLoaded('items')) {
+        $this->load('items.equipment');
+    }
+
+    return $this->items->filter(function ($item) {
+        return $item->equipment && $item->equipment->status === Equipment::AVAILABLE;
+    })->count();
+}
+
+public function countUnavailableItems(): int
+{
+    // Ensure items and equipment are already loaded
+    if (!$this->relationLoaded('items')) {
+        $this->load('items.equipment');
+    }
+
+    return $this->items->filter(function ($item) {
+        return $item->equipment && $item->equipment->status !== Equipment::AVAILABLE;
+    })->count();
+}
+
+
 }

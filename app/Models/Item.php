@@ -18,6 +18,16 @@ class Item extends Model
         return $this->belongsTo(Equipment::class);
     }
 
+    public function scopeWithAvailableEquipment($query)
+    {
+        return $query->whereHas('equipment', function ($query) {
+            $query->where('status', Equipment::AVAILABLE);
+        });
+    }
+
+    /**
+     * Scope to fetch items with unavailable equipment.
+     */
     public function scopeWithUnavailableEquipment($query)
     {
         return $query->whereHas('equipment', function ($query) {
