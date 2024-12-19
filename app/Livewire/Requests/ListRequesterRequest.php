@@ -8,12 +8,15 @@ use Livewire\Component;
 use Filament\Tables\Table;
 use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -26,7 +29,7 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Request::query())
+            ->query(Request::query()->myRequest()->latest())
             ->columns([
                 Tables\Columns\TextColumn::make('user.userDetails.fullName')
                     ->searchable(query: function (Builder $query, string $search): Builder {
@@ -34,44 +37,39 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
                             $query->where('first_name', 'like', "%{$search}%")
                                 ->orWhere('last_name', 'like', "%{$search}%");
                         });
-                       })->label('Request By'),
-                       TextColumn::make('items.equipment.name')
-    ->listWithLineBreaks()->label('Items'),
+                    })->label('Request By'),
+                TextColumn::make('items.equipment.name')
+                    ->listWithLineBreaks()->label('Items'),
                 Tables\Columns\TextColumn::make('request_date')
-                    ->date()
-                   ,
+                    ->date(),
                 Tables\Columns\TextColumn::make('actual_return_date')
-                    ->date()
-                   ,
+                    ->date(),
                 Tables\Columns\TextColumn::make('pickup_date')
                     ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                   ,
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('return_date')
                     ->date()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                   ,
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('status')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'Pending' => 'gray',
-                    'Approved' => 'success',
-                    'Ready for Pickup' => 'warning',
-                    'Picked Up' => 'success',
-                    'Delivered' => 'success',
-                    'Returned' => 'success',
-                    'Cancelled' => 'danger',
-                    'Completed' => 'success',
-                })
-                ,
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'Pending' => 'gray',
+                        'Approved' => 'success',
+                        'Ready for Pickup' => 'warning',
+                        'Picked Up' => 'success',
+                        'Delivered' => 'success',
+                        'Returned' => 'success',
+                        'Cancelled' => 'danger',
+                        'Completed' => 'success',
+                    }),
 
                 // Tables\Columns\TextColumn::make('created_at')
                 //     ->dateTime()
                 //     ->sortable()
                 //     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                ->label('Last Update')
+                    ->label('Last Update')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -80,12 +78,12 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
 
 
                 Action::make('create')
-                ->label('New Request')
-                ->color('primary')
-                ->button()
-                ->url(function(){
-                    return route('requests.create');
-                }),
+                    ->label('New Request')
+                    ->color('primary')
+                    ->button()
+                    ->url(function () {
+                        return route('requests.create');
+                    }),
 
 
 
@@ -95,21 +93,23 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
 
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('status')
+                ->options(Request::STATUS_OPTIONS)->searchable()->multiple()
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 ActionGroup::make([
                     Action::make('View')
-                    ->icon('heroicon-s-eye')
-                    ->modalSubmitAction(false)
-                    ->modalContent(function(Model $record){
-                        return view('livewire.view-requester-request', ['record'=> $record]);
-                    })
-                    ->modalCancelAction(fn (StaticAction $action) => $action->label('Close'))
-                    ->closeModalByClickingAway(false)->modalWidth('7xl'),
+                        ->icon('heroicon-s-eye')
+                        ->modalSubmitAction(false)
+                        ->modalContent(function (Model $record) {
+                            return view('livewire.view-requester-request', ['record' => $record]);
+                        })
+                        ->modalCancelAction(fn(StaticAction $action) => $action->label('Close'))
+                        ->closeModalByClickingAway(false)->modalWidth('7xl'),
 
-                    Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function(Model $record){
-                        return route('requests.edit', ['record'=> $record]);})->color('gray'),
+                    Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function (Model $record) {
+                        return route('requests.edit', ['record' => $record]);
+                    })->color('gray'),
 
                     Tables\Actions\DeleteAction::make()->color('gray'),
                 ]),
@@ -118,7 +118,11 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])  ->groups([
+                Group::make('status')
+                ->titlePrefixedWithLabel(false),
+
+            ])->defaultGroup('status');
     }
 
     public function render(): View

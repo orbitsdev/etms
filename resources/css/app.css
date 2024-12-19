@@ -84,3 +84,10 @@
 .fi-ta-group-header h4{
     @apply  text-base text-sksu-700 ;
 }
+.fi-fo-field-wrp-label span{
+  font-weight: normal;
+}
+
+.fi-section-header-heading{
+  font-weight: normal;
+}

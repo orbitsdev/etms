@@ -31,11 +31,13 @@ class Equipment extends Model implements HasMedia
     public const RESERVED = 'Reserved';
     public const NOTAVAILABLE = 'Not Available';
     public const OUTOFSTOCK = 'Out of Stock';
+    public const UNDER_MAINTENANCE = 'Under Maintenance';
     public const ARCHIVED = 'Archived';
 
 
     public const STATUS_OPTIONS = [
         self::AVAILABLE => self::AVAILABLE,
+        self::UNDER_MAINTENANCE => self::UNDER_MAINTENANCE,
         self::RESERVED => self::RESERVED,
         self::NOTAVAILABLE => self::NOTAVAILABLE,
         self::OUTOFSTOCK => self::OUTOFSTOCK,

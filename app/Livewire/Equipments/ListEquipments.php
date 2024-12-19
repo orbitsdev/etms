@@ -6,12 +6,16 @@ use Filament\Tables;
 use Livewire\Component;
 use App\Models\Equipment;
 use Filament\Tables\Table;
+use App\Models\MaintenanceLog;
 use App\Exports\EquipmentExport;
 use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
+use Filament\Support\Enums\MaxWidth;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +39,7 @@ class ListEquipments extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('serial_number')
-                    ->searchable(),
+                    ->searchable(isIndividual : true),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
@@ -47,11 +51,17 @@ class ListEquipments extends Component implements HasForms, HasTable
                     'Not Available' => 'danger',
                     'Out of Stock' => 'gray',
                     'Archived' => 'info',
+                    default=> 'gray'
                 }),
 
 
                 Tables\Columns\TextColumn::make('location')
                     ->wrap(),
+                Tables\Columns\TextColumn::make('issue_description')
+                ->label('Issue')
+                    ->wrap()->formatStateUsing(function (Model $record) {
+                        return $record->status == Equipment::UNDER_MAINTENANCE ? $record->issue_description : '';
+                    }),
                 Tables\Columns\TextColumn::make('archived_date')
                     ->dateTime()
                     ->sortable()->toggleable(isToggledHiddenByDefault: true),
@@ -99,7 +109,43 @@ class ListEquipments extends Component implements HasForms, HasTable
                     ->modalCancelAction(fn (StaticAction $action) => $action->label('Close'))
                     ->closeModalByClickingAway(false)->modalWidth('7xl'),
 
-                    Action::make('Download Details')
+                    Action::make('manage')
+                    ->label('Manage')
+                    ->icon('heroicon-s-pencil-square')
+                    ->modalWidth(MaxWidth::SixExtraLarge)
+                    ->fillForm(function (Model $record) {
+
+                        return [
+                            'status' => $record->status,
+                             'issue_description' => $record->issue_description,
+                        ];
+                    })
+                    ->form(FilamentForm::manageEquipment())
+             
+                    ->action(function (Model $record,array $data) {
+                        
+                           $record->status = $data['status'];
+                           if($data['issue_description']){
+                                $record->issue_description = $data['issue_description'];
+                           }
+                           $record->reported_by = Auth::user()->id; 
+                           $record->save();
+
+                if ($data['status'] === Equipment::UNDER_MAINTENANCE) {
+                MaintenanceLog::create([
+                    'equipment_id' => $record->id,
+                    'issue_description' => $data['issue_description'],
+                    'status' => MaintenanceLog::UNDER_MAINTENANCE,
+                    'reported_by' => Auth::id(),
+                    'reported_date' => now(),
+                ]);
+            }
+                           FilamentForm::success('Equipment was'.$data['status']);
+                        
+
+                    })->color('gray'),
+
+                    Action::make('Download')
 
                     ->action(function (Model $record) {
 

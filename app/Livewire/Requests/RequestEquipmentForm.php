@@ -52,6 +52,7 @@ class RequestEquipmentForm extends Component implements HasForms
         $record = Request::create($data);
 
         $this->form->model($record)->saveRelationships();
+        Auth::user()->refresh();
         FilamentForm::success('Equipment created successfully');
         return redirect()->route('requests.index');
     }

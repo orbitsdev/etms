@@ -41,6 +41,7 @@ return new class extends Migration
                ]
             )->default('Pending');
             $table->text('purpose')->nullable();
+            $table->text('status_reason')->nullable();
             $table->json('user_snapshot')->nullable(); // Storing snapshots in JSON format
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('cascade');
 

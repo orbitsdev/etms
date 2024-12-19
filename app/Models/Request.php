@@ -12,6 +12,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Request extends Model
 {
     use HasFactory;
+
+    public const PENDING = 'Pending';
+    public const APPROVED = 'Approved';
+    public const READY_FOR_PICKUP = 'Ready for Pickup';
+    public const PICKUP = 'Picked Up';
+    public const RETURNED = 'Returned';
+    public const CANCELED = 'Cancelled';
+    public const COMPLETED = 'Completed';
+
+
+    public const STATUS_OPTIONS= [
+        self::PENDING => self::PENDING,
+        self::APPROVED => self::APPROVED,
+        self::READY_FOR_PICKUP => self::READY_FOR_PICKUP,
+        self::PICKUP => self::PICKUP,
+        self::RETURNED => self::RETURNED,
+        self::CANCELED => self::CANCELED,
+        self::COMPLETED => self::COMPLETED,
+
+    ];
+    
+
+
     protected $casts = [
         'user_snapshot' => 'array', // Automatically cast JSON to an array
     ];

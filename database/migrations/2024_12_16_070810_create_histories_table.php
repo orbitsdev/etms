@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('equipment_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['Status Change', 'Stock Change', 'Location Change', 'Maintenance Change', 'Archived Change']);
-            $table->enum('old_status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived'])->nullable();
-            $table->enum('new_status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived'])->nullable();
+            $table->enum('old_status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived' , 'Under Maintenance',])->nullable();
+            $table->enum('new_status', ['Available', 'Reserved', 'Not Available', 'Out of Stock', 'Archived' , 'Under Maintenance',])->nullable();
             $table->string('old_location')->nullable();
             $table->string('new_location')->nullable();
             $table->integer('old_stock')->nullable();

@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Closure;
 use App\Models\Course;
+use App\Models\Request;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use App\Models\Equipment;
 use App\Models\Department;
 use App\Models\UserDetails;
-use Illuminate\Http\Request;
 use App\Models\Section as MSection;
 use Filament\Forms\Components\Group;
 use Illuminate\Support\Facades\Hash;
@@ -54,13 +54,37 @@ class FilamentForm extends Controller
                     //         ->required()  ->columnSpan(3),
                     //    TextInput::make('location')
                     //         ->maxLength(191)->columnSpan(3),
-                    Select::make('status')
-                        ->options(Equipment::STATUS_OPTIONS)
-                        ->native(false)->columnSpan(3)
-                        ->hidden(fn(string $operation): bool => $operation === 'create')->default(Equipment::AVAILABLE),
+                    // Select::make('status')
+                    //     ->options(Equipment::STATUS_OPTIONS)
+                    //     ->native(false)->columnSpan(3)
+                    //     ->hidden(fn(string $operation): bool => $operation === 'create')->default(Equipment::AVAILABLE),
                     //    DateTimePicker::make('archived_date')->date()->columnSpan(3)->native(false),
                     SpatieMediaLibraryFileUpload::make('image')->columnSpanFull(),
                 ]),
+        ];
+    }
+
+    public static function manageEquipment(): array
+    {
+        return [
+            Select::make('status')
+
+            ->live(debounce: 500)
+            ->options(Equipment::STATUS_OPTIONS)
+            ->native(false)->columnSpan(3),
+
+            Textarea::make('issue_description')
+            ->label('Issue')
+            ->helperText('Kindly describe what is the issue')
+            ->columnSpanFull()
+            ->required()
+            ->rows(5)
+            ->hidden(function (Get $get) {
+                $hiddenStatuses = [Equipment::UNDER_MAINTENANCE];
+
+    
+    return !in_array($get('status'), $hiddenStatuses);
+            }),
         ];
     }
 
@@ -160,7 +184,8 @@ class FilamentForm extends Controller
                         ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
                         ->dehydrated(fn(?string $state): bool => filled($state))
                         ->required(fn(string $operation): bool => $operation === 'create')
-                        ->label(fn(string $operation) => $operation == 'create' ? 'PASSWORD' : 'NEW PASSWORD'),
+                        ->helperText('(Change password)')
+                        ->label(fn(string $operation) => $operation == 'create' ? 'Password' : 'New password'),
                     TextInput::make('role')
                         ->disabled()
                         ->columnSpan(3),
@@ -319,7 +344,9 @@ class FilamentForm extends Controller
                         ->required()
                         ->rows(5)
                 ])->columnSpan(['lg' => 2]),
-            Section::make()
+            Section::make('Items')
+            ->description('Select the equipment, specify the required quantity, and ensure it doesn’t exceed the available stock. You can add multiple items to your request as needed.')
+
                 ->columnSpanFull()
                 ->columns([
                     'sm' => 3,
@@ -411,7 +438,30 @@ class FilamentForm extends Controller
         ];
     }
 
+    
+    public static function manageRequestForm(): array
+    {
+        return [
+            Select::make('status')
 
+            ->live(debounce: 500)
+            ->options(Request::STATUS_OPTIONS)
+            ->native(false)->columnSpan(3),
+
+            Textarea::make('status_reason')
+            ->label('Why?')
+            ->helperText('Kindly provide a reason for your decision')
+            ->columnSpanFull()
+            ->required()
+            ->rows(5)
+            ->hidden(function (Get $get) {
+                $hiddenStatuses = [Request::CANCELED];
+
+    
+    return !in_array($get('status'), $hiddenStatuses);
+            }),
+        ];
+    }
 
     public static function success(String $title = 'Success', String $body = null)
     {

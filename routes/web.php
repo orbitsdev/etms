@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Request\ListOfEquipmentRequest;
 use App\Models\Equipment;
 use App\Livewire\UserDashboard;
 use App\Livewire\ViewEquipment;
@@ -19,6 +20,7 @@ use App\Livewire\Departments\ListDepartment;
 use App\Livewire\Equipments\EditEquipment;
 use App\Livewire\Equiments\CreateEquipment;
 use App\Livewire\Equipments\ListEquipments;
+use App\Livewire\Request\ListOfEquipmetnRequest;
 use App\Livewire\Requests\EditEquipmentRequest;
 use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
@@ -89,7 +91,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
 
 
         });
-
+        Route::get('/equipments/requests', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests');
         Route::prefix('/requests')->name('requests.')->group(function () {
             Route::get('/', ListRequesterRequest::class)->name('index');
             Route::get('/form', RequestEquipmentForm::class)->name('create');

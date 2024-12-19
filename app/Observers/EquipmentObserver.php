@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Equipment;
 use App\Models\StockLogs;
+use App\Models\MaintenanceLog;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FilamentForm;
@@ -74,6 +75,16 @@ class EquipmentObserver
                 'old_status' => $oldStatus ?? 'Unknown',
                 'new_status' => $newStatus ?? 'Unknown',
             ], );
+
+            // if ($newStatus === 'Under Maintenance') {
+            //     MaintenanceLog::create([
+            //         'equipment_id' => $equipment->id,
+            //         'issue_description' => 'Maintenance initiated due to status update.',
+            //         'status' => 'Under Maintenance',
+            //         'reported_by' => Auth::id(),
+            //         'reported_date' => now(),
+            //     ]);
+            // }
         }
 
         // Log Location Changes
