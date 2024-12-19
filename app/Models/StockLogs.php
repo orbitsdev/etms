@@ -13,4 +13,7 @@ class StockLogs extends Model
     public function equipment(){
         return $this->belongsTo(Equipment::class);
     }
+    public function updater(){
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

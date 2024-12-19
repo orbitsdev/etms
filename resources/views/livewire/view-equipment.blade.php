@@ -50,7 +50,7 @@
                           <div class="divide-y divide-gray-200">
                               <!-- Stock Logs -->
                               <div class="py-4">
-                                <h3 class="text-md font-semibold text-gray-900">Stock Logs</h3>
+                                <h3 class="text-md font-semibold text-gray-900">Stocks Activity</h3>
                                 <ul role="list" class="mt-4 space-y-2">
                                     @forelse ($record->stocksLogs as $log)
                                         <li class="text-sm text-gray-600">
@@ -64,12 +64,12 @@
                                                 →
                                                 <span class="font-semibold">New Stock:</span> {{ $log->new_stock ?? 'N/A' }}
                                             </p>
-                                            <p class="text-xs text-gray-500">
+                                            {{-- <p class="text-xs text-gray-500">
                                                 Reason: {{ $log->reason ?? 'No reason provided' }}
-                                            </p>
+                                            </p> --}}
                                             <p class="text-xs text-gray-400">
                                                 Updated: {{ $log->updated_at->diffForHumans() }} by 
-                                                <span class="font-medium">{{ $log->user->name ?? 'System' }}</span>
+                                                <span class="font-medium">{{ $log->updater->name ?? 'System' }}</span>
                                             </p>
                                         </li>
                                     @empty
@@ -98,15 +98,15 @@
                                             <div>
                                                 <p><strong>Issue:</strong> {{ $log->issue_description ?? 'No description provided' }}</p>
                                                 <p class="text-xs text-gray-500">
-                                                    <strong>Last Updated:</strong> {{ $log->updated_at->format('F j, Y, g:i A') }}
+                                                   Last Updated: {{ $log->updated_at->format('F j, Y, g:i A') }}
                                                 </p>
                                                 @if ($log->formattedReportedDate)
                                                     <p class="text-xs text-gray-500">
-                                                        <strong>Reported On:</strong> {{ $log->formattedReportedDate }}
+                                                     Reported On: {{ $log->formattedReportedDate }}
                                                     </p>
                                                 @endif
-                                                <p class="text-xs text-gray-500">
-                                                    <strong>Reported By:</strong> {{ $log->reportedBy->name ?? 'Unknown User' }}
+                                                <p class="text-xs text-gray-500 ">
+                                                    Reported By: {{ $log->reporter->name ?? 'Unknown User' }}
                                                 </p>
                                             </div>
                                         </li>

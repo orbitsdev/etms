@@ -64,10 +64,8 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
                         'Completed' => 'success',
                     }),
 
-                // Tables\Columns\TextColumn::make('created_at')
-                //     ->dateTime()
-                //     ->sortable()
-                //     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('status_reason')->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Last Update')
                     ->dateTime()
@@ -109,7 +107,10 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
 
                     Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function (Model $record) {
                         return route('requests.edit', ['record' => $record]);
-                    })->color('gray'),
+                    })->color('gray')
+                    ->hidden(function(Model $record){
+                        return $record->status != Request::PENDING;
+                    }),
 
                     Tables\Actions\DeleteAction::make()->color('gray'),
                 ]),
