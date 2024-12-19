@@ -25,9 +25,10 @@ class TrackingController extends Controller
             StockLogs::create([
                 'equipment_id' => $equipment->id,
                 'change_type' => $changeType,
-                'quantity' => $quantity,
+                'old_stock' => $oldStock, // Retrieve old stock value
+                'new_stock' => $newStock, // Retrieve new stock value
                 'reason' => $reason,
-                'updated_by' => Auth::id() ?? null,
+                'updated_by' => Auth::id(),
             ]);
         }
     }

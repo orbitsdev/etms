@@ -20,12 +20,12 @@
             @csrf
 
             <div>
-                <x-label for="email" value="{{ __('Email') }}" />
+                <x-label for="email" value="{{ __('Email') }}" >Email</x-label>
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             </div>
 
             <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
+                <x-label for="password" value="{{ __('Password') }}" >Password</x-label>
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
 
@@ -43,7 +43,7 @@
                     </a>
                 @endif --}}
 
-                <x-button class="w-full flex items-center justify-center py-3">
+                <x-button class="w-full flex items-center justify-center py-3" type="submit"> 
                     {{ __('Log in') }}
                 </x-button>
             </div>

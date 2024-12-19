@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Equipment;
+use App\Models\User;
+use App\Models\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class History extends Model
+class RequestHistory extends Model
 {
     use HasFactory;
-    public function equipment(){
-        return $this->belongsTo(Equipment::class);
+
+    public function request()
+    {
+        return $this->belongsTo(Request::class);
     }
 
     public function user()

@@ -50,7 +50,7 @@ class EditEquipment extends Component implements HasForms
 
         // Log the stock change
    $name = Auth::user()->name;
-        TrackingController::logStockChange($this->record, $oldStock, $newStock, 'Stock updated by '.$name);
+        // TrackingController::logStockChange($this->record, $oldStock, $newStock, 'Stock updated by '.$name);
 
         FilamentForm::success('Equipment updated successfully');
         return redirect()->route('equipment.index');

@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Request;
 use App\Models\Equipment;
 use App\Models\MaintenanceLog;
 use App\Observers\EquipmentObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use App\Observers\MaintenanceLogObserver;
+use App\Observers\RequestObserver;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -31,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
     {
 
         Equipment::observe(EquipmentObserver::class);
-        MaintenanceLog::observe(MaintenanceLogObserver::class);
+        Request::observe(RequestObserver::class);
         // Equipment::observe(EquipmentObserver::class);
     }
 

@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('equipment_id')->constrained()->onDelete('cascade');
             $table->enum('change_type', ['Addition', 'Removal'])->default('addition');
-            $table->integer('quantity')->nullable();
+            $table->integer('old_stock')->nullable(); // Old stock value
+            $table->integer('new_stock')->nullable(); // New stock value
             $table->text('reason')->nullable();
             $table->foreignId('updated_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
+
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Equipment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,4 +33,10 @@ class MaintenanceLog extends Model
     public function equipment(){
         return $this->belongsTo(Equipment::class);
     }
+
+    public function reporter()
+{
+    return $this->belongsTo(User::class, 'reported_by');
+}
+
 }

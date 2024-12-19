@@ -13,7 +13,7 @@ class ViewEquipment extends Component
     {
 
         // Load the equipment record with relations using the scope
-        $this->record = Equipment::withRelation()->findOrFail($record);
+        $this->record = Equipment::withAllRelations()->findOrFail($record);
     }
 
     public function render()

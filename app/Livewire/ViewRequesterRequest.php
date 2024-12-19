@@ -17,7 +17,7 @@ class ViewRequesterRequest extends Component
     }
     public function render()
     {
-        
+            
         return view('livewire.view-requester-request',['record' => $this->record]);
     }
 

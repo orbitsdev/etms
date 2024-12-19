@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentColor;
+use Filament\Support\View\Components\Modal;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,6 @@ class AppServiceProvider extends ServiceProvider
             'primary' => "#00993c",
 
         ]);
-
+        Modal::closedByClickingAway(false);
     }
 }

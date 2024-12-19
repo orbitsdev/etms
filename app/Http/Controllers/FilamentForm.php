@@ -12,6 +12,7 @@ use App\Models\Department;
 use App\Models\UserDetails;
 use App\Models\Section as MSection;
 use Filament\Forms\Components\Group;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
@@ -50,9 +51,8 @@ class FilamentForm extends Controller
                         ->required()->columnSpan(3)
                         ->numeric()
                         ->default(1)->required()->mask(9999),
-                    //    TextInput::make('status')
-                    //         ->required()  ->columnSpan(3),
-                    //    TextInput::make('location')
+                    
+                       TextInput::make('location')->columnSpan(3),
                     //         ->maxLength(191)->columnSpan(3),
                     // Select::make('status')
                     //     ->options(Equipment::STATUS_OPTIONS)
@@ -203,7 +203,7 @@ class FilamentForm extends Controller
                         ->imageEditor()
                         // ->required()
                         ->columnSpanFull()
-                        ->label('PROFILE'),
+                        ->label('Profile'),
                 ]),
             ...FilamentForm::userDetailsForm(),
 
@@ -214,6 +214,9 @@ class FilamentForm extends Controller
     {
         return [
             Group::make()
+            ->hidden(function(){
+                return Auth::user()->isAdmin();
+            })
                 ->relationship('userDetails')
                 ->columnSpanFull()
                 ->schema([

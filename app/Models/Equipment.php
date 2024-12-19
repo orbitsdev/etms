@@ -43,18 +43,21 @@ class Equipment extends Model implements HasMedia
         self::OUTOFSTOCK => self::OUTOFSTOCK,
         self::ARCHIVED => self::ARCHIVED,
 
-    ];
-
-
-    public function stocksLogs(){
-        return $this->hasMany(StockLogs::class);
+    ];public function stocksLogs()
+    {
+        return $this->hasMany(StockLogs::class)->latest('created_at');
     }
-    public function maintenanceLogs(){
-        return $this->hasMany(MaintenanceLog::class);
+    
+    public function maintenanceLogs()
+    {
+        return $this->hasMany(MaintenanceLog::class)->latest('created_at');
     }
-    public function history(){
-        return $this->hasMany(History::class);
+    
+    public function history()
+    {
+        return $this->hasMany(History::class)->latest('created_at');
     }
+    
     public function items(){
         return $this->hasMany(Item::class);
     }
@@ -91,24 +94,27 @@ class Equipment extends Model implements HasMedia
             'media',
         ]);
     }
-
     public function scopeWithAllRelations($query)
-{
-    return $query->latest()->with([
-        'stocksLogs' => function ($query) {
-            $query->latest();
-        },
-        'maintenanceLogs' => function ($query) {
-            $query->latest();
-        },
-        'history' => function ($query) {
-            $query->latest();
-        },
-        'media',
-    ]);
-}
+    {
+        return $query->latest()->with([
+            'stocksLogs',
+            'maintenanceLogs',
+            'history',
+            'media',
+        ]);
+    }
+    
+
+public function getImage()
+    {
+        if ($this->hasMedia('image')) {
+            return $this->getFirstMediaUrl('image');
+        }
+    
+        return url('images/placeholder-image.jpg');
 
 
+    }   
 
 
 public function scopeAvailable($query){
@@ -129,5 +135,10 @@ public function scopeUnderMaintenance($query){
 public function scopeArchived($query){
     return $query->where('status', Equipment::ARCHIVED);
 }
-
+public function getFormattedReportedDateAttribute(): ?string
+{
+    return $this->reported_date
+        ? Carbon::parse($this->reported_date)->format('F j, Y, g:i A')
+        : null;
+}
 }

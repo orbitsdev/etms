@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Equipment;
+use App\Models\RequestHistory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +24,7 @@ class Request extends Model
     public const COMPLETED = 'Completed';
 
 
-    public const STATUS_OPTIONS= [
+    public const STATUS_OPTIONS = [
         self::PENDING => self::PENDING,
         self::APPROVED => self::APPROVED,
         self::READY_FOR_PICKUP => self::READY_FOR_PICKUP,
@@ -43,12 +44,12 @@ class Request extends Model
         self::CANCELED => self::CANCELED,
         self::READY_FOR_PICKUP => self::READY_FOR_PICKUP,
         self::PICKUP => self::PICKUP,
-      
+
     ];
     public const IF_READY_FOR_PICKUP = [
         self::PICKUP => self::PICKUP,
         self::CANCELED => self::CANCELED,
-      
+
     ];
 
     public const IF_PICKUP = [
@@ -62,30 +63,30 @@ class Request extends Model
         // self::CANCELED => self::CANCELED,
         // self::COMPLETED => self::COMPLETED,
     ];
-   
-    
+
+
 
     public function getAvailableStatusTransitions(): array
-{
-    // Map the current status to its allowed transitions
-    $statusTransitions = [
-        self::PENDING => self::IF_PENDING,
-        self::APPROVED => self::IF_APPROVED,
-        self::READY_FOR_PICKUP => self::IF_READY_FOR_PICKUP,
-        self::PICKUP => self::IF_PICKUP,
-        self::RETURNED => self::IF_RETURNED,
-        self::CANCELED => self::IF_CANCELED,
-        self::COMPLETED =>self::IF_COMPLETED,
-    ];
+    {
+        // Map the current status to its allowed transitions
+        $statusTransitions = [
+            self::PENDING => self::IF_PENDING,
+            self::APPROVED => self::IF_APPROVED,
+            self::READY_FOR_PICKUP => self::IF_READY_FOR_PICKUP,
+            self::PICKUP => self::IF_PICKUP,
+            self::RETURNED => self::IF_RETURNED,
+            self::CANCELED => self::IF_CANCELED,
+            self::COMPLETED => self::IF_COMPLETED,
+        ];
 
-    // Return the transitions for the current status or an empty array if the status is invalid
-    return $statusTransitions[$this->status] ?? [];
-}
+
+        return $statusTransitions[$this->status] ?? [];
+    }
 
 
 
     protected $casts = [
-        'user_snapshot' => 'array', // Automatically cast JSON to an array
+        'user_snapshot' => 'array',
     ];
 
     public function user()
@@ -96,9 +97,16 @@ class Request extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-    public function items(){
+    public function items()
+    {
         return $this->hasMany(Item::class);
     }
+    public function histories()
+    {
+        return $this->hasMany(RequestHistory::class)->latest('created_at');
+    }
+
+
     public function scopeWithAllRelations($query)
     {
         return $query->latest()->with([
@@ -107,6 +115,10 @@ class Request extends Model
             'items' => function ($query) {
                 $query->with(['equipment'])->latest();
             },
+            'histories' => function ($query) {
+                $query->latest();
+            },
+            'histories.user'
 
         ]);
     }
@@ -117,82 +129,78 @@ class Request extends Model
 
     public function getFormattedRequestDateAttribute(): ?string
     {
-        return $this->request_date 
-            ? Carbon::parse($this->request_date)->format('F j, Y, g:i A') 
+        return $this->request_date
+            ? Carbon::parse($this->request_date)->format('F j, Y, g:i A')
             : null;
     }
     public function getFormattedActualReturnDateAttribute(): ?string
     {
-        return $this->actual_return_date 
-            ? Carbon::parse($this->actual_return_date)->format('F j, Y, g:i A') 
+        return $this->actual_return_date
+            ? Carbon::parse($this->actual_return_date)->format('F j, Y, g:i A')
             : null;
     }
 
     public function availableItems()
-{
-    return $this->items()->whereHas('equipment', function ($query) {
-        $query->where('status', Equipment::AVAILABLE);
-    });
-}
-
-public function unavailableItems()
-{
-    return $this->items()->whereHas('equipment', function ($query) {
-        $query->where('status', '!=', Equipment::AVAILABLE);
-    });
-
-    
-}
-
-public function getItemsSummaryAttribute()
-{
-    $availableCount = $this->availableItems()->count();
-    $unavailableCount = $this->unavailableItems()->count();
-
-    return [
-        'available' => $availableCount,
-        'unavailable' => $unavailableCount,
-    ];
-}
-public function scopeWithItemCounts($query)
-{
-    return $query->withCount([
-        'items as available_items_count' => function ($query) {
-            $query->whereHas('equipment', function ($query) {
-                $query->where('status', Equipment::AVAILABLE);
-            });
-        },
-        'items as unavailable_items_count' => function ($query) {
-            $query->whereHas('equipment', function ($query) {
-                $query->where('status', '!=', Equipment::AVAILABLE);
-            });
-        },
-    ]);
-}
-
-public function countAvailableItems(): int
-{
-    // Ensure items and equipment are already loaded
-    if (!$this->relationLoaded('items')) {
-        $this->load('items.equipment');
+    {
+        return $this->items()->whereHas('equipment', function ($query) {
+            $query->where('status', Equipment::AVAILABLE);
+        });
     }
 
-    return $this->items->filter(function ($item) {
-        return $item->equipment && $item->equipment->status === Equipment::AVAILABLE;
-    })->count();
-}
-
-public function countUnavailableItems(): int
-{
-    // Ensure items and equipment are already loaded
-    if (!$this->relationLoaded('items')) {
-        $this->load('items.equipment');
+    public function unavailableItems()
+    {
+        return $this->items()->whereHas('equipment', function ($query) {
+            $query->where('status', '!=', Equipment::AVAILABLE);
+        });
     }
 
-    return $this->items->filter(function ($item) {
-        return $item->equipment && $item->equipment->status !== Equipment::AVAILABLE;
-    })->count();
-}
+    public function getItemsSummaryAttribute()
+    {
+        $availableCount = $this->availableItems()->count();
+        $unavailableCount = $this->unavailableItems()->count();
 
+        return [
+            'available' => $availableCount,
+            'unavailable' => $unavailableCount,
+        ];
+    }
+    public function scopeWithItemCounts($query)
+    {
+        return $query->withCount([
+            'items as available_items_count' => function ($query) {
+                $query->whereHas('equipment', function ($query) {
+                    $query->where('status', Equipment::AVAILABLE);
+                });
+            },
+            'items as unavailable_items_count' => function ($query) {
+                $query->whereHas('equipment', function ($query) {
+                    $query->where('status', '!=', Equipment::AVAILABLE);
+                });
+            },
+        ]);
+    }
 
+    public function countAvailableItems(): int
+    {
+        // Ensure items and equipment are already loaded
+        if (!$this->relationLoaded('items')) {
+            $this->load('items.equipment');
+        }
+
+        return $this->items->filter(function ($item) {
+            return $item->equipment && $item->equipment->status === Equipment::AVAILABLE;
+        })->count();
+    }
+
+    public function countUnavailableItems(): int
+    {
+        // Ensure items and equipment are already loaded
+        if (!$this->relationLoaded('items')) {
+            $this->load('items.equipment');
+        }
+
+        return $this->items->filter(function ($item) {
+            return $item->equipment && $item->equipment->status !== Equipment::AVAILABLE;
+        })->count();
+    }
 }
