@@ -8,40 +8,22 @@
         <div class="p-6">
             <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
 
-            <!-- Top Stats Section -->
+  
 
             @livewire('stats')
 
 
-            <!-- Visitor Statistics Section -->
-            {{-- <div class="bg-white p-6 rounded-lg shadow mb-6">
-              <h3 class="text-lg font-semibold mb-4">Visitor Statistics (Nov - July)</h3>
-              <div class="relative h-64">
-                <!-- Placeholder for the graph -->
-                <div class="absolute inset-0 flex items-center justify-center text-gray-400">Graph Placeholder</div>
-              </div>
-            </div> --}}
+    
 
             <!-- Two Columns: New Customers and Top Categories -->
-            <div class="grid grid-cols-3 gap-6 mb-6">
-              <!-- New Customers -->
-
-              {{-- <div class="col-span-1 bg-sksu-500 text-white p-6 rounded-lg shadow">
-                <h3 class="text-lg font-semibold">Top Requester ({{ now()->year }})</h3>
-                @if ($mostActiveUser)
-                    <p class="text-2xl font-bold mt-4">{{ $mostActiveUser->name }}</p>
-                    <p class="text-sm mt-2">Completed Requests: <strong>{{ $mostActiveUser->completed_request_count }}</strong></p>
-                @else
-                    <p class="text-2xl font-bold mt-4">No Data</p>
-                    <p class="text-sm mt-2">No completed requests for this year.</p>
-                @endif
-            </div> --}}
-            <div class="bg-gradient-to-r from-sksu-900 to-sksu-600 rounded-lg shadow-lg p-8 col-span-1">
+            <div class="grid grid-cols-3 gap-6 mb-6 stat-card">
+            
+            <div class="bg-gradient-to-r from-sksu-900 to-sksu-600 rounded-lg shadow-lg p-8 col-span-1 hover:scale-105 transition-all">
               <h1 class="text-4xl font-bold text-white mb-4">
                   Top Requester {{ now()->year }}
               </h1>
               @if ($mostActiveUser)
-                  <div class="flex items-center space-x-4 mb-8">
+                  <div class="flex items-center space-x-4 mb-8 ">
                       <!-- User Image -->
                       <div class="w-16 h-16">
                           <img 
@@ -67,18 +49,9 @@
               @endif
           </div>
           
-            {{-- <div class="col-span-1 bg-sksu-500 text-white p-6 rounded-lg shadow">
-                @if ($mostActiveUser)
-                <h3 class="text-lg font-semibold">Top Requester ({{ now()->year }})</h3>
-                <p class="text-2xl font-bold mt-4"> {{ $mostActiveUser->userDetails->fullName }}</p>
-                <p class="text-sm mt-2">Completed Request {{ $mostActiveUser->completed_request_count }} </p>
-                @endif
-              </div> --}}
 
-              <!-- Top Categories -->
 
-              
-              <div class="col-span-2 bg-white p-6 rounded-lg shadow">
+              <div class="col-span-2 bg-white p-6 rounded-lg stat-card shadow   ">
                 <h3 class="text-lg font-semibold mb-4">Top Requested Equipments</h3>
                 <ul class="divide-y divide-gray-200">
                   @forelse ($topPopularEquipment as $equipment)
@@ -96,11 +69,11 @@
             </div>
 
             <!-- Content Table -->
-            <div class="bg-white p-6 rounded-lg shadow">
+            <div class="bg-white p-6 rounded-lg shadow stat-card">
               <h3 class="text-lg font-semibold mb-4">Out of Stocks Equipments</h3>
               <table class="min-w-full table-auto border-collapse border border-gray-200">
                 <thead>
-                  <tr class="bg-gray-100">
+                  <tr class="bg-gray-100 table-row">
                     <th class="border border-gray-200 px-4 py-2">Thumbnail</th>
                     <th class="border border-gray-200 px-4 py-2">Equipment</th>
                     <th class="border border-gray-200 px-4 py-2">Serial</th>
