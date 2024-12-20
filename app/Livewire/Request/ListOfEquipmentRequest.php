@@ -79,7 +79,7 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->options(Request::STATUS_OPTIONS)->searchable()
+                    ->options(Request::STATUS_OPTIONS)->searchable()->multiple()
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 ActionGroup::make([
@@ -237,30 +237,88 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
     {
         $record = Request::findOrFail($data['record']['id']);
 
-
+        // Update the request status
         $record->status = $data['data']['status'];
-        if (!empty($data['data']['status_reason'])) {
-            $record->status_reason = $data['data']['status_reason'];
-        } else {
-            $record->status_reason = null;
-        }
+        $record->status_reason = $data['data']['status_reason'] ?? null;
         $record->updated_by = Auth::user()->id;
         $record->save();
 
+        // Handle stock deduction only for APPROVED or READY_FOR_PICKUP statuses
+        if (in_array($data['data']['status'], [Request::APPROVED, Request::READY_FOR_PICKUP])) {
+            // Fetch all items in the request with their equipment
+            $items = $record->items()->with('equipment')->get();
 
-        $description = "The request has been updated successfully.";
-        if (!empty($record->status_reason)) {
-            $description .= " with the reason: <strong>{$record->status_reason}</strong>.";
-        } else {
-            $description .= ".";
+            $insufficientStock = [];
+            $updatedSuccessfully = [];
+
+            foreach ($items as $item) {
+                $equipment = $item->equipment;
+
+                if ($equipment) {
+                    // Check stock availability
+                    if ($equipment->stock >= $item->quantity) {
+                        $equipment->stock -= $item->quantity;
+                        $equipment->save();
+                        $updatedSuccessfully[] = $equipment->name; // Track successful updates
+                    } else {
+                        // Track insufficient stock
+                        $insufficientStock[] = [
+                            'name' => $equipment->name,
+                            'available' => $equipment->stock,
+                            'required' => $item->quantity,
+                        ];
+                    }
+                }
+            }
+
+            // If there are insufficient stock items, show an error dialog with details
+            if (!empty($insufficientStock)) {
+                $html = '<div class="text-left">';
+                $html .= '<p>The following items have insufficient stock:</p><ul>';
+                foreach ($insufficientStock as $item) {
+                    $html .= "<li><strong>{$item['name']}</strong>: Available: {$item['available']}, Required: {$item['required']}</li>";
+                }
+                $html .= '</ul></div>';
+
+                $this->dialog()->confirm([
+                    'title' => 'Insufficient Stock!',
+                    'description' => $html,
+                    'icon' => 'error',
+                    'acceptLabel' => 'Close', // Text for the button
+                    'method' => null, // No further action
+                ]);
+
+
+                return; // Stop further execution if stock is insufficient
+            }
+
+            // If all items are updated successfully, show a success dialog
+            if (!empty($updatedSuccessfully)) {
+                $successItems = implode(', ', $updatedSuccessfully);
+
+
+                $this->dialog()->show([
+                    'icon' => 'success',
+                    'title' => 'The stock for the following items has been updated successfully: <strong>{$successItems}</strong>.',
+                    'description' => 'This is a description.',
+                ]);
+            }
+
+            return; // Stop here if stock was updated successfully
         }
 
-        FilamentForm::success($description);
-
-        // $this->dialog()->show([
-        //     'icon' => 'success',
+        FilamentForm::success('The request has been updated successfully.');
+        // Show a success dialog for status updates that don’t involve stock
+        // $this->dialog()->confirm([
         //     'title' => 'Request Updated!',
-        //     'description' => $description,
+        //     'description' => 'The request has been updated successfully.',
+        //     'icon' => 'success',
+        //     'acceptLabel' => 'Close',
+        //     'method' => null, // No further action
         // ]);
     }
+
 }
+
+
+

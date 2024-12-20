@@ -9,10 +9,11 @@ use App\Models\StockLogs;
 use App\Models\MaintenanceLog;
 use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Equipment extends Model implements HasMedia
 {
@@ -47,17 +48,17 @@ class Equipment extends Model implements HasMedia
     {
         return $this->hasMany(StockLogs::class)->latest('created_at');
     }
-    
+
     public function maintenanceLogs()
     {
         return $this->hasMany(MaintenanceLog::class)->latest('created_at');
     }
-    
+
     public function history()
     {
         return $this->hasMany(History::class)->latest('created_at');
     }
-    
+
     public function items(){
         return $this->hasMany(Item::class);
     }
@@ -103,18 +104,18 @@ class Equipment extends Model implements HasMedia
             'media',
         ]);
     }
-    
+
 
 public function getImage()
     {
         if ($this->hasMedia('image')) {
             return $this->getFirstMediaUrl('image');
         }
-    
+
         return url('images/placeholder-image.jpg');
 
 
-    }   
+    }
 
 
 public function scopeAvailable($query){
@@ -141,4 +142,24 @@ public function getFormattedReportedDateAttribute(): ?string
         ? Carbon::parse($this->reported_date)->format('F j, Y, g:i A')
         : null;
 }
+
+
+
+public function scopePopular($query, $limit = 10)
+{
+    return $query->select('equipment.id', 'equipment.name', DB::raw('COUNT(items.id) as usage_count'))
+        ->join('items', 'equipment.id', '=', 'items.equipment_id')
+        ->join('requests', 'items.request_id', '=', 'requests.id')
+        ->where('requests.status', Request::COMPLETED)
+        ->groupBy('equipment.id', 'equipment.name')
+        ->orderByDesc('usage_count')
+        ->limit($limit); // Limit results to the top N
+}
+
+
+public function scopeOutOfStock($query)
+{
+    return $query->where('stock', '<=', 0)->latest(); // Out of stock means stock is 0 or less
+}
+
 }

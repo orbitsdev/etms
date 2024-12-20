@@ -40,8 +40,9 @@
                          <ul role="list" class="-mx-2 mt-2 space-y-1">
                              <li class=" mb-6">
                                  <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
-                                 <a href="#"
-                                 class="inactive-link">
+                                 <a href="{{route('admin.dashboard')}}"
+                               
+                                  class=" {{RouteManager::isCurrentPage(Session::get('current_route_name'),['admin.dashboard'],'active-link','inactive-link') }}">
                                  <div class="flex justify-center items-center">
 
                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 ">
@@ -144,7 +145,7 @@
 
                     @can('is-requester')
                     <div class="mt-6">
-                      
+
                         <li class="">
                             {{-- <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div> --}}
                             <ul role="list" class="-mx-2 mt-2 space-y-1">
@@ -159,7 +160,7 @@
                                   <span class="ml-2 truncate">SKSU Equipments</span>
                                 </a>
                               </li>
-                              
+
 
                                 <li>
                                   <a href="{{route('requests.index')}}"

@@ -38,6 +38,7 @@ class Request extends Model
     ];
     public const IF_PENDING = [
         self::APPROVED => self::APPROVED,
+        self::READY_FOR_PICKUP => self::READY_FOR_PICKUP,
         self::CANCELED => self::CANCELED,
     ];
     public const IF_APPROVED = [
@@ -203,4 +204,28 @@ class Request extends Model
             return $item->equipment && $item->equipment->status !== Equipment::AVAILABLE;
         })->count();
     }
+
+    public function scopePending($query){
+        return $query->where('status', Request::PENDING);
+    }
+    public function scopeApproved($query){
+        return $query->where('status', Request::APPROVED);
+    }
+    public function scopeReadyToPickUp($query){
+        return $query->where('status', Request::READY_FOR_PICKUP);
+    }
+    public function scopePickedUp($query){
+        return $query->where('status', Request::PICKUP);
+    }
+    public function scopeReturned($query){
+        return $query->where('status', Request::RETURNED);
+    }
+    public function scopeCancelled($query){
+        return $query->where('status', Request::CANCELED);
+    }
+    public function scopeCompleted($query){
+        return $query->where('status', Request::COMPLETED);
+    }
+
+
 }
