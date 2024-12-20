@@ -88,7 +88,7 @@ class User extends Authenticatable
         switch ($this->role) {
 
             case 'admin':
-                return redirect()->route('requests.lisofequipmentrequests');
+                return redirect()->route('admin.dashboard');
 
             case 'manager':
             case 'requester':
