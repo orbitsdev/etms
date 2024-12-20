@@ -76,6 +76,8 @@
               </div> --}}
 
               <!-- Top Categories -->
+
+              
               <div class="col-span-2 bg-white p-6 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-4">Top Requested Equipments</h3>
                 <ul class="divide-y divide-gray-200">

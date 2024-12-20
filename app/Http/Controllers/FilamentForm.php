@@ -51,8 +51,8 @@ class FilamentForm extends Controller
                         ->required()->columnSpan(3)
                         ->numeric()
                         ->default(1)->required()->mask(9999),
-                    
-                       TextInput::make('location')->columnSpan(3),
+
+                    TextInput::make('location')->columnSpan(3),
                     //         ->maxLength(191)->columnSpan(3),
                     // Select::make('status')
                     //     ->options(Equipment::STATUS_OPTIONS)
@@ -69,22 +69,22 @@ class FilamentForm extends Controller
         return [
             Select::make('status')
 
-            ->live(debounce: 500)
-            ->options(Equipment::STATUS_OPTIONS)
-            ->native(false)->columnSpan(3),
+                ->live(debounce: 500)
+                ->options(Equipment::STATUS_OPTIONS)
+                ->native(false)->columnSpan(3),
 
             Textarea::make('issue_description')
-            ->label('Issue')
-            ->helperText('Kindly describe what is the issue')
-            ->columnSpanFull()
-            ->required()
-            ->rows(5)
-            ->hidden(function (Get $get) {
-                $hiddenStatuses = [Equipment::UNDER_MAINTENANCE];
+                ->label('Issue')
+                ->helperText('Kindly describe what is the issue')
+                ->columnSpanFull()
+                ->required()
+                ->rows(5)
+                ->hidden(function (Get $get) {
+                    $hiddenStatuses = [Equipment::UNDER_MAINTENANCE];
 
-    
-    return !in_array($get('status'), $hiddenStatuses);
-            }),
+
+                    return !in_array($get('status'), $hiddenStatuses);
+                }),
         ];
     }
 
@@ -214,9 +214,9 @@ class FilamentForm extends Controller
     {
         return [
             Group::make()
-            ->hidden(function(){
-                return Auth::user()->isAdmin();
-            })
+                ->hidden(function () {
+                    return Auth::user()->isAdmin();
+                })
                 ->relationship('userDetails')
                 ->columnSpanFull()
                 ->schema([
@@ -348,7 +348,7 @@ class FilamentForm extends Controller
                         ->rows(5)
                 ])->columnSpan(['lg' => 2]),
             Section::make('Items')
-            ->description('Select the equipment, specify the required quantity, and ensure it doesn’t exceed the available stock. You can add multiple items to your request as needed.')
+                ->description('Select the equipment, specify the required quantity, and ensure it doesn’t exceed the available stock. You can add multiple items to your request as needed.')
 
                 ->columnSpanFull()
                 ->columns([
@@ -369,7 +369,7 @@ class FilamentForm extends Controller
                                 ->relationship(
                                     name: 'equipment',
                                     titleAttribute: 'name',
-                                    modifyQueryUsing: fn (Builder $query) => $query->available(),
+                                    modifyQueryUsing: fn(Builder $query) => $query->available(),
                                 )
                                 ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} - ({$record->stock})")
                                 ->live(debounce: 500)
@@ -442,30 +442,108 @@ class FilamentForm extends Controller
         ];
     }
 
-    
+
     public static function manageRequestForm(): array
     {
         return [
             Select::make('status')
 
-            ->live(debounce: 500)
-            ->options(function(Model $record){
-                return $record->getAvailableStatusTransitions();
-            })
-            ->native(false)->columnSpan(3),
+                ->live(debounce: 500)
+                ->options(function (Model $record) {
+                    return $record->getAvailableStatusTransitions();
+                })
+                ->native(false)->columnSpan(3),
 
             Textarea::make('status_reason')
-            ->label('Why?')
-            ->helperText('Kindly provide a reason for your decision')
-            ->columnSpanFull()
-            ->required()
-            ->rows(5)
-            ->hidden(function (Get $get) {
-                $hiddenStatuses = [Request::CANCELED];
+                ->label('Why?')
+                ->helperText('Kindly provide a reason for your decision')
+                ->columnSpanFull()
+                ->required()
+                ->rows(5)
+                ->hidden(function (Get $get) {
+                    $hiddenStatuses = [Request::CANCELED];
 
-    
-    return !in_array($get('status'), $hiddenStatuses);
-            }),
+                    return !in_array($get('status'), $hiddenStatuses);
+                }),
+
+                 ...FilamentForm::itemsForm()
+        ];
+    }
+
+    public static  function itemsForm(): array
+    {
+        return [
+            TableRepeater::make('request_items')
+                ->relationship('items')
+                ->columnWidths([
+
+                    'equipment' => '400px',
+                    'quantity' => '200px',
+                ])
+                ->schema([
+                    Select::make('equipment_id')
+                        ->label('Equipment')
+                        ->relationship(
+                            name: 'equipment',
+                            titleAttribute: 'name',
+                            modifyQueryUsing: fn(Builder $query) => $query->available(),
+                        )
+                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} - ({$record->stock})")
+                        ->live(debounce: 500)
+                        ->afterStateUpdated(function ($state, Get $get, Set $set) {
+                            if ($state) {
+                                $equipment = Equipment::find($state);
+                                if ($equipment) {
+                                    $set('max_quantity', $equipment->stock);
+                                }
+                            }
+                        })
+                        ->disabled()
+                        ->distinct()
+                        ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                        ->preload()
+                        ->searchable()
+                        ->required(),
+                    TextInput::make('quantity')
+                        ->live(debounce: 500)
+                        ->default(1)
+                        ->required()
+                        ->numeric()
+                        ->hint('Update the item quantity based on the returned equipment.')
+
+                        ->helperText(function (Get $get) {
+                            $equipmentId = $get('equipment_id');
+                            if ($equipmentId) {
+                                $equipment = Equipment::find($equipmentId);
+                                return $equipment ? "Maximum quantity available: {$equipment->stock}" : null;
+                            }
+                            return null;
+                        })
+                        ->rules([
+                            function (Get $get) {
+                                return function (string $attribute, $value, Closure $fail) use ($get) {
+                                    $equipmentId = $get('equipment_id');
+                                    $equipment = Equipment::find($equipmentId);
+
+                                    if ($equipment && $value > $equipment->stock) {
+                                        $fail("The quantity cannot exceed the available stock of {$equipment->stock}.");
+                                    }
+                                };
+                            },
+                        ]),
+                ])
+                ->addable(false)
+                ->deletable(false)
+                ->addActionLabel('Add Item')
+                ->withoutHeader()
+                ->columnSpan('full')
+                ->label('Items')
+                ->minItems(1)
+                ->hidden(function (Get $get) {
+                    $hiddenStatuses = [Request::RETURNED];
+
+                    return !in_array($get('status'), $hiddenStatuses);
+                })
         ];
     }
 
@@ -485,7 +563,4 @@ class FilamentForm extends Controller
             ->danger()
             ->send();
     }
-
-
-    
 }

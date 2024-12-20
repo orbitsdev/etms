@@ -1,4 +1,4 @@
-<div class="grid grid-cols-4 gap-6 mb-6">
+<div class="grid grid-cols-4 gap-6 mb-6" wire:poll.visible.5s>
     <div class="bg-white p-6 rounded-lg shadow">
       <p class="text-lg font-semibold">Total Approved</p>
       <h2 class="text-3xl font-bold">{{$totalApproved}}</h2>
