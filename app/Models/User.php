@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\Request;
 use App\Models\UserDetails;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\HasProfilePhoto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
@@ -122,4 +123,17 @@ class User extends Authenticatable
                 return route('unauthorizepage');
         }
     }
+
+    public function scopeMostCompletedRequests($query)
+    {
+        return $query->select('users.*', DB::raw('COUNT(requests.id) as completed_request_count'))
+            ->join('requests', 'users.id', '=', 'requests.user_id') // Join users with requests
+            ->where('requests.status', 'Completed') // Filter for completed requests
+            ->whereYear('requests.created_at', now()->year) // Filter by current year
+            ->groupBy('users.id') // Group by user
+            ->orderByDesc('completed_request_count') // Order by highest completed requests
+            ->limit(1); // Only the top user
+    }
+
+
 }
