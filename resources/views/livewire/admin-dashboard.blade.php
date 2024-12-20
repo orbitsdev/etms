@@ -39,16 +39,34 @@
             <div class="bg-gradient-to-r from-sksu-900 to-sksu-600 rounded-lg shadow-lg p-8 col-span-1">
               <h1 class="text-4xl font-bold text-white mb-4">
                   Top Requester {{ now()->year }}
-              </h1> 
+              </h1>
               @if ($mostActiveUser)
-              <p class="text-lg text-white mb-8">
-                 {{$mostActiveUser->userDetails->fullName}}
-              </p>
-              <a href="#" class="bg-white hover:bg-gray-200 text-sksu-600 font-bold py-2 px-4 rounded">
-                 Total Request Completed ({{{ $mostActiveUser->completed_request_count }}})
-              </a>
+                  <div class="flex items-center space-x-4 mb-8">
+                      <!-- User Image -->
+                      <div class="w-16 h-16">
+                          <img 
+                              src="{{ $mostActiveUser->getImage() }}" 
+                              alt="{{ $mostActiveUser->userDetails->fullName }}" 
+                              class="rounded-full border-2 border-white shadow-lg object-cover w-16 h-16">
+                      </div>
+                      <!-- User Details -->
+                      <div>
+                          <p class="text-lg text-white font-semibold">
+                              {{ $mostActiveUser->userDetails->fullName }}
+                          </p>
+                      </div>
+                  </div>
+                  <!-- Completed Request Count -->
+                  <a href="#" class="bg-white hover:bg-gray-200 text-sksu-600 font-bold py-2 px-4 rounded">
+                      Total Request Completed ({{ $mostActiveUser->completed_request_count }})
+                  </a>
+              @else
+                  <p class="text-lg text-white mb-4">
+                      No Data Available
+                  </p>
               @endif
           </div>
+          
             {{-- <div class="col-span-1 bg-sksu-500 text-white p-6 rounded-lg shadow">
                 @if ($mostActiveUser)
                 <h3 class="text-lg font-semibold">Top Requester ({{ now()->year }})</h3>
