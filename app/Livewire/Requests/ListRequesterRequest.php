@@ -29,7 +29,7 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Request::query()->latest())
+            ->query(Request::query()->myRequest()->latest())
             ->columns([
                 Tables\Columns\TextColumn::make('user.userDetails.fullName')
                     ->searchable(query: function (Builder $query, string $search): Builder {

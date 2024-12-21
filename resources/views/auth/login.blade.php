@@ -46,7 +46,19 @@
                 <x-button class="w-full flex items-center justify-center py-3" type="submit"> 
                     {{ __('Log in') }}
                 </x-button>
+
+                
             </div>
         </form>
+        <div class="py-4 flex items-center justify-center">
+            <p class="text-gray-700 mr-2">Don’t have an account?</p>
+            <a href="{{route('register')}}" 
+               class="text-sksu-600 underline hover:text-sksu-700 rounded" 
+               aria-label="Create a new account">
+                Create Account
+            </a>
+        </div>
+        
+        
     </x-authentication-card>
 </x-guest-layout>
