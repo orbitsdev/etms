@@ -162,7 +162,7 @@
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
                     <a class="bg-white text-sksu-900 font-medium py-3 px-6 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all"
-                        href="{{route('equipment.export')}}">
+                        href="{{route('equipment.export',['status'=> 'all'])}}">
                         <i class="fa-regular fa-file-excel mr-2"></i> Export
                     </a>
                 </div>
