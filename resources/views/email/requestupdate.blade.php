@@ -72,6 +72,7 @@
 
         .label {
             font-weight: bold;
+            margin-right: 4px;
             color: #106c3b;
         }
 
