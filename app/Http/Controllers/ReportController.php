@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
 use App\Exports\RequestsExport;
 use App\Exports\EquipmentExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TopPopularEquipmentExport;
 
 class ReportController extends Controller
 {
@@ -42,5 +44,12 @@ public function exportEquipment($status = 'all')
 
     return Excel::download(new EquipmentExport($status), $filename);
 }
+
+public function exportPopularEquipment()
+    {
+        $filename = 'Popular_Equipment_' . now()->format('Y-m-d') . '.xlsx';
+
+        return Excel::download(new TopPopularEquipmentExport(10), $filename);
+    }
     
 }

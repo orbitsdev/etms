@@ -4,7 +4,7 @@
       <p class="text-lg font-normal text-gray-700">Total Approved</p>
       <h2 class="text-3xl font-bold text-gray-600">{{ $totalApproved }}</h2>
       @if ($totalApproved > 0)
-          <a href="{{ route('requests.export', ['status' => 'Approved']) }}" target="_blank" class="text-sm text-green-500 mt-2 underline hover:text-green-700">
+          <a href="{{ route('requests.export', ['status' => 'Approved']) }}" target="_blank" class="text-sm text-sksu-500 mt-2 underline hover:text-sksu-700">
               Download
           </a>
       @endif
