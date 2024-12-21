@@ -131,7 +131,7 @@
                                           <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $count }}</td>
                                           <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
                                               @if ($count > 0)
-                                                  <a href="{{ route('requests.export', ['status' => $status]) }}"
+                                                  <a href="{{ route('equipment.export', ['status' => $status]) }}"
                                                       class="underline text-sksu-700 hover:text-sksu-900">Download</a>
                                               @endif
                                           </td>
@@ -162,7 +162,7 @@
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
                     <a class="bg-white text-sksu-900 font-medium py-3 px-6 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all"
-                        href="{{route('equipment.export',['status'=> 'all'])}}">
+                        href="{{route('requests.export',['status'=> 'all'])}}">
                         <i class="fa-regular fa-file-excel mr-2"></i> Export
                     </a>
                 </div>
