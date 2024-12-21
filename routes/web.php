@@ -143,8 +143,8 @@ Route::get('/unauthorizepage', function () { return 'UnAuthorize'; })->name('una
 Route::get('/test/{record}', ViewRequesterRequest::class);
 
 Route::get('/send-email', function(){
-    // $record = Request::first();
-    // return view('email.requestupdate',['record'=> $record]);
+    $record = Request::first();
+    return view('email.requestupdate',['request'=> $record]);
     // $request= Request::first();
     
 

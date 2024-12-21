@@ -152,10 +152,7 @@
                     <div class="label">Request Date</div>
                     <div class="value">{{ $request->getFormattedRequestDateAttribute() }}</div>
                 </div>
-                <div class="details-row">
-                    <div class="label">Pickup Date</div>
-                    <div class="value">{{ $request->getFormattedPickupDateAttribute() }}</div>
-                </div>
+              
                 <div class="details-row">
                     <div class="label">Purpose</div>
                     <div class="value">{{ $request->purpose }}</div>
