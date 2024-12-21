@@ -133,34 +133,32 @@
         <!-- Header -->
         <div class="header">
             <img src="{{ url('images/sksu_logo.png') }}" alt="SKSU Logo">
-
-
             <h1>ETMS</h1>
             <p>Equipment Tracking Management System</p>
         </div>
 
         <!-- Content -->
         <div class="content">
-            <h2>Hello [Recipient Name],</h2>
+            <h2>Hello {{ $request->user->name ?? 'User' }},</h2>
             <p>We have an update regarding your request:</p>
 
             <!-- Request Details -->
             <div class="details">
                 <div class="details-row">
                     <div class="label">Request Status</div>
-                    <div class="value">Approved</div>
+                    <div class="value">{{ $request->status }}</div>
                 </div>
                 <div class="details-row">
                     <div class="label">Request Date</div>
-                    <div class="value">January 15, 2024</div>
+                    <div class="value">{{ $request->getFormattedRequestDateAttribute() }}</div>
                 </div>
                 <div class="details-row">
                     <div class="label">Pickup Date</div>
-                    <div class="value">January 20, 2024</div>
+                    <div class="value">{{ $request->getFormattedPickupDateAttribute() }}</div>
                 </div>
                 <div class="details-row">
                     <div class="label">Purpose</div>
-                    <div class="value">Classroom Equipment Usage</div>
+                    <div class="value">{{ $request->purpose }}</div>
                 </div>
             </div>
 
@@ -175,18 +173,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($request->items as $item)
                     <tr>
-                        <td>Projector</td>
-                        <td>Reserved</td>
-                        <td>1</td>
-                        <td>Room 101</td>
+                        <td>{{ $item->equipment->name ?? 'N/A' }}</td>
+                        <td>{{ $item->equipment->status ?? 'N/A' }}</td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>{{ $item->equipment->location ?? 'N/A' }}</td>
                     </tr>
-                    <tr>
-                        <td>Whiteboard</td>
-                        <td>Available</td>
-                        <td>2</td>
-                        <td>Room 102</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
 
@@ -196,7 +190,6 @@
         <!-- Footer -->
         <div class="footer">
             <p>SKSU Equipment Management System</p>
-           
         </div>
     </div>
 </body>
