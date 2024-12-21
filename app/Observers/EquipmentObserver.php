@@ -43,24 +43,39 @@ class EquipmentObserver
         // }
 
         // Log Stock Changes
+        
         if ($equipment->isDirty('stock')) {
             $oldStock = $equipment->getOriginal('stock');
             $newStock = $equipment->stock;
-
-
-            TrackingController::logStockChange($equipment, $oldStock, $newStock,);
-
-
+        
+            // Log stock change
+            TrackingController::logStockChange($equipment, $oldStock, $newStock);
+        
+            // Handle status updates based on stock
             if ($newStock <= 0 && $equipment->status !== 'Out of Stock') {
+                // If stock is 0 or less, set status to 'Out of Stock'
                 $equipment->update(['status' => 'Out of Stock']);
+            } elseif ($newStock > 0 && $equipment->status === 'Out of Stock') {
+                // If stock is greater than 0 and status is 'Out of Stock', update to 'Available'
+                $equipment->update(['status' => 'Available']);
             }
-
+        
+            // Ensure status consistency even if not explicitly covered by the above conditions
+          
+        
+            // Log history of the change
             TrackingController::logHistory($equipment, [
                 'type' => 'Stock Change',
                 'old_stock' => $oldStock,
                 'new_stock' => $newStock,
-            ], );
+            ]);
         }
+      
+        if ($equipment->status === 'Out of Stock' && $newStock > 0) {
+            // Correct the status if stock is greater than 0 but the status was not updated
+            $equipment->update(['status' => 'Available']);
+        }
+        
 
         // Log Status Changes
         if ($equipment->isDirty('status')) {

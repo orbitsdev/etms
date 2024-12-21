@@ -8,17 +8,26 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class EquipmentExport implements FromView
 {
-    protected $equipment;
+    protected $status;
 
-    public function __construct(Equipment $equipment)
+    public function __construct($status = 'all')
     {
-        $this->equipment = $equipment;
+        $this->status = $status;
     }
 
     public function view(): View
     {
+        $query = Equipment::query();
+
+        // Filter by status if provided
+        if ($this->status !== 'all') {
+            $query->where('status', $this->status);
+        }
+
+        $equipments = $query->latest()->get();
+
         return view('exports.equipment-export', [
-            'equipment' => $this->equipment
+            'equipments' => $equipments,
         ]);
     }
 }

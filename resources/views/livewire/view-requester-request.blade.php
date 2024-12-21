@@ -16,10 +16,21 @@
                         -
                         <a href="#" class="font-medium text-sksu-600"> {{$record->getFormattedRequestDateAttribute()}}</a>
                       </p>
-                      <div>
-                       
-                      
-                      </div>
+                      <div class="mt-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
+                {{ match($record->status) {
+                    'Pending' => 'bg-yellow-100 text-yellow-800',
+                    'Approved' => 'bg-green-100 text-green-800',
+                    'Ready for Pickup' => 'bg-blue-100 text-blue-800',
+                    'Picked Up' => 'bg-indigo-100 text-indigo-800',
+                    'Returned' => 'bg-purple-100 text-purple-800',
+                    'Cancelled' => 'bg-red-100 text-red-800',
+                    'Completed' => 'bg-gray-100 text-gray-800',
+                    default => 'bg-gray-200 text-gray-600',
+                } }}">
+                {{ $record->status }}
+            </span>
+        </div>
                     </div>
                     <div class="mt-4 flex space-x-3 md:mt-0">
                       
@@ -122,10 +133,14 @@
                                                               default => 'text-gray-500',
                                                           } }}">{{ $history->new_status }}</span>
                                                       @elseif ($history->type === 'Date Change')
-                                                          Updated request date 
-                                                          <span class="text-yellow-600 font-semibold">{{ $history->old_request_date }}</span>
-                                                          →
-                                                          <span class="text-yellow-600 font-semibold">{{ $history->new_request_date }}</span>
+                                                      <span class="text-yellow-600 font-semibold">
+                                                        {{ \Carbon\Carbon::parse($history->old_request_date)->format('F j, Y h:i A') }}
+                                                    </span>
+                                                    →
+                                                    <span class="text-yellow-600 font-semibold">
+                                                        {{ \Carbon\Carbon::parse($history->new_request_date)->format('F j, Y h:i A') }}
+                                                    </span>
+                                                    
                                                       @elseif ($history->type === 'Purpose Change')
                                                           Modified purpose
                                                       @endif
@@ -163,30 +178,36 @@
             </div>
             <aside class="hidden xl:block xl:pl-8">
               <h2 class="sr-only">Details</h2>
-              <div class="space-y-5">
+              
+              <div class="">
                   <!-- Total Items -->
-                  <div class="flex items-center space-x-2">
-                      <svg class="size-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8ZM8 9h4v2H8V9Zm0 4h4v2H8v-2ZM8 5h4v2H8V5Z" />
-                      </svg>
-                      <span class="text-sm text-blue-700 ">{{ $record->items->count() }} Total Items</span>
-                  </div>
-          
-                  <!-- Available Items -->
-                  <div class="flex items-center space-x-2">
-                      <svg class="size-5 text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM8.293 12.293a1 1 0 0 1 1.414 0L10 12.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414Z" />
-                      </svg>
-                      <span class="text-sm text-green-700 ">{{ $record->countAvailableItems() }} Available Items</span>
-                  </div>
-          
-                  <!-- Not Available Items -->
-                  <div class="flex items-center space-x-2">
-                      <svg class="size-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm3.707 10.707a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 9 6.293 6.707a1 1 0 1 1 1.414-1.414L10 7.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 9l2.293 2.293a1 1 0 0 1 0 1.414Z" />
-                      </svg>
-                      <span class="text-sm text-red-500 ">{{ $record->countUnavailableItems() }} Not Available Items</span>
-                  </div>
+                  @if($record->status != 'Completed')
+                  <div class="space-y-5 mb-6">
+
+                      <div class="flex items-center space-x-2">
+                          <svg class="size-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8ZM8 9h4v2H8V9Zm0 4h4v2H8v-2ZM8 5h4v2H8V5Z" />
+                            </svg>
+                            <span class="text-sm text-blue-700 ">{{ $record->items->count() }} Total Items</span>
+                        </div>
+                        
+                        <!-- Available Items -->
+                        <div class="flex items-center space-x-2">
+                            <svg class="size-5 text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM8.293 12.293a1 1 0 0 1 1.414 0L10 12.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414Z" />
+                            </svg>
+                            <span class="text-sm text-green-700 ">{{ $record->countAvailableItems() }} Available Items</span>
+                        </div>
+                        
+                        <!-- Not Available Items -->
+                        <div class="flex items-center space-x-2">
+                            <svg class="size-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm3.707 10.707a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 9 6.293 6.707a1 1 0 1 1 1.414-1.414L10 7.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 9l2.293 2.293a1 1 0 0 1 0 1.414Z" />
+                            </svg>
+                            <span class="text-sm text-red-500 ">{{ $record->countUnavailableItems() }} Not Available Items</span>
+                        </div>
+                    </div>
+                    @endif
           
                   <!-- Expected Return -->
                   <div class="flex items-center space-x-2 bg-sksu-50 p-2   rounded-lg border-2 border-sksu-500">
@@ -201,6 +222,7 @@
                       </span>
                   </div>
               </div>
+
               <div class="py-5 flex flex-col items-center">
                 <!-- Profile Image -->
                         

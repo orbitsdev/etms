@@ -97,7 +97,9 @@ class ListEquipments extends Component implements HasForms, HasTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(Equipment::STATUS_OPTIONS)->searchable()
-            ], layout: FiltersLayout::AboveContent)
+            ], 
+            // layout: FiltersLayout::AboveContent
+            )
             ->actions([
                 ActionGroup::make([
                     Action::make('View')

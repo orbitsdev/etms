@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipment;
 use Illuminate\Http\Request;
+use App\Exports\RequestsExport;
 use App\Exports\EquipmentExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,4 +23,24 @@ class ReportController extends Controller
         // Export with EquipmentExport
         return Excel::download(new EquipmentExport($equipment), $filename);
     }
+    public function requestExport($status)
+    {
+     
+        $filenameStatus = ucfirst($status); 
+        $date = now()->format('F_j_Y');     
+       
+        $filename = "{$filenameStatus}_request_Exported_{$date}.xlsx";
+    
+        
+        return Excel::download(new RequestsExport($status), $filename);
+    }
+
+    
+public function exportEquipment($status = 'all')
+{
+    $filename = "Equipment_Export_{$status}_" . now()->format('Y-m-d') . ".xlsx";
+
+    return Excel::download(new EquipmentExport($status), $filename);
+}
+    
 }

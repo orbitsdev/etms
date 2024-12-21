@@ -108,8 +108,8 @@ class Equipment extends Model implements HasMedia
 
 public function getImage()
     {
-        if ($this->hasMedia('image')) {
-            return $this->getFirstMediaUrl('image');
+        if ($this->hasMedia()) {
+            return $this->getFirstMediaUrl();
         }
 
         return url('images/placeholder-image.jpg');

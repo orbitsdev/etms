@@ -1,22 +1,45 @@
-<div class="grid grid-cols-4 gap-6 mb-6" wire:poll.visible.5s>
-    <div class="bg-white p-6 rounded-lg shadow tat-card hover:scale-105">
-      <p class="text-lg font-semibold">Total Approved</p>
-      <h2 class="text-3xl font-bold">{{$totalApproved}}</h2>
-      <p class="text-sm text-green-500 mt-2"> This year</p>
-    </div>
-    <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105">
-      <p class="text-lg font-semibold">Total Completed</p>
-      <h2 class="text-3xl font-bold">{{$totalCompleted}}</h2>
-      <p class="text-sm text-green-500 mt-2"> This year</p>
-    </div>
-    <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105">
-      <p class="text-lg font-semibold">Total Cancelled</p>
-      <h2 class="text-3xl font-bold">{{$totalCancelled}}</h2>
-      <p class="text-sm text-red-500 mt-2"> This year</p>
-    </div>
-    <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105">
-      <p class="text-lg font-semibold">Total Pending</p>
-      <h2 class="text-3xl font-bold">{{$totalPending}}</h2>
-      <p class="text-sm text-gray-500 mt-2"> This year</p>
-    </div>
+<div class="grid grid-cols-4 gap-6 mb-6" wire:poll.visible.5s">
+  <!-- Total Approved -->
+  <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105 transition-transform duration-300">
+      <p class="text-lg font-normal text-gray-700">Total Approved</p>
+      <h2 class="text-3xl font-bold text-gray-600">{{ $totalApproved }}</h2>
+      @if ($totalApproved > 0)
+          <a href="{{ route('requests.export', ['status' => 'Approved']) }}" target="_blank" class="text-sm text-green-500 mt-2 underline hover:text-green-700">
+              Download
+          </a>
+      @endif
   </div>
+
+  <!-- Total Completed -->
+  <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105 transition-transform duration-300">
+      <p class="text-lg font-normal text-gray-700">Total Completed</p>
+      <h2 class="text-3xl font-bold text-gray-600">{{ $totalCompleted }}</h2>
+      @if ($totalCompleted > 0)
+          <a href="{{ route('requests.export', ['status' => 'Completed']) }}" target="_blank" class="text-sm text-blue-500 mt-2 underline hover:text-blue-700">
+              Download
+          </a>
+      @endif
+  </div>
+
+  <!-- Total Cancelled -->
+  <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105 transition-transform duration-300">
+      <p class="text-lg font-normal text-gray-700">Total Cancelled</p>
+      <h2 class="text-3xl font-bold text-gray-600">{{ $totalCancelled }}</h2>
+      @if ($totalCancelled > 0)
+          <a href="{{ route('requests.export', ['status' => 'Cancelled']) }}" target="_blank" class="text-sm text-red-500 mt-2 underline hover:text-red-700">
+              Download
+          </a>
+      @endif
+  </div>
+
+  <!-- Total Pending -->
+  <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105 transition-transform duration-300">
+      <p class="text-lg font-normal text-gray-700">Total Pending</p>
+      <h2 class="text-3xl font-bold text-gray-600">{{ $totalPending }}</h2>
+      @if ($totalPending > 0)
+          <a href="{{ route('requests.export', ['status' => 'Pending']) }}" target="_blank" class="text-sm text-yellow-500 mt-2 underline hover:text-yellow-700">
+              Download
+          </a>
+      @endif
+  </div>
+</div>

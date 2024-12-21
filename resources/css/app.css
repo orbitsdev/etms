@@ -66,12 +66,21 @@
   @apply !w-[100rem];
 }
 .active-link {
-    @apply text-sksu-700 bg-gray-100  rubik-400 hover:bg-gray-50  flex gap-x-3 rounded-md px-1 py-2 text-base leading-6 font-semibold;
+  @apply text-sksu-700 bg-gray-100 rubik-400 hover:bg-gray-50 flex gap-x-3 rounded-md px-1 py-2 text-base leading-6 font-semibold;
+  transition: background-color 0.15s ease-out, transform 0.15s ease-out;
 }
 
 .inactive-link {
-    @apply text-gray-700 rubik-400 hover:text-sksu-700 hover:bg-gray-100  flex gap-x-3 rounded-md p-2 text-base leading-6 font-semibold;
+  @apply text-gray-700 rubik-400 hover:text-sksu-700 hover:bg-gray-100 flex gap-x-3 rounded-md p-2 text-base leading-6 font-semibold;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out, transform 0.15s ease-out;
 }
+
+.active-link:hover,
+.inactive-link:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+
 
 
 .fi-ta-header-cell-sort-icon{

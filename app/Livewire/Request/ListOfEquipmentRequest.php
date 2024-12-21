@@ -47,7 +47,7 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
                     ->listWithLineBreaks()->label('Items'),
                 Tables\Columns\TextColumn::make('request_date')
                     ->date(),
-                Tables\Columns\TextColumn::make('actual_return_date')
+                Tables\Columns\TextColumn::make('actual_return_date')->label('Expected returned date')
                     ->date(),
                 Tables\Columns\TextColumn::make('pickup_date')
                     ->dateTime()
@@ -80,7 +80,10 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(Request::STATUS_OPTIONS)->searchable()->multiple()
-            ], layout: FiltersLayout::AboveContent)
+            ], 
+            // layout: FiltersLayout::AboveContent
+            
+            )
             ->actions([
                 ActionGroup::make([
                     Action::make('View')
@@ -299,7 +302,7 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
 
                 $this->dialog()->show([
                     'icon' => 'success',
-                    'title' => 'The stock for the following items has been updated successfully: <strong>{$successItems}</strong>.',
+                'title' => "The stock for the following items has been updated successfully: <strong>{$successItems}</strong>.",
                     'description' => 'This is a description.',
                 ]);
             }

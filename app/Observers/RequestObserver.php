@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Request;
 use App\Models\RequestHistory;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\NotificationController;
 
 class RequestObserver
 {
@@ -30,6 +31,10 @@ class RequestObserver
                 'updated_by' => Auth::id(),
                 'description' => 'Status updated',
             ]);
+            if(Auth::user()->isAdmin()){
+
+                NotificationController::send($request);
+            }
         }
 
         // Track request date changes

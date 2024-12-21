@@ -93,7 +93,10 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
             ->filters([
                 SelectFilter::make('status')
                 ->options(Request::STATUS_OPTIONS)->searchable()->multiple()
-            ], layout: FiltersLayout::AboveContent)
+            ], 
+            // layout: FiltersLayout::AboveContentCollapsible
+            
+            )
             ->actions([
                 ActionGroup::make([
                     Action::make('View')

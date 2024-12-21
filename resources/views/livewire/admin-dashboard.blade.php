@@ -33,17 +33,17 @@
                       </div>
                       <!-- User Details -->
                       <div>
-                          <p class="text-lg text-white font-semibold">
+                          <p class="text-base text-white font-semibold">
                               {{ $mostActiveUser->userDetails->fullName }}
                           </p>
                       </div>
                   </div>
                   <!-- Completed Request Count -->
-                  <a href="#" class="bg-white hover:bg-gray-200 text-sksu-600 font-bold py-2 px-4 rounded">
+                  <a href="#" class="bg-white hover:bg-gray-200 text-sksu-800  text-base py-2 px-4 rounded">
                       Total Request Completed ({{ $mostActiveUser->completed_request_count }})
                   </a>
               @else
-                  <p class="text-lg text-white mb-4">
+                  <p class="text-base text-white mb-4">
                       No Data Available
                   </p>
               @endif
@@ -52,7 +52,20 @@
 
 
               <div class="col-span-2 bg-white p-6 rounded-lg stat-card shadow   ">
-                <h3 class="text-lg font-semibold mb-4">Top Requested Equipments</h3>
+                <div class="flex items-center justify-between">
+                  <h3 class="text-base font-normal mb-4">Top Requested Equipments</h3>
+                  <a class="text-blue-500 underline flex items-center " href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    <span class="text-base">
+
+                      Download
+                    </span>
+                </a>
+                
+
+                </div>
                 <ul class="divide-y divide-gray-200">
                   @forelse ($topPopularEquipment as $equipment)
                     
@@ -67,50 +80,247 @@
                 </ul>
               </div>
             </div>
-
-            <!-- Content Table -->
-            <div class="bg-white p-6 rounded-lg shadow stat-card">
-              <h3 class="text-lg font-semibold mb-4">Out of Stocks Equipments</h3>
-              <table class="min-w-full table-auto border-collapse border border-gray-200">
-                <thead>
-                  <tr class="bg-gray-100 table-row">
-                    <th class="border border-gray-200 px-4 py-2">Thumbnail</th>
-                    <th class="border border-gray-200 px-4 py-2">Equipment</th>
-                    <th class="border border-gray-200 px-4 py-2">Serial</th>
-                    <th class="border border-gray-200 px-4 py-2">Status </th>
-                    <th class="border border-gray-200 px-4 py-2">Last Update</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @forelse ($outOfStockEquipment as $equipment)
-                  <tr>
-                    <td class="border border-gray-200 px-4 py-2">
-                      @if ($equipment->getFirstMediaUrl())
-                      <a href="{{ $equipment->getFirstMediaUrl() }}" target="_blank" class="block">
-                        <img 
-                            src="{{ $equipment->getFirstMediaUrl() }}" 
-                            alt="{{ $equipment->name }}" 
-                            class="w-12 h-12 rounded">
+            <div class="grid grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow stat-card col-span-2 mb-6 stat-card">
+              <div class="sm:flex sm:items-center bg-gradient-to-r from-sksu-50 to-gray-50 rounded-lg p-6 space-y-4 sm:space-y-0">
+                <div class="sm:flex-auto">
+                    <h1 class="text-xl font-bold text-sksu-800">
+                        <i class="fa-solid fa-toolbox mr-2"></i> Equipment Summary
+                    </h1>
+                    <p class="mt-2 text-sm text-sksu-800 max-w-md">
+                        Access detailed equipment reports and export status-specific data for analysis.
+                    </p>
+                </div>
+                <div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
+                    <a class="bg-white text-sksu-900 font-medium py-3 px-6 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all"
+                        href="{{ route('equipment.export', ['status' => 'all']) }}">
+                        <i class="fa-regular fa-file-excel mr-2"></i> Export
                     </a>
-                    @else
-                    <img src="{{asset('images/placeholder-image.jpg')}}" alt="Thumbnail" class="w-12 h-12 rounded">
-                    @endif
-                    
-                    </td>
-                    <td class="border border-gray-200 px-4 py-2">{{$equipment->name}}</td>
-                    <td class="border border-gray-200 px-4 py-2">{{$equipment->serial_number ?? ''}}</td>
-                    <td class="border border-gray-200 px-4 py-2 text-red-500">{{$equipment->status}}</td>
-                    <td class="border border-gray-200 px-4 py-2">{{ $equipment->updated_at->format('F j, Y h:i:s A') }}</td>
-                  </tr>
-                  @empty
-                  <tr>
-                    <td colspan="5" class="text-center text-gray-500 py-4">No equipment found.</td>
-                </tr>
-                  @endforelse
-                 
-                </tbody>
-              </table>
+                </div>
             </div>
+            
+            
+          
+              <div class="mt-8 flow-root">
+                  <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                          <table class="min-w-full">
+                              <thead class="bg-white">
+                                  <tr>
+                                      <th scope="col" class="px-3 py-3.5 text-left text-sm text-gray-900">Status</th>
+                                      <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-3">Total Equipment</th>
+                                      <th scope="col" class="px-3 py-3.5 text-left text-sm text-gray-900"></th>
+                                  </tr>
+                              </thead>
+                              <tbody class="bg-white">
+                                  @php
+                                      $equipmentStatuses = [
+                                          'Available' => $availableEquipmentCount,
+                                          'Out of Stock' => $outOfStockEquipmentCount,
+                                          'Under Maintenance' => $underMaintenanceEquipmentCount,
+                                          'Reserved' => $reservedEquipmentCount,
+                                          'Not Available' => $notAvailableEquipmentCount,
+                                          'Archived' => $archivedEquipmentCount,
+                                      ];
+                                  @endphp
+                                  @foreach ($equipmentStatuses as $status => $count)
+                                      <tr class="border-t border-gray-300">
+                                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">{{ $status }}</td>
+                                          <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $count }}</td>
+                                          <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                              @if ($count > 0)
+                                                  <a href="{{ route('equipment.export', ['status' => $status]) }}"
+                                                      class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                              @endif
+                                          </td>
+                                      </tr>
+                                  @endforeach
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>  
+
+
+
+       
+          
+
+            <div class="bg-white p-6 rounded-lg shadow stat-card col-span-2 mb-6 stat-card">
+              
+              <div class="sm:flex sm:items-center bg-gradient-to-r from-sksu-50 to-gray-50 rounded-lg p-6 space-y-4 sm:space-y-0">
+                <div class="sm:flex-auto">
+                    <h1 class="text-xl font-bold text-sksu-800">
+                        <i class="fa-solid fa-clipboard-list mr-2"></i> Request Summary
+                    </h1>
+                    <p class="mt-2 text-sm text-sksu-800 max-w-md">
+                        Access all your reports with ease. Click below to download or print the latest request status and usage statistics.
+                    </p>
+                </div>
+                <div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
+                    <a class="bg-white text-sksu-900 font-medium py-3 px-6 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all"
+                        href="#">
+                        <i class="fa-regular fa-file-excel mr-2"></i> Export
+                    </a>
+                </div>
+            </div>
+            
+                <div class="mt-8 flow-root">
+                  <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                          <table class="min-w-full">
+                              <thead class="bg-white">
+                                  <tr>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm  text-gray-900">
+                                      Status
+                                  </th>
+                                      <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm  text-gray-900 sm:pl-3">
+                                          Total Equipments
+                                      </th>
+                                      <th scope="col" class="px-3 py-3.5 text-left text-sm  text-gray-900">
+                                          
+                                      </th>
+                                      {{-- 
+                                      <th scope="col" class="px-3 py-3.5 text-left text-sm  text-gray-900">
+                                          Status
+                                      </th> --}}
+                                  </tr>
+                              </thead>
+                              <tbody class="bg-white">
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Pending</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $pendingRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($pendingRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Pending']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Approved</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $approvedRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($approvedRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Approved']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Ready For Pickup</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $readyToPickUpRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($readyToPickUpRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Ready for Pickup']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Picked Up</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $pickedUpRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($pickedUpRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Picked Up']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Returned</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $returnedRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($returnedRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Returned']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Cancelled</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $cancelledRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($cancelledRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Cancelled']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Completed</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $completedRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($completedRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Completed']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                            
+                            
+                          </table>
+                      </div>
+                  </div>
+              </div>
+              
+              
+              </div>
+            </div>
+
+              {{-- <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="sm:flex sm:items-center bg-gradient-to-r from-sksu-50 to-gray-50 rounded-lg p-6">
+                    <div class="sm:flex-auto">
+                        <h1 class="text-xl font-bold text-sksu-800">Request Report</h1>
+                        <p class="mt-2 text-sm text-sksu-800">
+                            View and download the detailed report of requests along with their associated items and equipment details.
+                        </p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
+                        <a class="bg-white text-sksu-900 font-medium py-2 px-4 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all" href="#">
+                            <i class="fa-regular fa-file-excel mr-1"></i> Export to Excel
+                        </a>
+                        <a class="bg-white text-sksu-900 font-medium py-2 px-4 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all" href="#">
+                            <i class="fa-solid fa-file-pdf mr-1"></i> Export to PDF
+                        </a>
+                    </div>
+                </div>
+            
+                <div class="mt-8 flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-white">
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Requester</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Request Date</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Items</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <!-- Example Row -->
+                                    <tr>
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-3">
+                                            <div class="flex items-center space-x-2">
+                                                <img src="https://via.placeholder.com/50" alt="User Image" class="w-8 h-8 rounded-full">
+                                                <span>John Doe</span>
+                                            </div>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">December 15, 2023</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">Completed</span>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                            <ul class="list-disc pl-5">
+                                                <li>Projector - Status: Available</li>
+                                                <li>Whiteboard - Status: Reserved</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <!-- More Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+            
           </div>
 
 
