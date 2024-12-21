@@ -242,7 +242,9 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
 
         // Update the request status
         $record->status = $data['data']['status'];
-        $record->status_reason = $data['data']['status_reason'] ?? null;
+        if($data['data']['status'] == Request::CANCELED){
+            $record->status_reason = $data['data']['status_reason'] ?? '';
+        }
         $record->updated_by = Auth::user()->id;
         $record->save();
 
