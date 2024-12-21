@@ -1,4 +1,4 @@
-<div class="grid grid-cols-4 gap-6 mb-6" wire:poll.visible.5s">
+<div class="grid grid-cols-4 gap-6 mb-6" wire:poll.visible.5s>
   <!-- Total Approved -->
   <div class="bg-white p-6 rounded-lg shadow stat-card hover:scale-105 transition-transform duration-300">
       <p class="text-lg font-normal text-gray-700">Total Approved</p>

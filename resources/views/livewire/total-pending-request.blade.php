@@ -1,4 +1,4 @@
-<div class="ml-4 relative  flex items-center justify-center">
+<div class="ml-4 relative  flex items-center justify-center" wire:poll.visible.5s>
     <!-- Icon or Element -->
    
 
