@@ -131,7 +131,7 @@
                                           <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $count }}</td>
                                           <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
                                               @if ($count > 0)
-                                                  <a href="{{ route('equipment.export', ['status' => $status]) }}"
+                                                  <a href="{{ route('requests.export', ['status' => $status]) }}"
                                                       class="underline text-sksu-700 hover:text-sksu-900">Download</a>
                                               @endif
                                           </td>
