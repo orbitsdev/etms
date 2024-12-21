@@ -108,6 +108,20 @@
             color: #106c3b;
             text-decoration: none;
         }
+        .cancelled{
+            padding: 10px;
+            background: #fee2e2;
+            color: #991b1b;
+            border-radius: 2px;
+
+        
+        }
+
+        .text-c{
+            margin-top: 8px !important;
+            padding: 0px;
+            line-height: 0;
+        }
 
         @media (max-width: 600px) {
             .container {
@@ -158,7 +172,15 @@
                     <div class="value">{{ $request->purpose }}</div>
                 </div>
             </div>
-
+            @if($request->status == 'Cancelled')
+            <p class="text-c">
+                Reason
+            </p>
+            <div class="cancelled">
+                
+                    {{$request->status_reason ?? ''}}
+            </div>
+            @endif
             <h2>Items Included:</h2>
             <table class="items-table">
                 <thead>
@@ -180,6 +202,7 @@
                     @endforeach
                 </tbody>
             </table>
+           
 
             <p>If you have any questions or need further assistance, feel free to contact us.</p>
         </div>
