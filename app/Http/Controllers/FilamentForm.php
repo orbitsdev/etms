@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Closure;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Request;
 use Filament\Forms\Get;
@@ -30,6 +31,91 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class FilamentForm extends Controller
 {
+    
+    public static function user2Form(): array {
+    return [
+        Section::make('Account Details')
+            ->columns([
+                'sm' => 3,
+                'xl' => 6,
+                '2xl' => 12,
+            ])
+            ->schema([
+                // Name Input
+                TextInput::make('name')
+                    ->label('Full Name')
+                    ->required()
+                    ->maxLength(191)
+                    ->columnSpan(3),
+    
+                // Email Input
+                TextInput::make('email')
+                    ->label('Email Address')
+                    ->email()
+                    ->disabled(fn(string $operation): bool => $operation === 'create')
+                    ->maxLength(191)
+                    ->columnSpan(3),
+    
+                // Password Input
+                Password::make('password')
+                    ->label(fn(string $operation) => $operation === 'create' ? 'Password' : 'New Password')
+                  
+                    ->password()
+                    ->required(fn(string $operation): bool => $operation === 'create')
+                    ->dehydrateStateUsing(fn(?string $state): string => filled($state) ? Hash::make($state) : '')
+                    ->dehydrated(fn(?string $state): bool => filled($state))
+                    ->columnSpan(3),
+    
+                // Role Selection
+                Select::make('role')
+                ->label('User Role')
+                ->default(fn(?Model $record) => $record && $record->role !== null ? $record->role : User::STUDENT)
+                ->options(User::getRoleOptions())
+                ->required()
+                ->searchable()
+                ->live()
+                ->disabled(fn(string $operation) => $operation === 'edit')
+                ->columnSpan([
+                    'sm' => 2,
+                    'md' => 3,
+                    'lg' => 3,
+                ]),
+            
+    
+                // Department Input (Visible for Admins)
+                TextInput::make('department')
+                    ->label('Department')
+                    ->maxLength(191)
+                    ->hidden(fn(Get $get) => $get('role') == User::ADMIN),
+    
+                // Course Input (Visible for Students)
+                TextInput::make('course')
+                    ->label('Course')
+                    ->maxLength(191)
+                    ->hidden(fn(Get $get) => $get('role') !== User::STUDENT),
+    
+                // Section Input (Visible for Students)
+                TextInput::make('section')
+                    ->label('Section')
+                    ->maxLength(191)
+                    ->hidden(fn(Get $get) => $get('role') !== User::STUDENT),
+    
+                // Profile Photo Upload
+                FileUpload::make('profile_photo_path')
+                    ->label('Profile Photo')
+                    ->disk('public')
+                    ->directory('accounts')
+                    ->image()
+                    ->imageEditor()
+                    ->columnSpanFull(),
+            ]),
+        
+        // Additional user details form
+        ...FilamentForm::userDetailsForm(),
+    ];
+
+}
+    
     public static function equipmentForm(): array
     {
         return [
@@ -59,7 +145,7 @@ class FilamentForm extends Controller
                     //     ->native(false)->columnSpan(3)
                     //     ->hidden(fn(string $operation): bool => $operation === 'create')->default(Equipment::AVAILABLE),
                     //    DateTimePicker::make('archived_date')->date()->columnSpan(3)->native(false),
-                    SpatieMediaLibraryFileUpload::make('image')->columnSpanFull(),
+                    SpatieMediaLibraryFileUpload::make('image')->columnSpanFull()->image(),
                 ]),
         ];
     }
@@ -364,6 +450,7 @@ class FilamentForm extends Controller
                             'quantiy' => '200px',
                         ])
                         ->schema([
+                            
                             Select::make('equipment_id')
                                 ->label('Equipment')
                                 ->relationship(

@@ -18,33 +18,39 @@ class UserSeeder extends Seeder
             'name'=> 'Admin User',
             'email'=> 'admin@gmail.com',
             'password'=> Hash::make('password'),
-            'role'=> 'admin',
+            'role'=> User::ADMIN,
          ]);
         User::create([
             'name'=> 'Etms dmin',
             'email'=> 'admin@etms.com',
             'password'=> Hash::make('password'),
-            'role'=> 'admin',
+            'role'=> User::ADMIN,
          ]);
          User::create([
             'name'=> 'Developer User',
             'email'=> 'developer@gmail.com',
             'password'=> Hash::make('password'),
-            'role'=> 'admin',
+            'role'=> User::ADMIN,
          ]);
 
          User::create([
             'name'=> 'Brian Orbino',
             'email'=> 'test@etms.com',
             'password'=> Hash::make('password'),
-            'role'=> 'requester',
+            'role'=> User::STUDENT,
          ]);
          User::create([
             'name'=> 'Angela Tirado',
             'email'=> 'test2@etms.com',
             'password'=> Hash::make('password'),
-            'role'=> 'requester',
+            'role'=> User::FACULTY,
          ]);
+         // User::create([
+         //    'name'=> 'Jessica hey',
+         //    'email'=> 'test3@etms.com',
+         //    'password'=> Hash::make('password'),
+         //    'role'=> User::REQUESTER,
+         // ]);
 
         //  ['admin', 'manager', 'requester']
     }

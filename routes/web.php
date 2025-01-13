@@ -38,6 +38,10 @@ use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\UserDetails\CreateUserDetails;
 use App\Livewire\Request\ListOfEquipmentRequest;
 use App\Livewire\Request\ListOfEquipmetnRequest;
+use App\Livewire\Users\CreateUser;
+use App\Livewire\Users\ListUsers;
+use App\Livewire\Userss\UpdateUser;
+use Filament\Resources\Pages\EditRecord;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +76,14 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/requester', UserDashboard::class)->name('user.dashboard');
         Route::middleware(['can:is-admin'])->group(function(){
+            Route::prefix('/users')->name('users.')->group(function () {
+                Route::get('/', ListUsers::class)->name('index');
+                Route::get('/create', CreateUser::class)->name('create');
+                Route::get('/edit/{record}', UpdateUser::class)->name('edit');
+                
+               
+    
+            });
             Route::prefix('/departments')->name('department.')->group(function () {
                 Route::get('/', ListDepartment::class)->name('index');
                 Route::get('/create', CreateDepartment::class)->name('create');
@@ -101,7 +113,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
                 Route::get('/view/{record}', ViewEquipment::class)->name('view');
             });
         });
-        Route::get('/equipments/requests', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests')->middleware(['can:is-admin']);
+        Route::get('/equipments/requests-list', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests')->middleware(['can:is-admin']);
 
         // public 
 
@@ -111,8 +123,8 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
 
         Route::prefix('/requests')->name('requests.')->group(function () {
             Route::get('/', ListRequesterRequest::class)->name('index');
-            Route::get('/form', RequestEquipmentForm::class)->name('create');
-            Route::get('/form/update/{record}', EditEquipmentRequest::class)->name('edit');
+            Route::get('/new-equipment-request', RequestEquipmentForm::class)->name('create');
+            Route::get('/update/equipment-request/{record}', EditEquipmentRequest::class)->name('edit');
             Route::get('/view/{record}', ViewRequesterRequest::class)->name('view');
         });
 

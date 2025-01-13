@@ -22,6 +22,29 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+
+
+    public const ADMIN = 'Admin';
+    public const REQUESTER = 'Requester';
+    public const STUDENT = 'Student';
+    public const FACULTY = 'Faculty';
+    
+    //MAKE USERS OPTIONS FROM CONST
+
+
+    public static function getRoleOptions(): array
+    {
+        return [
+            self::ADMIN => self::ADMIN,
+            // self::REQUESTER => self::REQUESTER,
+            self::STUDENT => self::STUDENT,
+            self::FACULTY => self::FACULTY,
+        ];
+    }
+
+
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -76,24 +99,31 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->role === User::ADMIN;
     }
     public function isRequester()
     {
-        return $this->role === 'requester';
+        return $this->role === User::REQUESTER;
+    }
+
+    public function scopeIsNotAdmin($query){
+        return $query->where('role', '!=', User::ADMIN);
     }
 
     public function getRedirectRouteBasedOnRole()
     {
         switch ($this->role) {
 
-            case 'admin':
+            case User::ADMIN:
                 return redirect()->route('admin.dashboard');
 
             case 'manager':
-            case 'requester':
+            case User::REQUESTER:
                 return redirect()->route('requests.index');
-
+            case User::STUDENT:
+                return redirect()->route('requests.index');
+            case User::FACULTY:
+                return redirect()->route('requests.index');
             default:
                 return '/';
         }
@@ -112,11 +142,13 @@ class User extends Authenticatable
     public function routeBaseOnRole()
     {
         switch ($this->role) {
-            case 'admin':
+            case User::ADMIN:
                 return route('admin.dashboard');
-            case 'manager':
+            case User::REQUESTER:
                 return route('user.dashboard');
-            case 'requester':
+            case User::STUDENT:
+                return route('user.dashboard');
+            case User::FACULTY:
                 return route('user.dashboard');
 
             default:

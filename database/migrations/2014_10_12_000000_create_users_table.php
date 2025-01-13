@@ -20,7 +20,10 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
-            $table->enum('role', ['admin', 'manager', 'requester'])->default('requester');
+            $table->enum('role', ['Admin', 'Student', 'Requester','Faculty'])->default('Student');
+            $table->string('department')->nullable();
+            $table->string('course')->nullable();
+            $table->string('section')->nullable();
             $table->timestamps();
         });
     }
