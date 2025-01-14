@@ -108,6 +108,10 @@ class User extends Authenticatable
     {
         return $this->role === User::ADMIN;
     }
+    public function notAdmin()
+    {
+        return $this->role != User::ADMIN;
+    }
     public function isRequester()
     {
         return $this->role === User::REQUESTER;

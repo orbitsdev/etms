@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class TotalPendingRequest extends Component
 {
-  
+
     public $totalPending;
 
     public function render()
-    {   
+    {
         $currentYear = Carbon::now()->year;
-        if( Auth::user()->isRequester()){
+        if( Auth::user()->notAdmin()){
 
             $this->totalPending = number_format(Request::myRequest()->pending()->whereYear('created_at', $currentYear)->count());
         }else{

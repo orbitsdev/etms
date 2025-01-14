@@ -658,10 +658,9 @@ class FilamentForm extends Controller
             Section::make('Job Order Details')
             ->columnSpanFull()
                 ->schema([
+                    DatePicker::make('request_date')->date()->columnSpan(4)->required()->closeOnDateSelection()->minDate(today()),
                     Select::make('requester_id')
-                    ->label(function (string $operation){
-                        return $operation;
-                    })
+                   ->label('Requester')
                     ->relationship(
                         name: 'user',
                         titleAttribute: 'name',
@@ -669,6 +668,7 @@ class FilamentForm extends Controller
                     )
                     ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->userDetails->fullName} - {$record->userDetails->type} ")->searchable()->preload()
                     ->columnSpanFull()
+                    ->required()
                     ,
 
                     TextInput::make('title')
@@ -685,7 +685,7 @@ class FilamentForm extends Controller
                         ->required()
                         ->columnSpanFull()
                         ->rows(5),
-
+                       
 
                 ]),
         ];
@@ -696,6 +696,7 @@ class FilamentForm extends Controller
             Section::make('Job Order Details')
                 ->columns(2)
                 ->schema([
+                    DatePicker::make('request_date')->date()->columnSpan(4)->required()->closeOnDateSelection()->minDate(today()),
                     // Job Title
                     TextInput::make('title')
                         ->label('Job Title')
@@ -712,31 +713,7 @@ class FilamentForm extends Controller
                         ->columnSpanFull()
                         ->rows(5),
 
-                    // Requester (User making the request)
-                    // Select::make('requester_id')
-                    //     ->label('Requester')
-                    //     ->relationship('requester', 'name') // Assuming User model has a `name` field
-                    //     ->searchable()
-                    //     ->preload()
-                    //     ->required(),
 
-                    // Assignee Name
-                    // TextInput::make('assignee_name')
-                    //     ->label('Assignee Name')
-                    //     ->placeholder('Enter the name of the person assigned (optional)')
-                    //     ->maxLength(191),
-
-                    // Status
-                    // Select::make('status')
-                    //     ->label('Status')
-                    //     ->options([
-                    //         'Pending' => 'Pending',
-                    //         'In Progress' => 'In Progress',
-                    //         'Completed' => 'Completed',
-                    //         'Cancelled' => 'Cancelled',
-                    //     ])
-                    //     ->default('Pending')
-                    //     ->required(),
                 ]),
         ];
     }
@@ -749,7 +726,10 @@ class FilamentForm extends Controller
                 ->live(debounce: 500)
                 ->options(function (Model $record) {
                     return $record->getAvailableStatusTransitions();
-                }),
+                })->afterStateUpdated(function ($state, Get $get, Set $set) {
+                })
+
+                ->required(),
 
 
              // Status Reason Textarea
@@ -760,8 +740,21 @@ class FilamentForm extends Controller
         ->required()
         ->rows(5)
         ->hidden(function (Get $get) {
+            // dd($get('status'));
             // Only show if the status is Cancelled or Failed
             return !in_array($get('status'), [JobOrder::STATUS_CANCELLED, JobOrder::STATUS_FAILED]);
+        }),
+
+        TextInput::make('assignee_name')
+        ->label('Assign To')
+        ->placeholder('Enter')
+        ->required()
+        ->columnSpanFull()
+        ->maxLength(191)
+        ->hidden(function (Get $get) {
+            // dd($get('status'));
+            // Only show if the status is Cancelled or Failed
+            return in_array($get('status'), [JobOrder::STATUS_FAILED]);
         }),
 
         ];

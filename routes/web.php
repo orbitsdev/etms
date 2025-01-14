@@ -2,9 +2,11 @@
 
 use App\Models\Request;
 use App\Livewire\Report;
+use App\Models\JobOrder;
 use App\Models\Equipment;
 use App\Mail\RequestUpdate;
 use App\Livewire\ViewCourse;
+use App\Mail\JobOrderUpdate;
 use App\Livewire\ViewSection;
 use App\Livewire\UserDashboard;
 use App\Livewire\ViewEquipment;
@@ -24,29 +26,30 @@ use App\Livewire\User\EditUserDetails;
 use App\Livewire\ViewRequesterRequest;
 use App\Livewire\Sections\EditSections;
 use App\Livewire\Sections\ListSections;
+use App\Livewire\JobOrders\EditJobOrder;
 use Filament\Resources\Pages\EditRecord;
 use App\Http\Controllers\ReporController;
 use App\Livewire\Sections\CreateSections;
 use App\Http\Controllers\ReportController;
 use App\Livewire\Equipments\EditEquipment;
+use App\Livewire\JobOrders\CreateJobOrder;
 use App\Livewire\Equiments\CreateEquipment;
 use App\Livewire\Equipments\ListEquipments;
+use App\Livewire\JobOrders\ListOfJobOrders;
 use App\Livewire\Departments\EditDepartment;
 use App\Livewire\Departments\ListDepartment;
 use App\Http\Controllers\EquipmentController;
 use App\Livewire\Equipment\ListEquipmentView;
 use App\Livewire\Departments\CreateDepartment;
-use App\Livewire\JobOrders\CreateJobOrder;
-use App\Livewire\JobOrders\EditJobOrder;
-use App\Livewire\JobOrders\ListOfJobOrders;
-use App\Livewire\JobOrders\ListOfMyJobOrdersRequests;
 use App\Livewire\JobOrders\MyJobOrdersRequests;
 use App\Livewire\Requests\EditEquipmentRequest;
 use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\UserDetails\CreateUserDetails;
+use App\Http\Controllers\NotificationController;
 use App\Livewire\Request\ListOfEquipmentRequest;
 use App\Livewire\Request\ListOfEquipmetnRequest;
+use App\Livewire\JobOrders\ListOfMyJobOrdersRequests;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,4 +174,16 @@ Route::get('/send-email', function(){
     // $request= Request::first();
 
 
+});
+
+// test laytout of joborder emai
+Route::get('/joborder-email', function(){
+    $jobOrder = JobOrder::first(); // Replace with a specific ID if needed: JobOrder::find(1);
+
+   
+
+    // Replace with a test email address
+    NotificationController::sendJobOrderNotification($jobOrder);
+
+    return 'Job Order email sent!';
 });

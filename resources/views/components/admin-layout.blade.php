@@ -112,7 +112,7 @@
 
 
                                     <span class="ml-2 truncate">Job Orders </span>
-                                    @livewire('total-pending-request')
+                                    @livewire('total-job-order-pending-request')
                                     {{-- <div>
                                         <span class="inline-flex items-center justify-center px-1.5 py-1 text-xs rubik-500 leading-none text-green-100 bg-green-600 rounded-full">
                                         40
@@ -221,7 +221,7 @@
 
 
                                     <span class="ml-2 truncate">My Job Order Requests</span>
-                                     @livewire('total-pending-request')
+                                     @livewire('total-job-order-pending-request')
                                   </a>
                                 </li>
 

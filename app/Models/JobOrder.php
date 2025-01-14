@@ -14,10 +14,10 @@ class JobOrder extends Model implements HasMedia
     use InteractsWithMedia;
     use HasFactory;
 
-  
+
     // Array of All Statuses
     public const STATUS_PENDING = 'Pending';
-    public const STATUS_IN_PROGRESS = 'In Progress';
+    public const STATUS_APPROVED = 'Approved';
     public const STATUS_COMPLETED = 'Completed';
     public const STATUS_CANCELLED = 'Cancelled';
     public const STATUS_FAILED = 'Failed';
@@ -25,7 +25,7 @@ class JobOrder extends Model implements HasMedia
     // Array of All Statuses
     public const STATUSES = [
         self::STATUS_PENDING,
-        self::STATUS_IN_PROGRESS,
+        self::STATUS_APPROVED,
         self::STATUS_COMPLETED,
         self::STATUS_CANCELLED,
         self::STATUS_FAILED,
@@ -33,11 +33,11 @@ class JobOrder extends Model implements HasMedia
 
     // Status Transitions
     public const IF_PENDING = [
-        self::STATUS_IN_PROGRESS => self::STATUS_IN_PROGRESS,
+        self::STATUS_APPROVED => self::STATUS_APPROVED,
         self::STATUS_CANCELLED => self::STATUS_CANCELLED,
     ];
 
-    public const IF_IN_PROGRESS = [
+    public const IF_APPROVED = [
         self::STATUS_COMPLETED => self::STATUS_COMPLETED,
         self::STATUS_FAILED => self::STATUS_FAILED,
         self::STATUS_CANCELLED => self::STATUS_CANCELLED,
@@ -48,10 +48,14 @@ class JobOrder extends Model implements HasMedia
     ];
 
     public const IF_CANCELLED = [
+        self::STATUS_APPROVED => self::STATUS_APPROVED,
+        self::STATUS_COMPLETED => self::STATUS_COMPLETED,
         // No further transitions; job is terminated.
     ];
 
     public const IF_FAILED = [
+        self::STATUS_APPROVED => self::STATUS_APPROVED,
+        self::STATUS_COMPLETED => self::STATUS_COMPLETED,
         // No further transitions; job has failed.
     ];
 
@@ -65,7 +69,7 @@ class JobOrder extends Model implements HasMedia
         // Map the current status to its allowed transitions
         $statusTransitions = [
             self::STATUS_PENDING => self::IF_PENDING,
-            self::STATUS_IN_PROGRESS => self::IF_IN_PROGRESS,
+            self::STATUS_APPROVED => self::IF_APPROVED,
             self::STATUS_COMPLETED => self::IF_COMPLETED,
             self::STATUS_CANCELLED => self::IF_CANCELLED,
             self::STATUS_FAILED => self::IF_FAILED,
@@ -109,6 +113,48 @@ class JobOrder extends Model implements HasMedia
     {
         return $query->where('status', $status);
     }
+
+
+    public function scopePending($query)
+    {
+        return $query->where('status', self::STATUS_PENDING);
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', self::STATUS_APPROVED);
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', self::STATUS_COMPLETED);
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', self::STATUS_CANCELLED);
+    }
+
+    public function scopeFailed($query)
+    {
+        return $query->where('status', self::STATUS_FAILED);
+    }
+
+    /**
+     * Helpers
+     */
+    public function getFormattedRequestDateAttribute(): ?string
+    {
+        return $this->request_date
+            ? \Carbon\Carbon::parse($this->request_date)->format('F j, Y, g:i A')
+            : null;
+    }
+
+    public function getStatusReasonSummary(): string
+    {
+        return $this->status_reason ?? 'No reason provided.';
+    }
+
 
 
 }

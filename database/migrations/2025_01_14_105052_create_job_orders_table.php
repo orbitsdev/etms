@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('assignee_name')->nullable(); // User assigned to fulfill the job
             $table->string('title')->nullable(); // Brief job title
             $table->text('description')->nullable(); // Detailed description of the job
-            $table->enum('status', ['Pending', 'In Progress', 'Completed', 'Cancelled','Failed'])->default('Pending'); // Job status
-            $table->date('official_date')->nullable();
+            $table->enum('status', ['Pending', 'Approved', 'Completed', 'Cancelled', 'Failed'])->default('Pending'); // Job status
+
+            $table->date('request_date')->nullable();
             $table->text('status_reason')->nullable();
             $table->timestamps();
         });

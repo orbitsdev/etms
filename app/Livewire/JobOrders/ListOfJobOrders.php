@@ -6,6 +6,7 @@ use Filament\Tables;
 use Livewire\Component;
 use App\Models\JobOrder;
 use Filament\Tables\Table;
+use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
@@ -42,13 +43,14 @@ class ListOfJobOrders extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('status')
                 ->badge()
                 ->color(fn(string $state): string => match ($state) {
-                    'Available' => 'success',
-                    'Reserved' => 'warning',
-                    'Not Available' => 'danger',
-                    'Out of Stock' => 'gray',
-                    'Archived' => 'info',
-                    default => 'gray'
+                    'Pending' => 'warning',
+                    'Approved' => 'info',
+                    'Completed' => 'success',
+                    'Cancelled' => 'danger',
+                    'Failed' => 'danger',
+                    default => 'gray',
                 }),
+
                 Tables\Columns\TextColumn::make('assignee_name')
                 ->label('Assigned To')
                 ->searchable(),
@@ -67,14 +69,20 @@ class ListOfJobOrders extends Component implements HasForms, HasTable
                     })->label('Add Job Order')
             ])
             ->filters([
-                SelectFilter::make('status')
-                ->options(JobOrder::STATUSES)->searchable()->multiple()
+                // SelectFilter::make('status')
+                // ->options([
+                //     'Pending'=>'Pending',
+                //     'Approve'=>'Approved',
+                //     'Completed'=>'Completed',
+                //     'Cancelled'=>'Cancelled',
+                //     'Failed'=>'Failed',
+                // ]),
             ])
             ->actions([
                 ActionGroup::make([
 
                     Tables\Actions\EditAction::make('Manage')->form(FilamentForm::manageJobOrderForm())
-                    
+
                     ->mutateFormDataUsing(function (array $data): array {
                         // $data['last_edited_by_id'] = auth()->id();
 
@@ -82,6 +90,7 @@ class ListOfJobOrders extends Component implements HasForms, HasTable
                     })->label('Manage')
                     ,
                     Tables\Actions\EditAction::make('Update')->form(FilamentForm::JobOrderAdminform())
+
 
                     ->mutateFormDataUsing(function (array $data): array {
                         // $data['last_edited_by_id'] = auth()->id();
@@ -96,7 +105,12 @@ class ListOfJobOrders extends Component implements HasForms, HasTable
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ]) ->groups([
+                Group::make('status')
+                ->titlePrefixedWithLabel(false),
+
+            ])->defaultGroup('status');
+
     }
 
     public function render(): View

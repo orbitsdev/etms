@@ -53,6 +53,8 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('assignee_name')
                 ->label('Assigned To')
                 ->searchable(),
+
+                Tables\Columns\TextColumn::make('status_reason')->toggleable(isToggledHiddenByDefault: true),
             ])
 
             ->headerActions([
