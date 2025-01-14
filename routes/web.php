@@ -10,6 +10,9 @@ use App\Livewire\UserDashboard;
 use App\Livewire\ViewEquipment;
 use App\Exports\EquipmentExport;
 use App\Livewire\AdminDashboard;
+use App\Livewire\Users\ListUsers;
+use App\Livewire\Users\CreateUser;
+use App\Livewire\Userss\UpdateUser;
 use App\Livewire\Courses\EditCourse;
 use App\Livewire\Courses\ListCourse;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +24,7 @@ use App\Livewire\User\EditUserDetails;
 use App\Livewire\ViewRequesterRequest;
 use App\Livewire\Sections\EditSections;
 use App\Livewire\Sections\ListSections;
+use Filament\Resources\Pages\EditRecord;
 use App\Http\Controllers\ReporController;
 use App\Livewire\Sections\CreateSections;
 use App\Http\Controllers\ReportController;
@@ -32,16 +36,16 @@ use App\Livewire\Departments\ListDepartment;
 use App\Http\Controllers\EquipmentController;
 use App\Livewire\Equipment\ListEquipmentView;
 use App\Livewire\Departments\CreateDepartment;
+use App\Livewire\JobOrders\CreateJobOrder;
+use App\Livewire\JobOrders\EditJobOrder;
+use App\Livewire\JobOrders\ListOfMyJobOrdersRequests;
+use App\Livewire\JobOrders\MyJobOrdersRequests;
 use App\Livewire\Requests\EditEquipmentRequest;
 use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\UserDetails\CreateUserDetails;
 use App\Livewire\Request\ListOfEquipmentRequest;
 use App\Livewire\Request\ListOfEquipmetnRequest;
-use App\Livewire\Users\CreateUser;
-use App\Livewire\Users\ListUsers;
-use App\Livewire\Userss\UpdateUser;
-use Filament\Resources\Pages\EditRecord;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +76,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
     Route::middleware([
         'ensure.user.details'
         ])->group(function(){
-           
+
         Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/requester', UserDashboard::class)->name('user.dashboard');
         Route::middleware(['can:is-admin'])->group(function(){
@@ -80,34 +84,34 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
                 Route::get('/', ListUsers::class)->name('index');
                 Route::get('/create', CreateUser::class)->name('create');
                 Route::get('/edit/{record}', UpdateUser::class)->name('edit');
-                
-               
-    
+
+
+
             });
             Route::prefix('/departments')->name('department.')->group(function () {
                 Route::get('/', ListDepartment::class)->name('index');
                 Route::get('/create', CreateDepartment::class)->name('create');
                 Route::get('/edit/{record}', EditDepartment::class)->name('edit');
-    
+
             });
             Route::prefix('/courses')->name('courses.')->group(function () {
                 Route::get('/', ListCourse::class)->name('index');
                 Route::get('/create', CreateCourse::class)->name('create');
                 Route::get('/edit/{record}', EditCourse::class)->name('edit');
                 Route::get('/view/{record}', ViewCourse::class)->name('view');
-    
+
             });
             Route::prefix('/sections')->name('sections.')->group(function () {
                 Route::get('/', ListSections::class)->name('index');
                 Route::get('/create', CreateSections::class)->name('create');
                 Route::get('/edit/{record}', EditSections::class)->name('edit');
                 Route::get('/view/{record}', ViewSection::class)->name('view');
-    
+
             });
             Route::prefix('/equipments')->name('equipment.')->group(function () {
                 // ->middleware(['can:is-admin'])
-                Route::get('/', ListEquipments::class)->name('index');    
-              
+                Route::get('/', ListEquipments::class)->name('index');
+
                 Route::get('/create', CreateEquipment::class)->name('create');
                 Route::get('/edit/{record}', EditEquipment::class)->name('edit');
                 Route::get('/view/{record}', ViewEquipment::class)->name('view');
@@ -115,11 +119,11 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         });
         Route::get('/equipments/requests-list', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests')->middleware(['can:is-admin']);
 
-        // public 
+        // public
 
         Route::get('/list', ListEquipmentView::class)->name('list');
-     
-     
+
+
 
         Route::prefix('/requests')->name('requests.')->group(function () {
             Route::get('/', ListRequesterRequest::class)->name('index');
@@ -128,14 +132,19 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
             Route::get('/view/{record}', ViewRequesterRequest::class)->name('view');
         });
 
+        Route::prefix('/job-orders')->name('joborders.')->group(function () {
+            Route::get('/', ListOfMyJobOrdersRequests::class)->name('index');
+            Route::get('/new-request', CreateJobOrder::class)->name('create');
+            Route::get('/update/request/{record}', EditJobOrder::class)->name('edit');
+
+        });
+
         Route::get('/equipments/list', ListEquipmentView::class)->name('equipment.list');
         // Route::get('/view/{record}', ViewEquipment::class)->name('view');
         Route::get('/export/equipment/{id}', [ReportController::class, 'exportEquipmentDetails'])->name('export.equipment');
         Route::get('/export-equipment/{status}', [ReportController::class, 'exportEquipment'])->name('equipment.export');
         Route::get('/export-requests/{status}', [ReportController::class, 'requestExport'])->name('requests.export');
         Route::get('/export-popular-equipment', [ReportController::class, 'exportPopularEquipment'])->name('export.popular.equipment');
-
-
 
 
     });
@@ -158,6 +167,6 @@ Route::get('/send-email', function(){
     $record = Request::first();
     return view('email.requestupdate',['request'=> $record]);
     // $request= Request::first();
-    
+
 
 });

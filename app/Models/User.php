@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Request;
+use App\Models\JobOrder;
 use App\Models\UserDetails;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,7 @@ class User extends Authenticatable
     public const REQUESTER = 'Requester';
     public const STUDENT = 'Student';
     public const FACULTY = 'Faculty';
-    
+
     //MAKE USERS OPTIONS FROM CONST
 
 
@@ -89,7 +90,13 @@ class User extends Authenticatable
 
     public function userDetails()
     {
-        return $this->hasOne(UserDetails::class);
+        return $this->hasOne(UserDetails::class,);
+    }
+
+    //job orders
+    public function jobOrders()
+    {
+        return $this->hasMany(JobOrder::class, 'requester_id');
     }
 
     public function requests()

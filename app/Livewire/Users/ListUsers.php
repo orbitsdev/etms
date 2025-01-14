@@ -6,10 +6,13 @@ use App\Models\User;
 use Filament\Tables;
 use Livewire\Component;
 use Filament\Tables\Table;
+use App\Models\UserDetails;
+use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Actions\ActionGroup;
@@ -29,7 +32,7 @@ class ListUsers extends Component implements HasForms, HasTable
         return $table
             ->query(User::query()->isNotAdmin())
             ->columns([
-             
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
@@ -45,7 +48,7 @@ class ListUsers extends Component implements HasForms, HasTable
                 //     ->sortable(),
                 // Tables\Columns\TextColumn::make('profile_photo_path')
                 //     ->searchable(),
-                Tables\Columns\TextColumn::make('role'),
+                // Tables\Columns\TextColumn::make('role'),
                 // Tables\Columns\TextColumn::make('created_at')
                 //     ->dateTime()
                 //     ->sortable()
@@ -57,14 +60,14 @@ class ListUsers extends Component implements HasForms, HasTable
                     ImageColumn::make('avatar')
                     ->defaultImageUrl(url('/images/placeholder-image.jpg')),
 
-                    Tables\Columns\TextColumn::make('role')
+                 TextColumn::make('userDetails.type')
+                 ->label('Type')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
-                        User::ADMIN => 'success',
-                        User::REQUESTER => 'warning',
-                        User::FACULTY => 'danger',
-                        User::STUDENT => 'gray',
-                       
+                        UserDetails::FACULTY => 'success',
+                        UserDetails::STUDENT => 'info',
+                        UserDetails::JOBORDER => 'warning',
+
                         default => 'gray'
                     }),
             ])
@@ -82,13 +85,21 @@ class ListUsers extends Component implements HasForms, HasTable
                     ->options(User::getRoleOptions())->searchable()
             ])
             ->actions([
-                ActionGroup::make([ 
+                ActionGroup::make([
+                    Action::make('View')
+                    ->icon('heroicon-s-eye')
+                    ->modalSubmitAction(false)
+                    ->modalContent(function (Model $record) {
+                        return view('livewire.view-user-details', ['record' => $record]);
+                    })
+                    ->modalCancelAction(fn(StaticAction $action) => $action->label('Close'))
+                    ->closeModalByClickingAway(false)->modalWidth('7xl'),
                     Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function (Model $record) {
                         return route('users.edit', ['record' => $record]);
                     })->color('gray'),
 
                     Tables\Actions\DeleteAction::make()->color('gray'),
-                    
+
                 ])
             ])
             ->bulkActions([
@@ -96,15 +107,15 @@ class ListUsers extends Component implements HasForms, HasTable
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            
+
             ->groups([
-                Group::make('role')
+                Group::make('userDetails.type')
                     ->titlePrefixedWithLabel(false),
 
-            ])->defaultGroup('role')
-            
+            ])->defaultGroup('userDetails.type')
+
             ->deferLoading()
-            
+
             ;
     }
 

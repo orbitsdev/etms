@@ -27,7 +27,7 @@ class UpdateUser extends Component implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->schema(FilamentForm::user2Form())
+            ->schema(FilamentForm::userForm())
             ->statePath('data')
             ->model($this->record);
     }

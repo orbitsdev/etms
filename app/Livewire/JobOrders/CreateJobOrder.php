@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Livewire\Users;
+namespace App\Livewire\JobOrders;
 
 use Filament\Forms;
-use App\Models\User;
 use Livewire\Component;
+use App\Models\JobOrder;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
 
-class CreateUser extends Component implements HasForms
+class CreateJobOrder extends Component implements HasForms
 {
     use InteractsWithForms;
 
@@ -24,26 +25,25 @@ class CreateUser extends Component implements HasForms
 
     public function form(Form $form): Form
     {
-        // FilamentForm::user2Form()
         return $form
-            ->schema(FilamentForm::userForm())
-        ->statePath('data')
-            ->model(User::class);
+            ->schema(FilamentForm::JobOrderform())
+            ->statePath('data')
+            ->model(JobOrder::class);
     }
 
     public function create()
     {
         $data = $this->form->getState();
+        $data['requester_id']= Auth::user()->id;
 
-        $record = User::create($data);
-
+        $record = JobOrder::create($data);
         $this->form->model($record)->saveRelationships();
-        FilamentForm::success('User created successfully');
-        return redirect()->route('users.index');
+        FilamentForm::success('Equipment created successfully');
+        return redirect()->route('joborders.index');
     }
 
     public function render(): View
     {
-        return view('livewire.users.create-user');
+        return view('livewire.job-orders.create-job-order');
     }
 }

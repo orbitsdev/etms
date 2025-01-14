@@ -31,7 +31,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class FilamentForm extends Controller
 {
-    
+
     public static function user2Form(): array {
     return [
         Section::make('Account Details')
@@ -47,59 +47,68 @@ class FilamentForm extends Controller
                     ->required()
                     ->maxLength(191)
                     ->columnSpan(3),
-    
+
                 // Email Input
                 TextInput::make('email')
-                    ->label('Email Address')
+                    ->required()
+                    ->unique(ignoreRecord:true)
                     ->email()
-                    ->disabled(fn(string $operation): bool => $operation === 'create')
+                    ->disabled(function($operation){
+                        return $operation != 'App\Livewire\Users\CreateUser';
+                    })
                     ->maxLength(191)
                     ->columnSpan(3),
-    
+
                 // Password Input
                 Password::make('password')
                     ->label(fn(string $operation) => $operation === 'create' ? 'Password' : 'New Password')
-                  
+
                     ->password()
                     ->required(fn(string $operation): bool => $operation === 'create')
                     ->dehydrateStateUsing(fn(?string $state): string => filled($state) ? Hash::make($state) : '')
                     ->dehydrated(fn(?string $state): bool => filled($state))
                     ->columnSpan(3),
-    
+
                 // Role Selection
-                Select::make('role')
-                ->label('User Role')
-                ->default(fn(?Model $record) => $record && $record->role !== null ? $record->role : User::STUDENT)
-                ->options(User::getRoleOptions())
-                ->required()
-                ->searchable()
-                ->live()
-                ->disabled(fn(string $operation) => $operation === 'edit')
-                ->columnSpan([
-                    'sm' => 2,
-                    'md' => 3,
-                    'lg' => 3,
-                ]),
-            
-    
+                // Select::make('role')
+                // ->label('User Role')
+                // ->default(fn(?Model $record) => $record && $record->role !== null ? $record->role : User::STUDENT)
+                // ->options(User::getRoleOptions())
+                // ->required()
+                // ->searchable()
+                // ->live()
+                // ->disabled(fn(string $operation) => $operation === 'edit')
+                // ->columnSpan([
+                //     'sm' => 2,
+                //     'md' => 3,
+                //     'lg' => 3,
+                // ]),
+
+
                 // Department Input (Visible for Admins)
                 TextInput::make('department')
                     ->label('Department')
                     ->maxLength(191)
-                    ->hidden(fn(Get $get) => $get('role') == User::ADMIN),
-    
+                    ->hidden(fn(Get $get) => $get('role') == User::ADMIN)
+                    ->columnSpan(3)
+                    ,
+
                 // Course Input (Visible for Students)
                 TextInput::make('course')
                     ->label('Course')
                     ->maxLength(191)
-                    ->hidden(fn(Get $get) => $get('role') !== User::STUDENT),
-    
+                    ->hidden(fn(Get $get) => $get('role') !== User::STUDENT)
+                    ->columnSpan(3)
+                    ,
+
                 // Section Input (Visible for Students)
                 TextInput::make('section')
                     ->label('Section')
                     ->maxLength(191)
-                    ->hidden(fn(Get $get) => $get('role') !== User::STUDENT),
-    
+                    ->hidden(fn(Get $get) => $get('role') !== User::STUDENT)
+                    ->columnSpan(3)
+                    ,
+
                 // Profile Photo Upload
                 FileUpload::make('profile_photo_path')
                     ->label('Profile Photo')
@@ -109,13 +118,13 @@ class FilamentForm extends Controller
                     ->imageEditor()
                     ->columnSpanFull(),
             ]),
-        
+
         // Additional user details form
         ...FilamentForm::userDetailsForm(),
     ];
 
 }
-    
+
     public static function equipmentForm(): array
     {
         return [
@@ -261,7 +270,9 @@ class FilamentForm extends Controller
                     TextInput::make('email')
                         ->email()
                         ->columnSpan(3)
-                        ->disabled()
+                        ->disabled(function($operation){
+                            return $operation != 'App\Livewire\Users\CreateUser';
+                        })
                         ->maxLength(191),
                     //    DateTimePicker::make('email_verified_at'),
                     Password::make('password')
@@ -272,9 +283,15 @@ class FilamentForm extends Controller
                         ->required(fn(string $operation): bool => $operation === 'create')
                         ->helperText('(Change password)')
                         ->label(fn(string $operation) => $operation == 'create' ? 'Password' : 'New password'),
-                    TextInput::make('role')
-                        ->disabled()
-                        ->columnSpan(3),
+                        // Select::make('role')
+                        // ->default(User::STUDENT)
+                        // ->required()
+                        // ->options(User::getRoleOptions())
+                        // ->columnSpan(3)
+                        // ->searchable()
+                        // ->live()
+                        // ->hidden(fn(string $operation): bool => $operation === 'edit'),
+
                     //    Textarea::make('two_factor_secret')
                     //         ->columnSpanFull(),
                     //    Textarea::make('two_factor_recovery_codes')
@@ -300,8 +317,8 @@ class FilamentForm extends Controller
     {
         return [
             Group::make()
-                ->hidden(function () {
-                    return Auth::user()->isAdmin();
+                ->hidden(function (Get $get) {
+                    return !Auth::user()->isAdmin();
                 })
                 ->relationship('userDetails')
                 ->columnSpanFull()
@@ -450,7 +467,7 @@ class FilamentForm extends Controller
                             'quantiy' => '200px',
                         ])
                         ->schema([
-                            
+
                             Select::make('equipment_id')
                                 ->label('Equipment')
                                 ->relationship(
@@ -631,6 +648,57 @@ class FilamentForm extends Controller
 
                     return !in_array($get('status'), $hiddenStatuses);
                 })
+        ];
+    }
+
+    public static function JobOrderform(): array
+    {
+        return [
+            Section::make('Job Order Details')
+                ->columns(2)
+                ->schema([
+                    // Job Title
+                    TextInput::make('title')
+                        ->label('Job Title')
+                        ->placeholder('Enter a brief title for the job order')
+                        ->required()
+                        ->columnSpanFull()
+                        ->maxLength(191),
+
+                    // Description
+                    Textarea::make('description')
+                        ->label('Description')
+                        ->placeholder('Provide detailed information about the job order')
+                        ->required()
+                        ->columnSpanFull()
+                        ->rows(5),
+
+                    // Requester (User making the request)
+                    // Select::make('requester_id')
+                    //     ->label('Requester')
+                    //     ->relationship('requester', 'name') // Assuming User model has a `name` field
+                    //     ->searchable()
+                    //     ->preload()
+                    //     ->required(),
+
+                    // Assignee Name
+                    // TextInput::make('assignee_name')
+                    //     ->label('Assignee Name')
+                    //     ->placeholder('Enter the name of the person assigned (optional)')
+                    //     ->maxLength(191),
+
+                    // Status
+                    // Select::make('status')
+                    //     ->label('Status')
+                    //     ->options([
+                    //         'Pending' => 'Pending',
+                    //         'In Progress' => 'In Progress',
+                    //         'Completed' => 'Completed',
+                    //         'Cancelled' => 'Cancelled',
+                    //     ])
+                    //     ->default('Pending')
+                    //     ->required(),
+                ]),
         ];
     }
 

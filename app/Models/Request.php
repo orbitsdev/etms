@@ -22,6 +22,7 @@ class Request extends Model
     public const RETURNED = 'Returned';
     public const CANCELED = 'Cancelled';
     public const COMPLETED = 'Completed';
+    public const DUE = 'DUE';
 
 
     public const STATUS_OPTIONS = [
@@ -32,6 +33,7 @@ class Request extends Model
         self::RETURNED => self::RETURNED,
         self::CANCELED => self::CANCELED,
         self::COMPLETED => self::COMPLETED,
+        self::COMPLETED => self::DUE,
     ];
     public const IF_CANCELED = [
         self::APPROVED => self::APPROVED,
@@ -58,6 +60,7 @@ class Request extends Model
         // self::COMPLETED => self::COMPLETED,
     ];
     public const IF_RETURNED = [
+        self::DUE => self::DUE,
         self::COMPLETED => self::COMPLETED,
     ];
     public const IF_COMPLETED = [

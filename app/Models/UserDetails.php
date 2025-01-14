@@ -10,13 +10,17 @@ class UserDetails extends Model
 {
     use HasFactory;
 
+    public const ADMIN = 'Faculty';
     public const FACULTY = 'Faculty';
     public const STUDENT = 'Student';
+    public const JOBORDER = 'Job Order';
 
 
     public const TYPE_OPTIONS = [
+        self::ADMIN => 'Faculty',
         self::FACULTY => 'Faculty',
-        self::STUDENT => 'Student'
+        self::STUDENT => 'Student',
+        self::JOBORDER => 'Job Order'
     ];
 
     public function user(){
@@ -36,6 +40,10 @@ class UserDetails extends Model
     public function isStudent()
     {
         return $this->type === UserDetails::STUDENT;
+    }
+    public function isJobOrder()
+    {
+        return $this->type === UserDetails::JOBORDER;
     }
 
 

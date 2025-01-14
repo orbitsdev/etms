@@ -8,16 +8,16 @@
         <div class="p-6">
             <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
 
-  
+
 
             @livewire('stats')
 
 
-    
+
 
             <!-- Two Columns: New Customers and Top Categories -->
             <div class="grid grid-cols-3 gap-6 mb-6 stat-card">
-            
+
             <div class="bg-gradient-to-r from-sksu-900 to-sksu-600 rounded-lg shadow-lg p-8 col-span-1 hover:scale-105 transition-all">
               <h1 class="text-4xl font-bold text-white mb-4">
                   Top Requester {{ now()->year }}
@@ -26,9 +26,9 @@
                   <div class="flex items-center space-x-4 mb-8 ">
                       <!-- User Image -->
                       <div class="w-16 h-16">
-                          <img 
-                              src="{{ $mostActiveUser->getImage() }}" 
-                              alt="{{ $mostActiveUser->userDetails->fullName }}" 
+                          <img
+                              src="{{ $mostActiveUser->getImage() }}"
+                              alt="{{ $mostActiveUser->userDetails->fullName }}"
                               class="rounded-full border-2 border-white shadow-lg object-cover w-16 h-16">
                       </div>
                       <!-- User Details -->
@@ -48,29 +48,29 @@
                   </p>
               @endif
           </div>
-          
+
 
 
               <div class="col-span-2 bg-white p-6 rounded-lg stat-card shadow   ">
                 <div class="flex items-center justify-between">
-                  <h3 class="text-base font-normal mb-4">Top Requested Equipments</h3>
-                  
-                   
+                  <h3 class="text-base font-normal mb-4">Common Requested Equipments</h3>
+
+
                     <span class="text-base">
                         @if($topPopularEquipment->isNotEmpty())
                       <a href="{{ route('export.popular.equipment') }}" target="_blank" class="text-sm text-sksu-500 mt-2 underline hover:text-blue-700 flex items-center justify-center">
-                       
+
                         Download
                     </a>
                       @endif
                     </span>
-   
-                
+
+
 
                 </div>
                 <ul class="divide-y divide-gray-200">
                   @forelse ($topPopularEquipment as $equipment)
-                    
+
                   <li class="py-2 flex justify-between">
                     <span>{{$equipment->name}}</span>
                     <span>{{$equipment->usage_count }} Usage</span>
@@ -78,7 +78,7 @@
                   @empty
 
                   @endforelse
-                 
+
                 </ul>
               </div>
             </div>
@@ -100,9 +100,9 @@
                     </a>
                 </div>
             </div>
-            
-            
-          
+
+
+
               <div class="mt-8 flow-root">
                   <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -142,15 +142,15 @@
                       </div>
                   </div>
               </div>
-          </div>  
+          </div>
 
 
 
-       
-          
+
+
 
             <div class="bg-white p-6 rounded-lg shadow stat-card col-span-2 mb-6 stat-card">
-              
+
               <div class="sm:flex sm:items-center bg-gradient-to-r from-sksu-50 to-gray-50 rounded-lg p-6 space-y-4 sm:space-y-0">
                 <div class="sm:flex-auto">
                     <h1 class="text-xl font-bold text-sksu-800">
@@ -167,7 +167,7 @@
                     </a>
                 </div>
             </div>
-            
+
                 <div class="mt-8 flow-root">
                   <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -181,9 +181,9 @@
                                           Total Equipments
                                       </th>
                                       <th scope="col" class="px-3 py-3.5 text-left text-sm  text-gray-900">
-                                          
+
                                       </th>
-                                      {{-- 
+                                      {{--
                                       <th scope="col" class="px-3 py-3.5 text-left text-sm  text-gray-900">
                                           Status
                                       </th> --}}
@@ -254,14 +254,14 @@
                                     </td>
                                 </tr>
                             </tbody>
-                            
-                            
+
+
                           </table>
                       </div>
                   </div>
               </div>
-              
-              
+
+
               </div>
             </div>
 
@@ -282,7 +282,7 @@
                         </a>
                     </div>
                 </div>
-            
+
                 <div class="mt-8 flow-root">
                     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -322,7 +322,7 @@
                     </div>
                 </div>
             </div> --}}
-            
+
           </div>
 
 

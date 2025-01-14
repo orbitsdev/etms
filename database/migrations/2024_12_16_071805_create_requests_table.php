@@ -29,7 +29,8 @@ return new class extends Migration
                 'Delivered',
                 'Returned',
                 'Cancelled',
-                'Completed'
+                'Completed',
+                'Due',
                ]
             )->default('Pending');
             $table->text('purpose')->nullable();

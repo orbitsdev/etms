@@ -95,9 +95,8 @@ class ListEquipments extends Component implements HasForms, HasTable
 
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(Equipment::STATUS_OPTIONS)->searchable()
-            ], 
+
+            ],
             // layout: FiltersLayout::AboveContent
             )
             ->actions([
@@ -115,16 +114,16 @@ class ListEquipments extends Component implements HasForms, HasTable
                         ->label('Manage')
                         ->icon('heroicon-s-pencil-square')
                         ->modalWidth(MaxWidth::SixExtraLarge)
-                        ->fillForm(function (Model $record) {   
+                        ->fillForm(function (Model $record) {
 
                             if($record->status == Equipment::UNDER_MAINTENANCE){
                                 return [
                                     'status' => $record->status,
                                     'issue_description' => $record->issue_description,
                                 ];
-                                
+
                             }else{
-                                
+
                                 return [
                                     'status' => $record->status,
                                 ];
@@ -137,7 +136,7 @@ class ListEquipments extends Component implements HasForms, HasTable
                             $record->status = $data['status'];
                             if ($data['status'] === Equipment::UNDER_MAINTENANCE) {
                                 $record->issue_description = $data['issue_description'];
-                               
+
                             }
                             if ($data['status'] === Equipment::ARCHIVED) {
                                 $record->archived_date = now();
