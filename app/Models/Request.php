@@ -229,6 +229,9 @@ class Request extends Model
     public function scopeCompleted($query){
         return $query->where('status', Request::COMPLETED);
     }
+    public function scopeDue($query){
+        return $query->where('status', Request::DUE);
+    }
 
 
 }

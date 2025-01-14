@@ -5,10 +5,9 @@ namespace App\Livewire\JobOrders;
 use Filament\Tables;
 use Livewire\Component;
 use App\Models\JobOrder;
-use App\Models\Equipment;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
+use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 
-class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
+class ListOfJobOrders extends Component implements HasForms, HasTable
 {
     use InteractsWithForms;
     use InteractsWithTable;
@@ -26,7 +25,7 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(JobOrder::query()->myOrders())
+            ->query(JobOrder::query())
             ->columns([
                 Tables\Columns\TextColumn::make('user.userDetails.fullName')
                 ->label('Name')
@@ -53,20 +52,19 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('assignee_name')
                 ->label('Assigned To')
                 ->searchable(),
+
+                Tables\Columns\TextColumn::make('status_reason')
+                ->label('Reject Reason')
+                ->searchable() ->toggleable(isToggledHiddenByDefault: true),
+
             ])
-
             ->headerActions([
+                Tables\Actions\CreateAction::make('Add Job Order')->form(FilamentForm::JobOrderAdminform())
+                    ->mutateFormDataUsing(function (array $data): array {
+                        // $data['created_by_id'] = auth()->id();
 
-
-                Action::make('New Requests')
-
-                    ->color('primary')
-                    ->button()
-                    ->url(function () {
-                        return route('joborders.create');
-                    }),
-
-
+                        return $data;
+                    })->label('Add Job Order')
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -74,18 +72,25 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
             ])
             ->actions([
                 ActionGroup::make([
-                    Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function (Model $record) {
-                        return route('joborders.edit', ['record' => $record]);
-                    })->color('gray')->hidden(function(Model $record){
-                    return $record->status != JobOrder::STATUS_PENDING;
-                    }),
 
+                    Tables\Actions\EditAction::make('Manage')->form(FilamentForm::manageJobOrderForm())
+                    
+                    ->mutateFormDataUsing(function (array $data): array {
+                        // $data['last_edited_by_id'] = auth()->id();
 
-                    Tables\Actions\DeleteAction::make()->color('gray')->hidden(function(Model $record){
-                    return $record->status != JobOrder::STATUS_PENDING;
-                    }),
+                        return $data;
+                    })->label('Manage')
+                    ,
+                    Tables\Actions\EditAction::make('Update')->form(FilamentForm::JobOrderAdminform())
+
+                    ->mutateFormDataUsing(function (array $data): array {
+                        // $data['last_edited_by_id'] = auth()->id();
+
+                        return $data;
+                    })->label('Update')
+                    ,
+                    Tables\Actions\DeleteAction::make()->color('gray'),
                 ]),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -96,6 +101,6 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
 
     public function render(): View
     {
-        return view('livewire.job-orders.list-of-my-job-orders-requests');
+        return view('livewire.job-orders.list-of-job-orders');
     }
 }

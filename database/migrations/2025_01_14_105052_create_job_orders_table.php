@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // Detailed description of the job
             $table->enum('status', ['Pending', 'In Progress', 'Completed', 'Cancelled','Failed'])->default('Pending'); // Job status
             $table->date('official_date')->nullable();
+            $table->text('status_reason')->nullable();
             $table->timestamps();
         });
     }

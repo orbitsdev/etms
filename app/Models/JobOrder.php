@@ -14,6 +14,8 @@ class JobOrder extends Model implements HasMedia
     use InteractsWithMedia;
     use HasFactory;
 
+  
+    // Array of All Statuses
     public const STATUS_PENDING = 'Pending';
     public const STATUS_IN_PROGRESS = 'In Progress';
     public const STATUS_COMPLETED = 'Completed';
@@ -28,6 +30,50 @@ class JobOrder extends Model implements HasMedia
         self::STATUS_CANCELLED,
         self::STATUS_FAILED,
     ];
+
+    // Status Transitions
+    public const IF_PENDING = [
+        self::STATUS_IN_PROGRESS => self::STATUS_IN_PROGRESS,
+        self::STATUS_CANCELLED => self::STATUS_CANCELLED,
+    ];
+
+    public const IF_IN_PROGRESS = [
+        self::STATUS_COMPLETED => self::STATUS_COMPLETED,
+        self::STATUS_FAILED => self::STATUS_FAILED,
+        self::STATUS_CANCELLED => self::STATUS_CANCELLED,
+    ];
+
+    public const IF_COMPLETED = [
+        // No further transitions; job is finalized.
+    ];
+
+    public const IF_CANCELLED = [
+        // No further transitions; job is terminated.
+    ];
+
+    public const IF_FAILED = [
+        // No further transitions; job has failed.
+    ];
+
+    /**
+     * Get available status transitions for the current status.
+     *
+     * @return array
+     */
+    public function getAvailableStatusTransitions(): array
+    {
+        // Map the current status to its allowed transitions
+        $statusTransitions = [
+            self::STATUS_PENDING => self::IF_PENDING,
+            self::STATUS_IN_PROGRESS => self::IF_IN_PROGRESS,
+            self::STATUS_COMPLETED => self::IF_COMPLETED,
+            self::STATUS_CANCELLED => self::IF_CANCELLED,
+            self::STATUS_FAILED => self::IF_FAILED,
+        ];
+
+        return $statusTransitions[$this->status] ?? [];
+    }
+
 
 
     // belong to user

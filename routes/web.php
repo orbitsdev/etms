@@ -38,6 +38,7 @@ use App\Livewire\Equipment\ListEquipmentView;
 use App\Livewire\Departments\CreateDepartment;
 use App\Livewire\JobOrders\CreateJobOrder;
 use App\Livewire\JobOrders\EditJobOrder;
+use App\Livewire\JobOrders\ListOfJobOrders;
 use App\Livewire\JobOrders\ListOfMyJobOrdersRequests;
 use App\Livewire\JobOrders\MyJobOrdersRequests;
 use App\Livewire\Requests\EditEquipmentRequest;
@@ -118,6 +119,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
             });
         });
         Route::get('/equipments/requests-list', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests')->middleware(['can:is-admin']);
+        Route::get('/job-orders/requests-list', ListOfJobOrders::class)->name('jobordfers.listofjoborders')->middleware(['can:is-admin']);
 
         // public
 

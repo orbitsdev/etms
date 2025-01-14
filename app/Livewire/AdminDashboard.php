@@ -31,7 +31,7 @@ $reservedEquipmentCount = Equipment::reserved()->count();
 $notAvailableEquipmentCount = Equipment::notAvailable()->count();
 $archivedEquipmentCount = Equipment::archived()->count();
 
-        // reuest report 
+        // reuest report
     $pendingRequestsCount = Request::pending()->count();
     $approvedRequestsCount = Request::approved()->count();
     $readyToPickUpRequestsCount = Request::readyToPickUp()->count();
@@ -39,6 +39,7 @@ $archivedEquipmentCount = Equipment::archived()->count();
     $returnedRequestsCount = Request::returned()->count();
     $cancelledRequestsCount = Request::cancelled()->count();
     $completedRequestsCount = Request::completed()->count();
+    $dueRequestsCount = Request::Due()->count();
 
 
         $mostActiveUser = User::mostCompletedRequests()->first();
@@ -70,6 +71,7 @@ $archivedEquipmentCount = Equipment::archived()->count();
             'returnedRequestsCount' => $returnedRequestsCount,
             'cancelledRequestsCount' => $cancelledRequestsCount,
             'completedRequestsCount' => $completedRequestsCount,
+            'dueRequestsCount' => $dueRequestsCount,
 
         ]);
     }

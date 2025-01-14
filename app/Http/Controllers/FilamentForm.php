@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Request;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use App\Models\JobOrder;
 use App\Models\Equipment;
 use App\Models\Department;
 use App\Models\UserDetails;
@@ -651,6 +652,44 @@ class FilamentForm extends Controller
         ];
     }
 
+    public static function JobOrderAdminform(): array
+    {
+        return [
+            Section::make('Job Order Details')
+            ->columnSpanFull()
+                ->schema([
+                    Select::make('requester_id')
+                    ->label(function (string $operation){
+                        return $operation;
+                    })
+                    ->relationship(
+                        name: 'user',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn(Builder $query) => $query->isNotAdmin(),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->userDetails->fullName} - {$record->userDetails->type} ")->searchable()->preload()
+                    ->columnSpanFull()
+                    ,
+
+                    TextInput::make('title')
+                        ->label('Job Title')
+                        ->placeholder('Enter a brief title for the job order')
+                        ->required()
+                        ->columnSpanFull()
+                        ->maxLength(191),
+
+                    // Description
+                    Textarea::make('description')
+                        ->label('Description')
+                        ->placeholder('Provide detailed information about the job order')
+                        ->required()
+                        ->columnSpanFull()
+                        ->rows(5),
+
+
+                ]),
+        ];
+    }
     public static function JobOrderform(): array
     {
         return [
@@ -699,6 +738,32 @@ class FilamentForm extends Controller
                     //     ->default('Pending')
                     //     ->required(),
                 ]),
+        ];
+    }
+
+    public static function manageJobOrderForm(): array
+    {
+        return [
+            Select::make('status')
+
+                ->live(debounce: 500)
+                ->options(function (Model $record) {
+                    return $record->getAvailableStatusTransitions();
+                }),
+
+
+             // Status Reason Textarea
+        Textarea::make('status_reason')
+        ->label('Why?')
+        ->helperText('Kindly provide a reason for your decision')
+        ->columnSpanFull()
+        ->required()
+        ->rows(5)
+        ->hidden(function (Get $get) {
+            // Only show if the status is Cancelled or Failed
+            return !in_array($get('status'), [JobOrder::STATUS_CANCELLED, JobOrder::STATUS_FAILED]);
+        }),
+
         ];
     }
 

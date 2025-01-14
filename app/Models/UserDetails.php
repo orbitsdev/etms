@@ -56,4 +56,30 @@ class UserDetails extends Model
         return $firstName . ' ' . $lastName;
     }
 
+    public function scopeJobOrderUsers($query)
+    {
+        return $query->whereHas('userDetails', function ($query) {
+            $query->where('type', UserDetails::JOBORDER);
+        });
+    }
+
+    public function scopeStudentUsers($query)
+    {
+        return $query->whereHas('userDetails', function ($query) {
+            $query->where('type', UserDetails::STUDENT);
+        });
+    }
+
+    public function scopeFacultyUsers($query)
+    {
+        return $query->whereHas('userDetails', function ($query) {
+            $query->where('type', UserDetails::FACULTY);
+        });
+    }
+
+    public function scopeIsNotAdmin($query)
+    {
+        return $query->where('role', '!=', self::ADMIN);
+    }
+
 }

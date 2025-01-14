@@ -245,6 +245,15 @@
                                     </td>
                                 </tr>
                                 <tr class="border-t border-gray-300">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Due</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $dueRequestsCount }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                        @if ($dueRequestsCount > 0)
+                                            <a href="{{ route('requests.export', ['status' => 'Due']) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="border-t border-gray-300">
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">Completed</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $completedRequestsCount }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
