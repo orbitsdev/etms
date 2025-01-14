@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\User;
 use App\Models\Request;
 use Livewire\Component;
+use App\Models\JobOrder;
 use App\Models\Equipment;
 
 class AdminDashboard extends Component
@@ -12,7 +13,7 @@ class AdminDashboard extends Component
     public function render()
     {
 
-         $topPopularEquipment = Equipment::popular()->limit(10)->get();
+        $topPopularEquipment = Equipment::popular()->limit(10)->get();
         // $outOfStockEquipment = Equipment::outOfStock()->get();
 
         $availableEquipment = Equipment::available()->get();
@@ -25,26 +26,33 @@ class AdminDashboard extends Component
         // equipment
 
         $availableEquipmentCount = Equipment::available()->count();
-$outOfStockEquipmentCount = Equipment::outOfStock()->count();
-$underMaintenanceEquipmentCount = Equipment::underMaintenance()->count();
-$reservedEquipmentCount = Equipment::reserved()->count();
-$notAvailableEquipmentCount = Equipment::notAvailable()->count();
-$archivedEquipmentCount = Equipment::archived()->count();
+        $outOfStockEquipmentCount = Equipment::outOfStock()->count();
+        $underMaintenanceEquipmentCount = Equipment::underMaintenance()->count();
+        $reservedEquipmentCount = Equipment::reserved()->count();
+        $notAvailableEquipmentCount = Equipment::notAvailable()->count();
+        $archivedEquipmentCount = Equipment::archived()->count();
 
         // reuest report
-    $pendingRequestsCount = Request::pending()->count();
-    $approvedRequestsCount = Request::approved()->count();
-    $readyToPickUpRequestsCount = Request::readyToPickUp()->count();
-    $pickedUpRequestsCount = Request::pickedUp()->count();
-    $returnedRequestsCount = Request::returned()->count();
-    $cancelledRequestsCount = Request::cancelled()->count();
-    $completedRequestsCount = Request::completed()->count();
-    $dueRequestsCount = Request::Due()->count();
+        $pendingRequestsCount = Request::pending()->count();
+        $approvedRequestsCount = Request::approved()->count();
+        $readyToPickUpRequestsCount = Request::readyToPickUp()->count();
+        $pickedUpRequestsCount = Request::pickedUp()->count();
+        $returnedRequestsCount = Request::returned()->count();
+        $cancelledRequestsCount = Request::cancelled()->count();
+        $completedRequestsCount = Request::completed()->count();
+        $dueRequestsCount = Request::Due()->count();
+
+         // Job Order Counts
+    $pendingJobOrdersCount = JobOrder::pending()->count();
+    $approvedJobOrdersCount = JobOrder::approved()->count();
+    $completedJobOrdersCount = JobOrder::completed()->count();
+    $cancelledJobOrdersCount = JobOrder::cancelled()->count();
+    $failedJobOrdersCount = JobOrder::failed()->count();
 
 
         $mostActiveUser = User::mostCompletedRequests()->first();
         return view('livewire.admin-dashboard', [
-            'topPopularEquipment'=> $topPopularEquipment,
+            'topPopularEquipment' => $topPopularEquipment,
             'mostActiveUser' => $mostActiveUser,
 
             'availableEquipment' => $availableEquipment,
@@ -63,7 +71,6 @@ $archivedEquipmentCount = Equipment::archived()->count();
             'archivedEquipmentCount' => $archivedEquipmentCount,
 
             // requiest
-
             'pendingRequestsCount' => $pendingRequestsCount,
             'approvedRequestsCount' => $approvedRequestsCount,
             'readyToPickUpRequestsCount' => $readyToPickUpRequestsCount,
@@ -72,6 +79,16 @@ $archivedEquipmentCount = Equipment::archived()->count();
             'cancelledRequestsCount' => $cancelledRequestsCount,
             'completedRequestsCount' => $completedRequestsCount,
             'dueRequestsCount' => $dueRequestsCount,
+
+            // job orders
+
+            'pendingJobOrdersCount' => $pendingJobOrdersCount,
+            'approvedJobOrdersCount' => $approvedJobOrdersCount,
+            'completedJobOrdersCount' => $completedJobOrdersCount,
+            'cancelledJobOrdersCount' => $cancelledJobOrdersCount,
+            'failedJobOrdersCount' => $failedJobOrdersCount,
+
+            
 
         ]);
     }

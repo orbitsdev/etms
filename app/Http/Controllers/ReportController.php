@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use DB;
+use JobOrderExport;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
 use App\Exports\RequestsExport;
 use App\Exports\EquipmentExport;
+use App\Exports\JobOrdersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TopPopularEquipmentExport;
 
 class ReportController extends Controller
 {
 
-    public function exportEquipmentDetails($id) {
+    public function exportEquipmentDetails($id)
+    {
         $equipment = Equipment::withAllRelations()->findOrFail($id);
 
         // Generate a dynamic filename
@@ -27,29 +30,35 @@ class ReportController extends Controller
     }
     public function requestExport($status)
     {
-     
-        $filenameStatus = ucfirst($status); 
-        $date = now()->format('F_j_Y');     
-       
+
+        $filenameStatus = ucfirst($status);
+        $date = now()->format('F_j_Y');
+
         $filename = "{$filenameStatus}_request_Exported_{$date}.xlsx";
-    
-        
+
+
         return Excel::download(new RequestsExport($status), $filename);
     }
 
-    
-public function exportEquipment($status = 'all')
-{
-    $filename = "Equipment_Export_{$status}_" . now()->format('Y-m-d') . ".xlsx";
 
-    return Excel::download(new EquipmentExport($status), $filename);
-}
+    public function exportEquipment($status = 'all')
+    {
+        $filename = "Equipment_Export_{$status}_" . now()->format('Y-m-d') . ".xlsx";
 
-public function exportPopularEquipment()
+        return Excel::download(new EquipmentExport($status), $filename);
+    }
+
+    public function exportPopularEquipment()
     {
         $filename = 'Popular_Equipment_' . now()->format('Y-m-d') . '.xlsx';
 
         return Excel::download(new TopPopularEquipmentExport(10), $filename);
     }
-    
+
+    public function exportJobOrders($status = 'all')
+{
+    $filename = "Job_Orders_{$status}_" . now()->format('Y-m-d') . ".xlsx";
+    return Excel::download(new JobOrdersExport($status), $filename);
+}
+
 }

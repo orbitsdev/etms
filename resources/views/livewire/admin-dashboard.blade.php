@@ -166,7 +166,7 @@
                         <i class="fa-regular fa-file-excel mr-2"></i> Export
                     </a>
                 </div>
-            </div>
+                  </div>
 
                 <div class="mt-8 flow-root">
                   <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -274,63 +274,60 @@
               </div>
             </div>
 
-              {{-- <div class="bg-white p-6 rounded-lg shadow-lg">
-                <div class="sm:flex sm:items-center bg-gradient-to-r from-sksu-50 to-gray-50 rounded-lg p-6">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="sm:flex sm:items-center bg-gradient-to-r from-sksu-50 to-sksu-50 rounded-lg p-6">
                     <div class="sm:flex-auto">
-                        <h1 class="text-xl font-bold text-sksu-800">Request Report</h1>
+                        <h1 class="text-xl font-bold text-sksu-800">Job Orders Summary</h1>
                         <p class="mt-2 text-sm text-sksu-800">
-                            View and download the detailed report of requests along with their associated items and equipment details.
+                            Access the status and reports of all job orders.
                         </p>
                     </div>
                     <div class="mt-4 sm:mt-0 sm:ml-auto flex items-center space-x-4">
-                        <a class="bg-white text-sksu-900 font-medium py-2 px-4 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all" href="#">
+                        <a class="bg-white text-sksu-900 font-medium py-2 px-4 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all" href="{{ route('job-orders.export', ['status' => 'all']) }}">
                             <i class="fa-regular fa-file-excel mr-1"></i> Export to Excel
-                        </a>
-                        <a class="bg-white text-sksu-900 font-medium py-2 px-4 rounded-lg shadow hover:bg-sksu-800 hover:text-white transition-all" href="#">
-                            <i class="fa-solid fa-file-pdf mr-1"></i> Export to PDF
                         </a>
                     </div>
                 </div>
-
+            
                 <div class="mt-8 flow-root">
                     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full">
                                 <thead class="bg-white">
                                     <tr>
-                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Requester</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Request Date</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Items</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm text-gray-900">Status</th>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-3">Total</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm text-gray-900"></th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <!-- Example Row -->
-                                    <tr>
-                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-3">
-                                            <div class="flex items-center space-x-2">
-                                                <img src="https://via.placeholder.com/50" alt="User Image" class="w-8 h-8 rounded-full">
-                                                <span>John Doe</span>
-                                            </div>
-                                        </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">December 15, 2023</td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">Completed</span>
-                                        </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                            <ul class="list-disc pl-5">
-                                                <li>Projector - Status: Available</li>
-                                                <li>Whiteboard - Status: Reserved</li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <!-- More Rows -->
+                                <tbody class="bg-white">
+                                    @php
+                                        $jobOrderStatuses = [
+                                            'Pending' => $pendingJobOrdersCount,
+                                            'Approved' => $approvedJobOrdersCount,
+                                            'Completed' => $completedJobOrdersCount,
+                                            'Cancelled' => $cancelledJobOrdersCount,
+                                            'Failed' => $failedJobOrdersCount,
+                                        ];
+                                    @endphp
+                                    @foreach ($jobOrderStatuses as $status => $count)
+                                        <tr class="border-t border-gray-300">
+                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-sksu-900 sm:pl-3">{{ $status }}</td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">{{ $count }}</td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-sksu-700">
+                                                @if ($count > 0)
+                                                    <a href="{{ route('job-orders.export', ['status' => $status]) }}" class="underline text-sksu-700 hover:text-sksu-900">Download</a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
+            
 
           </div>
 

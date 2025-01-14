@@ -150,6 +150,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::get('/export-equipment/{status}', [ReportController::class, 'exportEquipment'])->name('equipment.export');
         Route::get('/export-requests/{status}', [ReportController::class, 'requestExport'])->name('requests.export');
         Route::get('/export-popular-equipment', [ReportController::class, 'exportPopularEquipment'])->name('export.popular.equipment');
+        Route::get('/job-orders/export/{status}', [ReportController::class, 'exportJobOrders'])->name('job-orders.export');
 
 
     });
