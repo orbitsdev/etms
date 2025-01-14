@@ -32,7 +32,8 @@ class ListUsers extends Component implements HasForms, HasTable
         return $table
             ->query(User::query()->isNotAdmin())
             ->columns([
-
+                ImageColumn::make('Profile')
+                ->defaultImageUrl(url('/images/placeholder-image.jpg')),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
@@ -57,8 +58,7 @@ class ListUsers extends Component implements HasForms, HasTable
                 //     ->dateTime()
                 //     ->sortable()
                 //     ->toggleable(isToggledHiddenByDefault: true),
-                    ImageColumn::make('avatar')
-                    ->defaultImageUrl(url('/images/placeholder-image.jpg')),
+
 
                  TextColumn::make('userDetails.type')
                  ->label('Type')
@@ -81,8 +81,8 @@ class ListUsers extends Component implements HasForms, HasTable
                 }),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(User::getRoleOptions())->searchable()
+                // SelectFilter::make('userDetails.type')
+                //     ->options(UserDetails::TYPE_OPTIONS)->searchable()
             ])
             ->actions([
                 ActionGroup::make([
