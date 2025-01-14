@@ -147,7 +147,7 @@
                 </div>
                 <div class="details-row">
                     <div class="label">Assignee</div>
-                    <div class="value">{{ $jobOrder->assignee->name ?? 'N/A' }}</div>
+                    <div class="value">{{ $jobOrder->assignee_name?? 'N/A' }}</div>
                 </div>
                 <div class="details-row">
                     <div class="label">Official Date</div>
