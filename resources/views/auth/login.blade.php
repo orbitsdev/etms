@@ -1,7 +1,14 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            {{-- <x-authentication-card-logo /> --}}
+            <div class="flex flex-col justify-center items-center  mt-4 mb-8">
+                <p class="text-7xl text-white font-bold"> ETMS</p>
+                <p class="text-3xl text-white drop-shadow-sm mt-3"> Equipment Tracking Management System</p>
+            </div>
+            {{-- <div class="flex flex-col justify-center items-center  mt-4 mb-8">
+                <p class="text-3xl text-sksu-800 font-bold"> ETMS</p>
+                <p class="text-md text-sksu-900 drop-shadow-sm "> Equipment Tracking Management System</p>
+            </div> --}}
         </x-slot>
 
         <x-validation-errors class="mb-4" />
@@ -12,8 +19,8 @@
             </div>
         @endif
         <div class="flex flex-col justify-center items-center  mt-4 mb-8">
-            <p class="text-3xl text-sksu-800 font-bold"> ETMS</p>
-            <p class="text-md text-sksu-900 drop-shadow-sm "> Equipment Tracking Management System</p>
+            <p class="text-4xl  font-bold">Sign In</p>
+            {{-- <p class="text-md  drop-shadow-sm "> Equipment Tracking Management System</p> --}}
         </div>
 
         <form method="POST" action="{{ route('login') }}">
@@ -43,22 +50,22 @@
                     </a>
                 @endif --}}
 
-                <x-button class="w-full flex items-center justify-center py-3" type="submit"> 
+                <x-button class="w-full flex items-center justify-center py-3" type="submit">
                     {{ __('Log in') }}
                 </x-button>
 
-                
+
             </div>
         </form>
         {{-- <div class="py-4 flex items-center justify-center">
             <p class="text-gray-700 mr-2">Don’t have an account?</p>
-            <a href="{{route('register')}}" 
-               class="text-sksu-600 underline hover:text-sksu-700 rounded" 
+            <a href="{{route('register')}}"
+               class="text-sksu-600 underline hover:text-sksu-700 rounded"
                aria-label="Create a new account">
                 Create Account
             </a>
         </div> --}}
-        
-        
+
+
     </x-authentication-card>
 </x-guest-layout>
