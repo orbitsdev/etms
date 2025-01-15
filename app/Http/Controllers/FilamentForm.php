@@ -20,12 +20,15 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Illuminate\Database\Eloquent\Model;
+use Mokhosh\FilamentRating\RatingTheme;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Rawilk\FilamentPasswordInput\Password;
+
 use Filament\Forms\Components\DateTimePicker;
+use Mokhosh\FilamentRating\Components\Rating;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -685,11 +688,91 @@ class FilamentForm extends Controller
                         ->required()
                         ->columnSpanFull()
                         ->rows(5),
-                       
+
 
                 ]),
         ];
     }
+
+    public static function feedBackAdminForm(): array
+{
+    return [
+        Section::make('Feedback Form')
+            ->columnSpanFull()
+            ->schema([
+                Select::make('user_id')
+                    ->label('User')
+                    ->relationship(
+                        name: 'user',
+                        titleAttribute: 'name',
+                        //modify
+                        modifyQueryUsing: fn(Builder $query) => $query->isNotAdmin(),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => $record->name)
+                    ->searchable()
+                    ->preload()
+                    ->columnSpanFull()
+                    ->required(),
+
+                Textarea::make('message')
+                    ->label('Feedback Message')
+                    ->placeholder('Enter feedback message here')
+                    ->required()
+                    ->columnSpanFull()
+                    ->rows(5),
+
+                    Select::make('rating')
+                    ->label('Rating')
+                    ->options([
+                        1 => '1 - Poor',
+                        2 => '2 - Fair',
+                        3 => '3 - Good',
+                        4 => '4 - Very Good',
+                        5 => '5 - Excellent',
+                    ])
+                    ->placeholder('Select a rating')
+                    ->default(5)
+                    ->required()
+                    ->columnSpan(3)
+                    ->nullable(),
+
+            ]),
+    ];
+}
+    public static function feedBackForm(): array
+{
+    return [
+        Section::make('Feedback Form')
+            ->columnSpanFull()
+            ->schema([
+               
+
+                Textarea::make('message')
+                    ->label('Feedback Message')
+                    ->placeholder('Enter feedback message here')
+                    ->required()
+                    ->columnSpanFull()
+                    ->rows(5),
+
+                    Select::make('rating')
+                    ->label('Rating')
+                    ->options([
+                        1 => '1 - Poor',
+                        2 => '2 - Fair',
+                        3 => '3 - Good',
+                        4 => '4 - Very Good',
+                        5 => '5 - Excellent',
+                    ])
+                    ->placeholder('Select a rating')
+                    ->default(5)
+                    ->required()
+                    ->columnSpan(3)
+                    ->nullable(),
+
+            ]),
+    ];
+}
+
     public static function JobOrderform(): array
     {
         return [

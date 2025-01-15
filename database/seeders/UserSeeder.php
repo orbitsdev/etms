@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         $usersWithDetails = [
             [
                 'user' => [
-                    'name' => 'Brian Orbino',
+                    'name' => 'Juan Delacruz',
                     'email' => 'test@etms.com',
                     'password' => Hash::make('password'),
                     'role' => User::STUDENT,
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'user' => [
-                    'name' => 'Angela Tirado',
+                    'name' => 'Angela Yue',
                     'email' => 'test2@etms.com',
                     'password' => Hash::make('password'),
                     'role' => User::FACULTY,

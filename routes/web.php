@@ -47,9 +47,11 @@ use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\UserDetails\CreateUserDetails;
 use App\Http\Controllers\NotificationController;
+use App\Livewire\Feedbacks\ListFeedback;
 use App\Livewire\Request\ListOfEquipmentRequest;
 use App\Livewire\Request\ListOfEquipmetnRequest;
 use App\Livewire\JobOrders\ListOfMyJobOrdersRequests;
+use App\Livewire\RequesterDashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,8 +83,9 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         'ensure.user.details'
         ])->group(function(){
 
-        Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
+        Route::get('/admin', AdminDashboard::class)->name('admin.dashboard')->middleware(['can:is-admin']);
         Route::get('/requester', UserDashboard::class)->name('user.dashboard');
+        Route::get('/feedbacks', RequesterDashboard::class)->name('requester.dashboard');
         Route::middleware(['can:is-admin'])->group(function(){
             Route::prefix('/users')->name('users.')->group(function () {
                 Route::get('/', ListUsers::class)->name('index');
@@ -121,8 +124,10 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
                 Route::get('/view/{record}', ViewEquipment::class)->name('view');
             });
         });
+
         Route::get('/equipments/requests-list', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests')->middleware(['can:is-admin']);
         Route::get('/job-orders/requests-list', ListOfJobOrders::class)->name('jobordfers.listofjoborders')->middleware(['can:is-admin']);
+        Route::get('/feedback/list', ListFeedback::class)->name('feedback.index')->middleware(['can:is-admin']);
 
         // public
 
@@ -181,7 +186,7 @@ Route::get('/send-email', function(){
 Route::get('/joborder-email', function(){
     $jobOrder = JobOrder::first(); // Replace with a specific ID if needed: JobOrder::find(1);
 
-   
+
 
     // Replace with a test email address
     NotificationController::sendJobOrderNotification($jobOrder);

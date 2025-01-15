@@ -111,8 +111,29 @@
                                    </svg>
 
 
+
+
                                     <span class="ml-2 truncate">Job Orders </span>
                                     @livewire('total-job-order-pending-request')
+                                    {{-- <div>
+                                        <span class="inline-flex items-center justify-center px-1.5 py-1 text-xs rubik-500 leading-none text-green-100 bg-green-600 rounded-full">
+                                        40
+                                        </span>
+
+                                  </div> --}}
+                                  </a>
+                                </li>
+                                <li>
+                                  <a href="{{route('feedback.index')}}"
+                                  class="{{RouteManager::isCurrentPage(Session::get('current_route_name'),['feedback.index'],'active-link','inactive-link') }}">
+
+
+                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                                  </svg>
+
+
+                                    <span class="ml-2 truncate">Feedback </span>
                                     {{-- <div>
                                         <span class="inline-flex items-center justify-center px-1.5 py-1 text-xs rubik-500 leading-none text-green-100 bg-green-600 rounded-full">
                                         40
@@ -182,6 +203,17 @@
                         <li class="">
                             {{-- <div class="text-sm font-semibold leading-6 text-sksu-800">TRANSACTION </div> --}}
                             <ul role="list" class="-mx-2 mt-2 space-y-1">
+                              <li>
+                                <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
+                                <a href="{{route('requester.dashboard')}}"
+                                class=" {{RouteManager::isCurrentPage(Session::get('current_route_name'),['requester.dashboard'],'active-link','inactive-link') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
+                                 </svg>
+
+                                  <span class="ml-2 truncate">FeeedBack</span>
+                                </a>
+                              </li>
                               <li>
                                 <!-- Current: "bg-gray-50 text-indigo-600", Default: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50" -->
                                 <a href="{{route('equipment.list')}}"

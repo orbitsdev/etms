@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             CourseSeeder::class,
             SectionSeeder::class,
+            FeedbackSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

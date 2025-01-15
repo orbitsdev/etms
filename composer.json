@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "awcodes/filament-table-repeater": "2.0",
+        "blade-ui-kit/blade-heroicons": "^2.5",
         "filament/actions": "^3.2",
         "filament/forms": "^3.2",
         "filament/infolists": "^3.2",
@@ -21,6 +22,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.0",
         "maatwebsite/excel": "^3.1",
+        "mokhosh/filament-rating": "^1.4",
         "rawilk/filament-password-input": "^2.0",
         "spatie/laravel-medialibrary": "^11.11",
         "wireui/wireui": "^2.2"

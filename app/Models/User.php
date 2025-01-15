@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Request;
+use App\Models\Feedback;
 use App\Models\JobOrder;
 use App\Models\UserDetails;
 use Laravel\Sanctum\HasApiTokens;
@@ -178,5 +179,11 @@ class User extends Authenticatable
             ->limit(1); // Only the top user
     }
 
+
+    // has many feed backs
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 
 }
