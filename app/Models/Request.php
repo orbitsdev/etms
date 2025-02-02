@@ -57,7 +57,7 @@ class Request extends Model
 
     public const IF_PICKUP = [
         self::RETURNED => self::RETURNED,
-        // self::COMPLETED => self::COMPLETED,
+        self::COMPLETED => self::COMPLETED,
     ];
     public const IF_RETURNED = [
         self::DUE => self::DUE,
