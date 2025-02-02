@@ -33,7 +33,7 @@ class Request extends Model
         self::RETURNED => self::RETURNED,
         self::CANCELED => self::CANCELED,
         self::COMPLETED => self::COMPLETED,
-        self::COMPLETED => self::DUE,
+        self::DUE => self::DUE,
     ];
     public const IF_CANCELED = [
         self::APPROVED => self::APPROVED,
