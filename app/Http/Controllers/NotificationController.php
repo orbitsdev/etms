@@ -27,7 +27,7 @@ class NotificationController extends Controller
     public static function sendJobOrderNotification(JobOrder $jobOrder): void
     {
         try {
-            // Send an email notification to the requester
+           
             Mail::to($jobOrder->user->email)->send(new JobOrderUpdate($jobOrder));
 
             // Log the successful notification
