@@ -6,5 +6,6 @@
     @endsection
 
         {{ $this->table }}
+
     </x-admin-layout>
 </div>
