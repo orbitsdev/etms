@@ -11,58 +11,73 @@
             <p class="text-md text-sksu-900 drop-shadow-sm">Equipment Tracking Management System</p>
         </div>
 
-        {{-- ✅ Alpine.js at the FORM level for role-based logic --}}
-        <form method="POST" action="{{ route('register') }}" x-data="{ role: 'Student', sections: [] }">
+        {{-- ✅ Alpine.js manages form visibility dynamically --}}
+        <form method="POST" action="{{ route('register') }}" x-data="{
+                role: 'Student',
+                sections: [],
+                courseSelected: false
+            }">
             @csrf
 
-            <div>
-                <x-label for="name">Name</x-label>
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            {{-- Full Name Fields --}}
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <x-label for="first_name">First Name</x-label>
+                    <x-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" required />
+                </div>
+                <div>
+                    <x-label for="middle_name">Middle Name</x-label>
+                    <x-input id="middle_name" class="block mt-1 w-full" type="text" name="middle_name" />
+                </div>
+                <div>
+                    <x-label for="last_name">Last Name</x-label>
+                    <x-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" required />
+                </div>
             </div>
 
+            {{-- Email & Password --}}
             <div class="mt-4">
                 <x-label for="email">Email</x-label>
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                <x-input id="email" class="block mt-1 w-full" type="email" name="email" required />
             </div>
 
             <div class="mt-4">
                 <x-label for="password">Password</x-label>
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required />
             </div>
 
             <div class="mt-4">
                 <x-label for="password_confirmation">Confirm Password</x-label>
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
             </div>
 
-            {{-- ✅ Role Selection (Controls visibility of Course & Section) --}}
+            {{-- Role Selection --}}
             <div class="mt-4">
                 <x-label for="role">Role</x-label>
-                <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                    x-model="role">
+                <select id="role" name="role" x-model="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
                     <option value="Student">Student</option>
                     <option value="Faculty">Faculty</option>
                 </select>
             </div>
 
-            {{-- ✅ Department Dropdown (Always Visible) --}}
+            {{-- Department Dropdown --}}
             <div class="mt-4">
-                <x-label for="department_id">Department</x-label>
-                <select id="department_id" name="department_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                <x-label for="department">Department</x-label>
+                <select id="department" name="department" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
                     <option value="">Select Department</option>
                     @foreach ($departments as $department)
-                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                        <option value="{{ $department->name }}">{{ $department->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- ✅ Course Dropdown (Only Visible for Students) --}}
+            {{-- Course & Section (Only for Students) --}}
             <div class="mt-4" x-show="role === 'Student'">
                 <x-label for="course_id">Course</x-label>
                 <select id="course_id" name="course_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
                     x-on:change="fetch('/get-sections/' + $event.target.value)
                         .then(res => res.json())
-                        .then(data => sections = data)">
+                        .then(data => { sections = data; courseSelected = true; })">
                     <option value="">Select Course</option>
                     @foreach ($courses as $course)
                         <option value="{{ $course->id }}">{{ $course->name }}</option>
@@ -70,14 +85,19 @@
                 </select>
             </div>
 
-            {{-- ✅ Section Dropdown (Only Visible for Students & When Sections Exist) --}}
-            <div class="mt-4" x-show="role === 'Student' && sections.length > 0">
+            <div class="mt-4" x-show="role === 'Student' && courseSelected">
                 <x-label for="section_id">Section</x-label>
                 <select id="section_id" name="section_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
-                    <template x-for="section in sections" :key="section.id">
+                    <template x-for="section in sections">
                         <option :value="section.id" x-text="section.name"></option>
                     </template>
                 </select>
+            </div>
+
+            {{-- Position (Only for Faculty) --}}
+            <div class="mt-4" x-show="role === 'Faculty'">
+                <x-label for="position">Position</x-label>
+                <x-input id="position" class="block mt-1 w-full" type="text" name="position" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -86,14 +106,5 @@
                 </x-button>
             </div>
         </form>
-
-        <div class="py-4 flex items-center justify-center">
-            <p class="text-gray-700 mr-2">Already registered?</p>
-            <a href="{{ route('login') }}"
-               class="text-sksu-600 underline hover:text-sksu-700 rounded"
-               aria-label="Log in to your account">
-                Log in
-            </a>
-        </div>
     </x-authentication-card>
 </x-guest-layout>
