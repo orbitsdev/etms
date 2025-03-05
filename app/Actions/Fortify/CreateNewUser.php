@@ -24,7 +24,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'role' => ['required', 'in:Student,Faculty'],
-            'department' => ['required', 'string', 'max:255'],
+            'department_id' => ['required', 'exists:departments,id'],
             'course_id' => ['nullable', 'exists:courses,id'],
             'section_id' => ['nullable', 'exists:sections,id'],
         ])->validate();
@@ -34,7 +34,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'role' => $input['role'],
-            'department' => $input['department'],
+            'department_id' => $input['department_id'],
             'course_id' => $input['role'] === 'Student' ? $input['course_id'] : null,
             'section_id' => $input['role'] === 'Student' ? $input['section_id'] : null,
         ]);

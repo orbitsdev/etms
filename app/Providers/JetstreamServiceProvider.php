@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Course;
+use App\Models\Department;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use App\Actions\Jetstream\DeleteUser;
@@ -28,7 +29,8 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::deleteUsersUsing(DeleteUser::class);
         Fortify::registerView(function () {
             return view('auth.register', [
-                'courses' => Course::all(), // Pass all courses to the registration view
+                'departments' => Department::all(),
+            'courses' => Course::all(),
             ]);
         });
     }

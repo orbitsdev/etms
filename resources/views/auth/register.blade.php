@@ -44,14 +44,19 @@
                 </select>
             </div>
 
-            {{-- Department Field --}}
+            {{-- Department Dropdown --}}
             <div class="mt-4">
-                <x-label for="department">Department</x-label>
-                <x-input id="department" class="block mt-1 w-full" type="text" name="department" :value="old('department')" required />
+                <x-label for="department_id">Department</x-label>
+                <select id="department_id" name="department_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                    <option value="">Select Department</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             {{-- Course Dropdown (Only for Students) --}}
-            <div class="mt-4" x-show="role === 'Student'" x-data="{ sections: [] }">
+            <div class="mt-4" x-data="{ sections: [] }" x-show="role === 'Student'">
                 <x-label for="course_id">Course</x-label>
                 <select id="course_id" name="course_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
                     x-on:change="fetch('/get-sections/' + $event.target.value)
