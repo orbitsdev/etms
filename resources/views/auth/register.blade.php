@@ -34,21 +34,45 @@
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
 
-            @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                <div class="mt-4">
-                    <x-label for="terms">
-                        <div class="flex items-center">
-                            <x-checkbox name="terms" id="terms" required />
-                            <div class="ms-2">
-                                {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Terms of Service').'</a>',
-                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Privacy Policy').'</a>',
-                                ]) !!}
-                            </div>
-                        </div>
-                    </x-label>
-                </div>
-            @endif
+            {{-- Role Selection --}}
+            <div class="mt-4">
+                <x-label for="role">Role</x-label>
+                <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
+                    x-data="{ role: 'Student' }" x-model="role">
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                </select>
+            </div>
+
+            {{-- Department Field --}}
+            <div class="mt-4">
+                <x-label for="department">Department</x-label>
+                <x-input id="department" class="block mt-1 w-full" type="text" name="department" :value="old('department')" required />
+            </div>
+
+            {{-- Course Dropdown (Only for Students) --}}
+            <div class="mt-4" x-show="role === 'Student'" x-data="{ sections: [] }">
+                <x-label for="course_id">Course</x-label>
+                <select id="course_id" name="course_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
+                    x-on:change="fetch('/get-sections/' + $event.target.value)
+                        .then(res => res.json())
+                        .then(data => sections = data)">
+                    <option value="">Select Course</option>
+                    @foreach ($courses as $course)
+                        <option value="{{ $course->id }}">{{ $course->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Section Dropdown (Only for Students) --}}
+            <div class="mt-4" x-show="role === 'Student' && sections.length > 0">
+                <x-label for="section_id">Section</x-label>
+                <select id="section_id" name="section_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                    <template x-for="section in sections">
+                        <option :value="section.id" x-text="section.name"></option>
+                    </template>
+                </select>
+            </div>
 
             <div class="flex items-center justify-end mt-4">
                 <x-button class="w-full flex items-center justify-center py-3" type="submit">
@@ -59,8 +83,8 @@
 
         <div class="py-4 flex items-center justify-center">
             <p class="text-gray-700 mr-2">Already registered?</p>
-            <a href="{{ route('login') }}" 
-               class="text-sksu-600 underline hover:text-sksu-700 rounded" 
+            <a href="{{ route('login') }}"
+               class="text-sksu-600 underline hover:text-sksu-700 rounded"
                aria-label="Log in to your account">
                 Log in
             </a>

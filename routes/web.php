@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Request;
+use App\Models\Section;
 use App\Livewire\Report;
 use App\Models\JobOrder;
 use App\Models\Equipment;
@@ -17,6 +18,7 @@ use App\Livewire\Users\CreateUser;
 use App\Livewire\Userss\UpdateUser;
 use App\Livewire\Courses\EditCourse;
 use App\Livewire\Courses\ListCourse;
+use App\Livewire\RequesterDashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,6 +28,7 @@ use App\Livewire\User\EditUserDetails;
 use App\Livewire\ViewRequesterRequest;
 use App\Livewire\Sections\EditSections;
 use App\Livewire\Sections\ListSections;
+use App\Livewire\Feedbacks\ListFeedback;
 use App\Livewire\JobOrders\EditJobOrder;
 use Filament\Resources\Pages\EditRecord;
 use App\Http\Controllers\ReporController;
@@ -47,11 +50,9 @@ use App\Livewire\Requests\ListRequesterRequest;
 use App\Livewire\Requests\RequestEquipmentForm;
 use App\Livewire\UserDetails\CreateUserDetails;
 use App\Http\Controllers\NotificationController;
-use App\Livewire\Feedbacks\ListFeedback;
 use App\Livewire\Request\ListOfEquipmentRequest;
 use App\Livewire\Request\ListOfEquipmetnRequest;
 use App\Livewire\JobOrders\ListOfMyJobOrdersRequests;
-use App\Livewire\RequesterDashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -192,4 +193,9 @@ Route::get('/joborder-email', function(){
     NotificationController::sendJobOrderNotification($jobOrder);
 
     return 'Job Order email sent!';
+});
+
+
+Route::get('/get-sections/{course_id}', function ($course_id) {
+    return Section::where('course_id', $course_id)->get();
 });
