@@ -11,7 +11,8 @@
             <p class="text-md text-sksu-900 drop-shadow-sm">Equipment Tracking Management System</p>
         </div>
 
-        <form method="POST" action="{{ route('register') }}">
+        {{-- ✅ Alpine.js at the FORM level for role-based logic --}}
+        <form method="POST" action="{{ route('register') }}" x-data="{ role: 'Student', sections: [] }">
             @csrf
 
             <div>
@@ -34,17 +35,17 @@
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
 
-            {{-- Role Selection --}}
+            {{-- ✅ Role Selection (Controls visibility of Course & Section) --}}
             <div class="mt-4">
                 <x-label for="role">Role</x-label>
                 <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                    x-data="{ role: 'Student' }" x-model="role">
+                    x-model="role">
                     <option value="Student">Student</option>
                     <option value="Faculty">Faculty</option>
                 </select>
             </div>
 
-            {{-- Department Dropdown --}}
+            {{-- ✅ Department Dropdown (Always Visible) --}}
             <div class="mt-4">
                 <x-label for="department_id">Department</x-label>
                 <select id="department_id" name="department_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
@@ -55,8 +56,8 @@
                 </select>
             </div>
 
-            {{-- Course Dropdown (Only for Students) --}}
-            <div class="mt-4" x-data="{ sections: [] }" x-show="role === 'Student'">
+            {{-- ✅ Course Dropdown (Only Visible for Students) --}}
+            <div class="mt-4" x-show="role === 'Student'">
                 <x-label for="course_id">Course</x-label>
                 <select id="course_id" name="course_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
                     x-on:change="fetch('/get-sections/' + $event.target.value)
@@ -69,11 +70,11 @@
                 </select>
             </div>
 
-            {{-- Section Dropdown (Only for Students) --}}
+            {{-- ✅ Section Dropdown (Only Visible for Students & When Sections Exist) --}}
             <div class="mt-4" x-show="role === 'Student' && sections.length > 0">
                 <x-label for="section_id">Section</x-label>
                 <select id="section_id" name="section_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
-                    <template x-for="section in sections">
+                    <template x-for="section in sections" :key="section.id">
                         <option :value="section.id" x-text="section.name"></option>
                     </template>
                 </select>
