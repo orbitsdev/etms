@@ -47,11 +47,12 @@ class RequesterDashboard extends Component implements HasForms, HasActions
     {
         $userId = Auth::id();
         $hasCompletedRequest = Request::where('user_id', $userId)
-            ->where('status', 'Completed')
+            ->where('status', Request::RETURNED)
+            ->orWhere('status', Request::RETURNED)
             ->exists();
 
         $hasCompletedJobOrder = JobOrder::where('requester_id', $userId)
-            ->where('status', 'Completed')
+            ->where('status', JobOrder::STATUS_COMPLETED)
             ->exists();
 
 

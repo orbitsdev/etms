@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use App\Models\Request;
 use Illuminate\Console\Command;
+use App\Mail\RequestDueReminder;
+use Illuminate\Support\Facades\Mail;
 
 class UpdateDueStatus extends Command
 {
@@ -39,6 +41,10 @@ class UpdateDueStatus extends Command
         foreach ($requests as $request) {
             $request->status = Request::DUE;
             $request->save();
+
+            if ($request->user) {
+                Mail::to($request->user->email)->send(new RequestDueReminder($request));
+            }
 
             $this->info("Request ID {$request->id} status updated to Due.");
         }
