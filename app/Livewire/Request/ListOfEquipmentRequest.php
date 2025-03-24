@@ -80,12 +80,19 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(Request::STATUS_OPTIONS)->searchable()->multiple()
-            ], 
+            ],
             // layout: FiltersLayout::AboveContent
-            
+
             )
             ->actions([
                 ActionGroup::make([
+                    Action::make('Print')
+    ->label('Print Acknowledgement')
+    ->icon('heroicon-o-printer')
+    ->color('primary')
+    ->url(fn (Model $record) => route('report.property-acknowledgement', $record->id))
+    ->openUrlInNewTab(),
+
                     Action::make('View')
                         ->icon('heroicon-s-eye')
                         ->modalSubmitAction(false)

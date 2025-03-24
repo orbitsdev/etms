@@ -7,8 +7,8 @@
         <x-validation-errors class="mb-4" />
 
         <div class="flex flex-col justify-center items-center mt-4 mb-8">
-            <p class="text-3xl text-sksu-800 font-bold">ETMS</p>
-            <p class="text-md text-sksu-900 drop-shadow-sm">Equipment Tracking Management System</p>
+            <p class="text-3xl text-sksu-800 font-bold">ICTPro</p>
+            <p class="text-md text-sksu-900 drop-shadow-sm">ICT OFFICE TRANSACTION PROCESSING SYSTEM</p>
         </div>
 
         {{-- ✅ Alpine.js manages step navigation --}}

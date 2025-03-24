@@ -2,8 +2,9 @@
     <x-authentication-card>
         <x-slot name="logo">
             <div class="flex flex-col justify-center items-center  mt-4 mb-8">
-                <p class="text-7xl text-white font-bold"> ETMS</p>
-                <p class="text-3xl text-white drop-shadow-sm mt-3"> Equipment Tracking Management System</p>
+                <p class="text-7xl text-white font-bold max-w-7xl mx-auto text-center" > ICTPro </p>
+                <p class="text-4xl text-white font-bold max-w-7xl mx-auto text-center" > ICT OFFICE TRANSACTION PROCESSING SYSTEM</p>
+                {{-- <p class="text-3xl text-white drop-shadow-sm mt-3"> </p> --}}
             </div>
             {{-- <div class="flex flex-col justify-center items-center  mt-4 mb-8">
                 <p class="text-3xl text-sksu-800 font-bold"> ETMS</p>
