@@ -29,7 +29,7 @@ class JobOrderUpdate extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->jobOrder->user->email, 'ETMS'),
+            from: new Address($this->jobOrder->user->email, 'ICTPro'),
             subject: "Job Order Update: Status - {$this->jobOrder->status}"
         );
     }

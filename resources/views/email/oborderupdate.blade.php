@@ -118,8 +118,8 @@
         <!-- Header -->
         <div class="header">
             <img src="{{ url('images/sksu_logo.png') }}" alt="SKSU Logo">
-            <h1>ETMS</h1>
-            <p>Equipment Tracking Management System</p>
+            <h1>ICTPro</h1>
+            <p>ICT OFFICE TRANSACTION PROCESSING SYSTEM</p>
         </div>
 
         <!-- Content -->

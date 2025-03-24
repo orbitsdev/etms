@@ -6,10 +6,7 @@
                 <p class="text-4xl text-white font-bold max-w-7xl mx-auto text-center" > ICT OFFICE TRANSACTION PROCESSING SYSTEM</p>
                 {{-- <p class="text-3xl text-white drop-shadow-sm mt-3"> </p> --}}
             </div>
-            {{-- <div class="flex flex-col justify-center items-center  mt-4 mb-8">
-                <p class="text-3xl text-sksu-800 font-bold"> ETMS</p>
-                <p class="text-md text-sksu-900 drop-shadow-sm "> Equipment Tracking Management System</p>
-            </div> --}}
+
         </x-slot>
 
         <x-validation-errors class="mb-4" />

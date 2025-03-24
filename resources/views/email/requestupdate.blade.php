@@ -114,7 +114,7 @@
             color: #991b1b;
             border-radius: 2px;
 
-        
+
         }
 
         .text-c{
@@ -147,7 +147,7 @@
         <!-- Header -->
         <div class="header">
             <img src="{{ url('images/sksu_logo.png') }}" alt="SKSU Logo">
-            <h1>ETMS</h1>
+            <h1>ICTPro</h1>
             <p>Equipment Tracking Management System</p>
         </div>
 
@@ -166,7 +166,7 @@
                     <div class="label">Request Date</div>
                     <div class="value">{{ $request->getFormattedRequestDateAttribute() }}</div>
                 </div>
-              
+
                 <div class="details-row">
                     <div class="label">Purpose</div>
                     <div class="value">{{ $request->purpose }}</div>
@@ -177,7 +177,7 @@
                 Reason
             </p>
             <div class="cancelled">
-                
+
                     {{$request->status_reason ?? ''}}
             </div>
             @endif
@@ -202,7 +202,7 @@
                     @endforeach
                 </tbody>
             </table>
-           
+
 
             <p>If you have any questions or need further assistance, feel free to contact us.</p>
         </div>

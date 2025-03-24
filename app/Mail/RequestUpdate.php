@@ -19,7 +19,7 @@ class RequestUpdate extends Mailable
      */
     public function __construct(public Request $request)
     {
-        
+
     }
 
     /**
@@ -28,7 +28,7 @@ class RequestUpdate extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->request->user->email, 'ETMS'),
+            from: new Address($this->request->user->email, 'ICTPro'),
             subject: "Request Update: Status - {$this->request->status} (Date: {$this->request->getFormattedRequestDateAttribute()})",
 
         );
