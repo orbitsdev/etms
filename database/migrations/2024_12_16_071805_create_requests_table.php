@@ -27,7 +27,7 @@ return new class extends Migration
                 'Ready for Pickup',
                 'Picked Up',
                 'Delivered',
-                'Returned',
+            'Returned',
                 'Cancelled',
                 'Completed',
                 'Due',

@@ -21,8 +21,8 @@
                     <p class="text-xs drop-shadow-sm text-sksu-900">{{Auth::user()->email}}</p>
                 </div> --}}
                 <div class="flex justify-center items-center text-center flex-col mt-24">
-                    <p class="text-center text-5xl font-bold text-sksu-900">ETMS</p>
-                    <p class="text-center text-sm mt-1 drop-shadow-sm text-sksu-900">Equipment Tracking Management System</p>
+                    <p class="text-center text-5xl font-bold text-sksu-900">ICTPro: </p>
+                    <p class="text-center text-sm mt-1 drop-shadow-sm text-sksu-900">ICT OFFICE TRANSACTION PROCESSING SYSTEM</p>
                 </div>
             </div>
 
