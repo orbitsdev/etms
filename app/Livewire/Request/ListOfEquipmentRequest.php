@@ -91,7 +91,9 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
     ->icon('heroicon-o-printer')
     ->color('primary')
     ->url(fn (Model $record) => route('report.property-acknowledgement', ['requestId'=> $record->id]))
-    ->openUrlInNewTab(),
+    ->openUrlInNewTab()->visible(function($record){
+        return $record->status = Request::COMPLETED;
+    }),
 
                     Action::make('View')
                         ->icon('heroicon-s-eye')
