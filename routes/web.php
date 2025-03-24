@@ -130,7 +130,7 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::get('/equipments/requests-list', ListOfEquipmentRequest::class)->name('requests.lisofequipmentrequests')->middleware(['can:is-admin']);
         Route::get('/job-orders/requests-list', ListOfJobOrders::class)->name('jobordfers.listofjoborders')->middleware(['can:is-admin']);
         Route::get('/feedback/list', ListFeedback::class)->name('feedback.index')->middleware(['can:is-admin']);
-        Route::get('report/property-acknowledgement/{id}', PropertyAcknowledgementReport::class)
+        Route::get('report/property-acknowledgement/{requestId}', PropertyAcknowledgementReport::class)
     ->name('report.property-acknowledgement')->middleware(['can:is-admin']);
 
         // public

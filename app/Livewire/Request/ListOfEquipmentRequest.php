@@ -90,7 +90,7 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
     ->label('Print Acknowledgement')
     ->icon('heroicon-o-printer')
     ->color('primary')
-    ->url(fn (Model $record) => route('report.property-acknowledgement', $record->id))
+    ->url(fn (Model $record) => route('report.property-acknowledgement', ['requestId'=> $record->id]))
     ->openUrlInNewTab(),
 
                     Action::make('View')

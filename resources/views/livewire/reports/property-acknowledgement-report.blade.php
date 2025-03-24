@@ -1,24 +1,29 @@
 <div>
+
+    <x-admin-layout>
+
+
+
     <div id="printableDiv" class="p-6 bg-white shadow-md border border-gray-300 mx-auto max-w-3xl">
         <x-sksu-header/>
 
         <div class="mb-4 text-gray-800">
             <h2 class="text-center text-xl mt-2">Property Acknowledgement Report</h2>
-            <p class="text-center">Request No: {{ $request->id }}</p>
+            <p class="text-center">Request No: {{ $record->id }}</p>
         </div>
 
         <div class="border-b pb-2 border-black text-gray-800 text-xs">
             <div class="flex justify-start font-bold">
                 <p class="min-w-28">Requested by:</p>
-                <div>{{ $request->user->name }}</div>
+                <div>{{ $record->user->name }}</div>
             </div>
             <div class="flex justify-start font-bold">
                 <p class="min-w-28">Department:</p>
-                <div>{{ $request->user->department ?? 'N/A' }}</div>
+                <div>{{ $record->user->department ?? 'N/A' }}</div>
             </div>
             <div class="flex justify-start font-bold">
                 <p class="min-w-28">Date Requested:</p>
-                <div>{{ \Carbon\Carbon::parse($request->request_date)->format('F d, Y') }}</div>
+                <div>{{ \Carbon\Carbon::parse($record->request_date)->format('F d, Y') }}</div>
             </div>
         </div>
 
@@ -34,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($request->items as $item)
+                    @forelse($record->items as $item)
                         <tr>
                             <td class="border border-gray-800 px-2 py-1">{{ $item->name }}</td>
                             <td class="border border-gray-800 px-2 py-1 text-center">{{ $item->quantity }}</td>
@@ -55,7 +60,7 @@
 
         <div class="grid grid-cols-2 gap-4 text-xs mt-6">
             <div class="text-center">
-                <p class="font-bold mt-6 underline">{{ $request->user->name }}</p>
+                <p class="font-bold mt-6 underline">{{ $record->user->name }}</p>
                 <p>Recipient</p>
             </div>
 
@@ -79,4 +84,6 @@
             document.body.innerHTML = originalContents;
         }
     </script>
+
+</x-admin-layout>
 </div>

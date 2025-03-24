@@ -9,12 +9,12 @@ class PropertyAcknowledgementReport extends Component
 {
 
     public $requestId;
-    public $request;
+    public $record;
 
     public function mount($requestId)
     {
         $this->requestId = $requestId;
-        $this->request = Request::with(['user', 'items'])->findOrFail($requestId);
+        $this->record = Request::with(['user', 'items'])->findOrFail($requestId);
     }
 
     public function render()
