@@ -4,17 +4,16 @@
             <x-sksu-header/>
 
             <div class="text-center mb-6">
-                <h2 class="text-xl font-semibold uppercase">Property Acknowledgement Report</h2>
+                <h2 class="text-xl font-semibold uppercase">Property Acknowledgement Certificate</h2>
             </div>
 
-            <div class="space-y-2 border-b border-black pb-4">
+            <div class="space-y-2 mb-6">
+                <p>
+                    This is to certify that the following item(s) were issued to:
+                </p>
                 <div class="flex">
-                    <span class="w-40 font-semibold">Name of Employee:</span>
+                    <span class="w-40 font-semibold">Name:</span>
                     <span>{{ $record->user->name }}</span>
-                </div>
-                <div class="flex">
-                    <span class="w-40 font-semibold">Department/Office:</span>
-                    <span>{{ $record->user->department ?? 'N/A' }}</span>
                 </div>
                 <div class="flex">
                     <span class="w-40 font-semibold">Date Issued:</span>
@@ -22,27 +21,23 @@
                 </div>
             </div>
 
-            <div class="mt-6">
-                <p class="mb-2">The following property/ies are issued to the above-named employee for official use. The undersigned acknowledges receipt and accountability of the listed item/s:</p>
-
+            <div class="mt-4">
                 <table class="w-full border border-gray-800 mt-4">
                     <thead class="bg-gray-200">
                         <tr>
                             <th class="border border-gray-800 px-2 py-1 text-left">Item Description</th>
                             <th class="border border-gray-800 px-2 py-1 text-center">Quantity</th>
-                            <th class="border border-gray-800 px-2 py-1 text-left">Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($record->items as $item)
                             <tr>
-                                <td class="border border-gray-800 px-2 py-1">{{ $item->name }}</td>
+                                <td class="border border-gray-800 px-2 py-1">{{ $item->equipment->name }}</td>
                                 <td class="border border-gray-800 px-2 py-1 text-center">{{ $item->quantity }}</td>
-                                <td class="border border-gray-800 px-2 py-1">{{ $item->remarks ?? '---' }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="border border-gray-800 px-2 py-1 text-center text-gray-500">No items listed.</td>
+                                <td colspan="2" class="border border-gray-800 px-2 py-1 text-center text-gray-500">No items listed.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -51,7 +46,7 @@
 
             <div class="mt-6">
                 <p>
-                    I hereby acknowledge the receipt of the above-mentioned items and accept full responsibility for their proper use, safekeeping, and eventual return upon request or end of service.
+                    I hereby acknowledge receipt of the above-listed property/ies and accept responsibility for their proper use and safekeeping.
                 </p>
             </div>
 
@@ -61,15 +56,11 @@
                     <p>Recipient</p>
                 </div>
                 <div>
-                    <p class="font-semibold underline mt-6">Jesher Palomaria</p>
-                    <p>Accountant III</p>
+                    <p class="font-semibold underline mt-6">&nbsp;</p>
+                    <p>Authorized Personnel</p>
                 </div>
             </div>
         </div>
-
-        <button onclick="printDiv('printableDiv')" class="mt-6 px-4 py-2 bg-primary-500 text-white rounded">
-            Print Document
-        </button>
 
         <script>
             function printDiv(divName) {
