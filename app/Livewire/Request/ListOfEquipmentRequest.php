@@ -43,6 +43,7 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
                                 ->orWhere('last_name', 'like', "%{$search}%");
                         });
                     })->label('Request By'),
+                Tables\Columns\TextColumn::make('user.userDetails.email')->label('Email'),
                 TextColumn::make('items.equipment.name')
                     ->listWithLineBreaks()->label('Items'),
                 Tables\Columns\TextColumn::make('request_date')
