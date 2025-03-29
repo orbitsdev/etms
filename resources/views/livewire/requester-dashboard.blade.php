@@ -13,15 +13,14 @@
                                 class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-balance sm:text-5xl">
                                 What our users are saying about us
                             </p>
-
-                            @if ($canSubmitFeedback)
+                            {{-- @if ($canSubmitFeedback)
                                 <div class="mt-8">
                                     {{ $this->addFeedback }}
                                 </div>
                             @else
                                 <p class="mt-8 text-gray-500">You need to complete at least one request or job order to
                                     provide feedback.</p>
-                            @endif
+                            @endif --}}
 
                         </div>
 

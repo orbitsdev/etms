@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Feedback;
 use App\Models\Equipment;
 use App\Models\RequestHistory;
 use Illuminate\Support\Carbon;
@@ -233,5 +234,14 @@ class Request extends Model
         return $query->where('status', Request::DUE);
     }
 
+
+    public function feedbacks(){
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
 
 }

@@ -6,6 +6,7 @@ use Filament\Tables;
 use App\Models\Request;
 use Livewire\Component;
 use Filament\Tables\Table;
+use WireUi\Traits\WireUiActions;
 use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Grouping\Group;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Actions\ActionGroup;
@@ -23,7 +25,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
-use WireUi\Traits\WireUiActions;
 
 class ListOfEquipmentRequest extends Component implements HasForms, HasTable
 {
@@ -44,6 +45,8 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
                         });
                     })->label('Request By'),
                 Tables\Columns\TextColumn::make('user.email')->label('Email')->searchable(),
+                TextColumn::make('items.equipment.name'),
+                Tables\Columns\TextColumn::make('purpose')->label('Purpose')->wrap(),
                 TextColumn::make('items.equipment.name')
                     ->listWithLineBreaks()->label('Items'),
                 Tables\Columns\TextColumn::make('request_date')
@@ -69,6 +72,7 @@ class ListOfEquipmentRequest extends Component implements HasForms, HasTable
                         'Cancelled' => 'danger',
                         'Completed' => 'success',
                     }),
+                    ViewColumn::make('Feedback')->view('tables.columns.request-feedback'),
 
                 Tables\Columns\TextColumn::make('status_reason')->toggleable(isToggledHiddenByDefault: true),
 

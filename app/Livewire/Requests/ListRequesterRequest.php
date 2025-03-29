@@ -6,12 +6,17 @@ use Filament\Tables;
 use App\Models\Request;
 use Livewire\Component;
 use Filament\Tables\Table;
+use WireUi\Traits\WireUiActions;
 use Filament\Actions\StaticAction;
+use Illuminate\Support\Facades\DB;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Grouping\Group;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Actions\ActionGroup;
@@ -25,6 +30,7 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
 {
     use InteractsWithForms;
     use InteractsWithTable;
+    use WireUiActions;
 
     public function table(Table $table): Table
     {
@@ -64,6 +70,8 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
                         'Completed' => 'success',
                     }),
 
+
+ViewColumn::make('Feedback')->view('tables.columns.request-feedback'),
                 Tables\Columns\TextColumn::make('status_reason')->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
@@ -93,12 +101,51 @@ class ListRequesterRequest extends Component implements HasForms, HasTable
             ->filters([
                 SelectFilter::make('status')
                 ->options(Request::STATUS_OPTIONS)->searchable()->multiple()
-            ], 
+            ],
             // layout: FiltersLayout::AboveContentCollapsible
-            
+
             )
             ->actions([
                 ActionGroup::make([
+                    Tables\Actions\Action::make('addFeedback')
+                    ->label('Submit Feedback') // Button label
+                    ->icon('heroicon-s-star')
+                    ->size('lg')
+                    ->form(FilamentForm::feedBackForm())
+                    ->action(function (Model $record,array $data) {
+                        $user_id = Auth::id(); // Get the authenticated user ID
+
+                        try {
+                            DB::beginTransaction();
+
+                            // Create feedback record
+                            $record->feedback()->create([
+                                'user_id' => $user_id,
+                                'message' => $data['message'],
+                                'rating' => $data['rating'],
+                            ]);
+
+                            DB::commit();
+
+                            // Show success dialog
+                            $this->dialog()->success(
+                                'Feedback Submitted',
+                                'Thank you for sharing your feedback!'
+                            );
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+
+                            // Show error dialog
+                            $this->dialog()->error(
+                                'Error',
+                                'Failed to submit your feedback. Please try again later.'
+                            );
+                        }
+                    })->visible(function (Model $record) {
+                        return in_array($record->status, [Request::COMPLETED, Request::RETURNED])
+                            && is_null($record->feedback);
+                    }),
+
                     Action::make('View')
                         ->icon('heroicon-s-eye')
                         ->modalSubmitAction(false)

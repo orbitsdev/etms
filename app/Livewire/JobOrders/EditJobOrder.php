@@ -36,7 +36,7 @@ class EditJobOrder extends Component implements HasForms
                     ->maxLength(191),
                 Forms\Components\TextInput::make('title')
                     ->maxLength(191),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\Textarea::make('description')->label('Problem Description')
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('status')
                     ->required(),

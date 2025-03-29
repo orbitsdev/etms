@@ -745,7 +745,7 @@ class FilamentForm extends Controller
         Section::make('Feedback Form')
             ->columnSpanFull()
             ->schema([
-               
+
 
                 Textarea::make('message')
                     ->label('Feedback Message')
@@ -790,7 +790,7 @@ class FilamentForm extends Controller
 
                     // Description
                     Textarea::make('description')
-                        ->label('Description')
+                        ->label('Problem Description')
                         ->placeholder('Provide detailed information about the job order')
                         ->required()
                         ->columnSpanFull()

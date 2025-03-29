@@ -7,8 +7,11 @@ use Livewire\Component;
 use App\Models\JobOrder;
 use App\Models\Equipment;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FilamentForm;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +37,7 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
                     ->sortable(),
                     Tables\Columns\TextColumn::make('title')
                         ->searchable(),
-                    Tables\Columns\TextColumn::make('description')
+                    Tables\Columns\TextColumn::make('description')->label('Problem Description')
                         ->searchable()->wrap(),
                 // Tables\Columns\TextColumn::make('assignee_id')
                 //     ->numeric()
@@ -76,6 +79,7 @@ class ListOfMyJobOrdersRequests extends Component implements HasForms, HasTable
             ])
             ->actions([
                 ActionGroup::make([
+                 
                     Tables\Actions\Action::make('Edit')->icon('heroicon-s-pencil-square')->url(function (Model $record) {
                         return route('joborders.edit', ['record' => $record]);
                     })->color('gray')->hidden(function(Model $record){
