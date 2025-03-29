@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Courses\CreateCourse;
+use App\Livewire\EquipmentPrintReport;
 use App\Livewire\User\EditUserDetails;
 use App\Livewire\ViewRequesterRequest;
 use App\Livewire\Sections\EditSections;
@@ -132,6 +133,9 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::get('/feedback/list', ListFeedback::class)->name('feedback.index')->middleware(['can:is-admin']);
         Route::get('report/property-acknowledgement/{requestId}', PropertyAcknowledgementReport::class)
     ->name('report.property-acknowledgement')->middleware(['can:is-admin','request.completed']);
+
+Route::get('/equipment/print-report/{status?}', EquipmentPrintReport::class)
+->name('equipment.print-report');
 
         // public
 
