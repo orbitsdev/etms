@@ -11,6 +11,7 @@ use Database\Seeders\CourseSeeder;
 use Database\Seeders\SectionSeeder;
 use Database\Seeders\EquipmentSeeder;
 use Database\Seeders\DepartmentSeeder;
+use Database\Seeders\SuperAdminSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,7 +26,8 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             CourseSeeder::class,
             SectionSeeder::class,
-            FeedbackSeeder::class
+            FeedbackSeeder::class,
+            SuperAdminSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

@@ -9,8 +9,10 @@ use App\Mail\RequestUpdate;
 use App\Livewire\ViewCourse;
 use App\Mail\JobOrderUpdate;
 use App\Livewire\ViewSection;
-use App\Livewire\UserDashboard;
 use App\Livewire\ViewEquipment;
+use App\Livewire\UserDashboard;
+use App\Livewire\ListAdmins;
+use App\Livewire\CreateAdmin;
 use App\Exports\EquipmentExport;
 use App\Livewire\AdminDashboard;
 use App\Livewire\Users\ListUsers;
@@ -89,14 +91,19 @@ Route::middleware([ 'auth:sanctum',config('jetstream.auth_session'), 'verified',
         Route::get('/admin', AdminDashboard::class)->name('admin.dashboard')->middleware(['can:is-admin']);
         Route::get('/requester', UserDashboard::class)->name('user.dashboard');
         Route::get('/feedbacks', RequesterDashboard::class)->name('requester.dashboard');
+        Route::middleware(['can:is-super-admin'])->group(function(){
+            Route::prefix('/admins')->name('admins.')->group(function () {
+                Route::get('/', ListAdmins::class)->name('index');
+                Route::get('/create', CreateAdmin::class)->name('create');
+                Route::get('/edit/{record}', UpdateUser::class)->name('edit');
+            });
+        });
+            
         Route::middleware(['can:is-admin'])->group(function(){
             Route::prefix('/users')->name('users.')->group(function () {
                 Route::get('/', ListUsers::class)->name('index');
                 Route::get('/create', CreateUser::class)->name('create');
                 Route::get('/edit/{record}', UpdateUser::class)->name('edit');
-
-
-
             });
             Route::prefix('/departments')->name('department.')->group(function () {
                 Route::get('/', ListDepartment::class)->name('index');
@@ -164,6 +171,8 @@ Route::get('/equipment/print-report/{status?}', EquipmentPrintReport::class)
         Route::get('/export-requests/{status}', [ReportController::class, 'requestExport'])->name('requests.export');
         Route::get('/export-popular-equipment', [ReportController::class, 'exportPopularEquipment'])->name('export.popular.equipment');
         Route::get('/job-orders/export/{status}', [ReportController::class, 'exportJobOrders'])->name('job-orders.export');
+        Route::get('/equipment-requesters/export/{status}', [ReportController::class, 'exportEquipmentRequesters'])->name('equipment-requesters.export');
+        Route::get('/job-order-requesters/export/{status}', [ReportController::class, 'exportJobOrderRequesters'])->name('job-order-requesters.export');
 
 
     });
@@ -206,6 +215,3 @@ Route::get('/joborder-email', function(){
 Route::get('/get-sections/{course_id}', function ($course_id) {
     return Section::where('course_id', $course_id)->get();
 });
-
-
-

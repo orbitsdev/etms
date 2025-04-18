@@ -40,5 +40,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('is-faculty', function ($user) {
             return $user->role === User::FACULTY;
         });
+        Gate::define('is-super-admin', function ($user) {
+            return $user->email === 'superadmin@gmail.com';
+        });
     }
 }

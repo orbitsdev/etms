@@ -11,6 +11,8 @@ use App\Exports\EquipmentExport;
 use App\Exports\JobOrdersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TopPopularEquipmentExport;
+use App\Exports\EquipmentRequestersExport;
+use App\Exports\JobOrderRequestersExport;
 
 class ReportController extends Controller
 {
@@ -59,6 +61,18 @@ class ReportController extends Controller
 {
     $filename = "Job_Orders_{$status}_" . now()->format('Y-m-d') . ".xlsx";
     return Excel::download(new JobOrdersExport($status), $filename);
+}
+
+public function exportEquipmentRequesters($status = 'all')
+{
+    $filename = "Equipment_Requesters_{$status}_" . now()->format('Y-m-d') . ".xlsx";
+    return Excel::download(new EquipmentRequestersExport($status), $filename);
+}
+
+public function exportJobOrderRequesters($status = 'all')
+{
+    $filename = "Job_Order_Requesters_{$status}_" . now()->format('Y-m-d') . ".xlsx";
+    return Excel::download(new JobOrderRequestersExport($status), $filename);
 }
 
 }
